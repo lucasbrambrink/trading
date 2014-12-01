@@ -48,31 +48,6 @@ class Calculator:
 		return st_dev
 
 	@classmethod
-	def alpha(self,return_portfolio,return_market,return_risk_free,beta):
-		alpha = return_portfolio - (return_risk_free + beta*(return_market - return_risk_free))
-		return alpha
-
-	@classmethod	
-	def beta(self,stock,benchmark):
-		c = Calculator()
-		pc_stock = c.percent_change_array(stock)
-		pc_benchmark = c.percent_change_array(benchmark)
-		beta = round(float(c.covariance(pc_stock,pc_benchmark,'pchange') / c.variance(pc_benchmark,'pchange')),3)
-		return beta
-
-	@classmethod	
-	def sharpe(self,**kwargs):
-		pass
-
-	@classmethod
-	def total_returns(self,*args):
-		pass
-
-	@classmethod
-	def volatility(self,**kwargs):
-		pass
-
-	@classmethod
 	def find_indexes(self,data,date_of_investment,date_of_return):
 		for index in range(0,len(data)):
 			if data[index]['date'] == date_of_investment:
@@ -98,4 +73,33 @@ class Calculator:
 				})
 		return percent_changes
 
+
+class RiskCalculator:
+	def __init__(self):
+		pass
+
+	@classmethod
+	def alpha(self,return_portfolio,return_market,return_risk_free,beta):
+		alpha = return_portfolio - (return_risk_free + beta*(return_market - return_risk_free))
+		return alpha
+
+	@classmethod	
+	def beta(self,stock,benchmark):
+		c = Calculator()
+		pc_stock = c.percent_change_array(stock)
+		pc_benchmark = c.percent_change_array(benchmark)
+		beta = round(float(c.covariance(pc_stock,pc_benchmark,'pchange') / c.variance(pc_benchmark,'pchange')),3)
+		return beta
+
+	@classmethod	
+	def sharpe(self,**kwargs):
+		pass
+
+	@classmethod
+	def total_returns(self,*args):
+		pass
+
+	@classmethod
+	def volatility(self,**kwargs):
+		pass
 
