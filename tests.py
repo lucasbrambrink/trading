@@ -21,6 +21,11 @@ class Calc_Test:
 			{ "date" : "2000/01/06", 'value' : 40},
 			{ "date" : "2000/01/07", 'value' : 41},
 		]
+		self.test_set3 = [
+			{ "date" : "2000/01/01", 'value' : 10},
+			{ "date" : "2000/01/01", 'value' : 20},
+			{ "date" : "2000/01/01", 'value' : 40},
+		]
 		self.calculator = Calculator()
 
 	def test_mean(self):
@@ -32,7 +37,19 @@ class Calc_Test:
 	def test_covariance(self):
 		assert self.calculator.covariance(self.test_set1,self.test_set2,'value') == 40
 
+	def test_stdev(self):
+		assert self.calculator.stdev(self.test_set1,'value') == 20
 
+	def test_find_index(self):
+		assert self.calculator.find_indexes(self.test_set1,'2000/01/02','2000/01/06') == (1,5)
+
+	def test_percent_change(self):
+		assert self.calculator.percent_change(self.test_set1,0,1,'value') == 1
+
+	def test_percent_change_array(self):
+		assert self.calculator.percent_change_array(self.test_set3,'value') == [
+			{'date': '2000/01/01', 'pchange': 1.0},
+		    {'date': '2000/01/01', 'pchange': 1.0}]
 
 ## Run Tests ##
 
@@ -40,3 +57,7 @@ c = Calc_Test()
 c.test_mean()
 c.test_variance()
 c.test_covariance()
+c.test_stdev()
+c.test_find_index()
+c.test_percent_change()
+c.test_percent_change_array()

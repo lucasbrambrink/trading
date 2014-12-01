@@ -38,11 +38,11 @@ class Calculator:
 	@classmethod
 	def stdev(self,arr,key):
 		c = Calculator()
-		mean = c.average(arr1)
+		mean = c.average(arr,key)
 		deviation = []
-		for index in range(0,len(arr1)):
+		for index in range(0,len(arr)):
 			point = (arr[index][key] - mean)**2
-			deviation.append(point)
+			deviation.append({ key : point })
 		av_deviation = c.average(deviation,key)
 		st_dev = av_deviation**(0.5)
 		return st_dev
@@ -83,15 +83,15 @@ class Calculator:
 
 	@classmethod
 	def percent_change(self,data,index,increment,key):
-		value = round(((data[index+increment][key] - data[index][key]) / (parsed_data[index][key])),2)
+		value = round(((data[index+increment][key] - data[index][key]) / (data[index][key])),2)
 		return value
 
 	@classmethod
-	def percent_change_array(self,obj_arr):
+	def percent_change_array(self,obj_arr,key):
 		c = Calculator()
 		percent_changes = []
-		for index in range(0,(len(arr)-1)):
-			pchange = c.percent_change(obj_arr,index,1,'close')
+		for index in range(0,(len(obj_arr)-1)):
+			pchange = c.percent_change(obj_arr,index,1,key)
 			percent_changes.append({
 				'date' : obj_arr[index]['date'],
 				'pchange' : pchange
