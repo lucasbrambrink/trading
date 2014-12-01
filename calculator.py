@@ -5,52 +5,52 @@ class Calculator:
 		pass
 
 	@classmethod
-	def average(self,arr):
+	def average(self,arr,key):
 		sum = 0
 		for num in arr:
-			sum += num
+			sum += num[key]
 		average = round(float(sum / len(arr)),2)
 		return average
 
 	@classmethod
-	def variance(self,arr):
+	def variance(self,arr,key):
 		c = Calculator()
-		mean_arr = c.average(arr)
+		mean_arr = c.average(arr,key)
 		squared_differences = []
 		for item in arr:
-			squared_difference = (item - mean)**2
+			squared_difference = (item[key] - mean)**2
 			squared_differences.append(squared_difference)
-		variance = c.average(squared_differences)
+		variance = c.average(squared_differences,key)
 		return variance
 
 	@classmethod
-	def covariance(self,arr1,arr2):
+	def covariance(self,arr1,arr2,key):
 		c = Calculator()
-		mean1 = c.average(arr1)
-		mean2 = c.average(arr2)
+		mean1 = c.average(arr1,key)
+		mean2 = c.average(arr2,key)
 		tmp_points = []
 		for index in range(0,len(arr1)):
-			point = (arr1[index] - mean1)*(arr2[index] - mean2)
+			point = (arr1[index][key] - mean1)*(arr2[index][key] - mean2)
 			tmp_points.append(point)
 		covariance = c.average(tmp_points)
 		return covariance
 
 	@classmethod
-	def stdev(self,arr1):
+	def stdev(self,arr,key):
 		c = Calculator()
 		mean = c.average(arr1)
 		deviation = []
 		for index in range(0,len(arr1)):
-			point = (arr[index] - mean)**2
+			point = (arr[index][key] - mean)**2
 			deviation.append(point)
-		av_deviation = c.average(deviation)
+		av_deviation = c.average(deviation,key)
 		st_dev = av_deviation**(0.5)
 		return st_dev
 
 	@classmethod
-	def alpha(self,**kwargs):
-		c = Calculator()
-		pass
+	def alpha(self,return_portfolio,return_market,return_risk_free,beta):
+		alpha = return_portfolio - (return_risk_free + beta*(return_market - return_risk_free))
+		return alpha
 
 	@classmethod	
 	def beta(self,stock,benchmark):
