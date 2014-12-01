@@ -15,11 +15,11 @@ class Calculator:
 	@classmethod
 	def variance(self,arr,key):
 		c = Calculator()
-		mean_arr = c.average(arr,key)
+		mean = c.average(arr,key)
 		squared_differences = []
 		for item in arr:
 			squared_difference = (item[key] - mean)**2
-			squared_differences.append(squared_difference)
+			squared_differences.append({ key : squared_difference })
 		variance = c.average(squared_differences,key)
 		return variance
 
@@ -57,7 +57,7 @@ class Calculator:
 		c = Calculator()
 		pc_stock = c.percent_change_array(stock)
 		pc_benchmark = c.percent_change_array(benchmark)
-		beta = round(float(c.covariance(pc_stock,pc_benchmark) / c.variance(pc_benchmark)),3)
+		beta = round(float(c.covariance(pc_stock,pc_benchmark,'pchange') / c.variance(pc_benchmark,'pchange')),3)
 		return beta
 
 	@classmethod	
@@ -73,7 +73,7 @@ class Calculator:
 		pass
 
 	@classmethod
-	def find_indexes(self,data,date_of_investment,date_of_return,key='close'):
+	def find_indexes(self,data,date_of_investment,date_of_return):
 		for index in range(0,len(data)):
 			if data[index]['date'] == date_of_investment:
 				d_invest = index
