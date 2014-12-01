@@ -31,8 +31,8 @@ class Calculator:
 		tmp_points = []
 		for index in range(0,len(arr1)):
 			point = (arr1[index][key] - mean1)*(arr2[index][key] - mean2)
-			tmp_points.append(point)
-		covariance = c.average(tmp_points)
+			tmp_points.append({ key : point })
+		covariance = c.average(tmp_points,key)
 		return covariance
 
 	@classmethod
