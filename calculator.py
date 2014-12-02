@@ -69,15 +69,9 @@ class Calculator:
 			pchange = c.percent_change(obj_arr,index,1,key)
 			percent_changes.append({
 				'date' : obj_arr[index]['date'],
-				'pchange' : pchange
+				'returns' : pchange
 				})
 		return percent_changes
-
-
-class RiskCalculator:
-	def __init__(self):
-		# self.portfolio = portfolio
-		pass
 
 	@classmethod
 	def total_returns(self,portfolio,current_prices):
@@ -88,7 +82,7 @@ class RiskCalculator:
 			for price in current_prices:
 				if price['symbol'] == asset['symbol']:
 					current_value += (price['current_price']*asset['quantity'])
-		returns = (current_value - value_portfolio) / value_portfolio
+		returns = round(float((current_value - value_portfolio) / value_portfolio),3)
 		return returns
 
 	@classmethod
@@ -101,32 +95,33 @@ class RiskCalculator:
 					returns.append({ 'symbol' : asset['symbol'], 'returns' : returns_per_share})
 		return returns
 
-	@classmethod
-	def alpha(self,return_portfolio,return_market,return_risk_free,beta):
-		alpha = return_portfolio - (return_risk_free + beta*(return_market - return_risk_free))
-		return alpha
+class RiskCalculator:
+	def __init__(self,portfolio,current_prices,risk_free,market_data):
+		self.c = Calculator()
+		self.portfolio = portfolio
+		self.current_prices = current_prices
+		self.risk_free = risk_free
+		self.market_returns = self.c.percent_change(market_data,0,(len(market_data)-1),'price')
+		self.market_returns_arr = self.c.percent_change_array(market_data,'price')
+		self.portfolio_returns = RiskCalculator().total_returns(self.portfolio,self.current_prices)
+		self.portfolio_returns_arr = RiskCalculator().returns_array(self.portfolio,self.current_prices)
 
-	@classmethod	
-	def beta(self,stock,benchmark):
-		c = Calculator()
-		pc_stock = c.percent_change_array(stock)
-		pc_benchmark = c.percent_change_array(benchmark)
-		beta = round(float(c.covariance(pc_stock,pc_benchmark,'pchange') / c.variance(pc_benchmark,'pchange')),3)
+
+
+	def alpha(self,beta):
+		alpha = self.portfolio_returns - (self.risk_free + beta*(return_market - return_risk_free))
+		return alpha
+	
+	def beta(self):
+		beta = round(float(self.c.covariance(self.portfolio_returns_arr,self.market_returns_arr,'returns') / self.c.variance(self.market_returns_arr,'returns')),3)
 		return beta
 
-	@classmethod	
-	def sharpe(self,portfolio,current_prices,risk_free):
-		c = Calculator()
-		rc = RiskCalculator()
-		portfolio_returns = rc.total_returns(portfolio,current_prices)
-		portfolio_stdev = c.stdev(rc.returns_array(portfolio,current_prices),'returns')
-		sharpe = round(float((portfolio_returns - risk_free) / portfolio_stdev),3)
+	def sharpe(self):
+		portfolio_stdev = self.c.stdev(self.portfolio_returns_arr,'returns')
+		sharpe = round(float((self.portfolio_returns - self.risk_free) / portfolio_stdev),3)
 		return sharpe
 
-	@classmethod
-	def volatility(self,portfolio, current_prices):
-		c = Calculator()
-		rc = RiskCalculator()
-		portfolio_stdev = c.stdev(rc.returns_array(portfolio,current_prices),'returns')
+	def volatility(self):
+		portfolio_stdev = self.c.stdev(self.portfolio_returns_arr,'returns')
 		return portfolio_stdev
 

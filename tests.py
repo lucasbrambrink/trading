@@ -48,8 +48,8 @@ class Calc_Test:
 
 	def test_percent_change_array(self):
 		assert self.calculator.percent_change_array(self.test_set3,'value') == [
-			{'date': '2000/01/01', 'pchange': 1.0},
-		    {'date': '2000/01/01', 'pchange': 1.0}]
+			{'date': '2000/01/01', 'returns': 1.0},
+		    {'date': '2000/01/01', 'returns': 1.0}]
 
 
 class Risk_Test:
@@ -69,13 +69,31 @@ class Risk_Test:
 		]
 
 		self.risk_free_rate = 0.030 ##suppose this is 3 months later
-		self.benchmark = [
-			{'symbol' : 'SP500', 'price_initial' : 550.00},
-			{'symbol' : 'SP500', 'price_current' : 600.00}
+		self.market_data = [
+			{'date': '2000/01/01', 'symbol' : 'SP500', 'price' : 550.00},
+			{'date': '2000/04/01', 'symbol' : 'SP500', 'price' : 600.00}
 		]
+		self.risk_calc = RiskCalculator(self.portfolio,self.current_values,self.risk_free_rate,self.market_data)
+
+	def test_alpha(self):
+		pass
+
+	def test_beta(self):
+		assert self.risk_calc.beta()
+		pass
 
 	def test_sharpe(self):
 		pass
+
+	def test_volatility(self):
+		pass
+
+	def test_total_returns(self):
+		pass
+
+	def test_returns_array(self):
+		pass
+
 
 ## Run Tests ##
 
@@ -87,6 +105,12 @@ c.test_stdev()
 c.test_find_index()
 c.test_percent_change()
 c.test_percent_change_array()
+
+## Run Risk Tests ##
+
+rc = Risk_Test()
+rc.test_beta()
+
 
 
 
