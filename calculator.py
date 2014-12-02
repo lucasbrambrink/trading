@@ -75,7 +75,8 @@ class Calculator:
 
 
 class RiskCalculator:
-	def __init__(self):
+	def __init__(self,portfolio):
+		self.portfolio = portfolio
 		pass
 
 	@classmethod
@@ -96,8 +97,15 @@ class RiskCalculator:
 		pass
 
 	@classmethod
-	def total_returns(self,*args):
-		returns = (price_sold - price_purchased) / price_purchased
+	def total_returns(self,portfolio,current_prices):
+		value_portfolio = 0
+		current_value = 0
+		for asset in portfolio:
+			value_portfolio += (asset['price_purchased']*asset['quantity'])
+			for price in current_prices:
+				if price['symbol'] == asset['symbol']:
+					current_value += (price['current_price']*asset['quantity'])
+		returns = (current_value - value_portfolio) / value_portfolio
 		return returns
 
 	@classmethod
