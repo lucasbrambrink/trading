@@ -101,8 +101,6 @@ class RiskCalculator:
 					returns.append({ 'symbol' : asset['symbol'], 'returns' : returns_per_share})
 		return returns
 
-
-		
 	@classmethod
 	def alpha(self,return_portfolio,return_market,return_risk_free,beta):
 		alpha = return_portfolio - (return_risk_free + beta*(return_market - return_risk_free))
@@ -125,8 +123,10 @@ class RiskCalculator:
 		sharpe = round(float((portfolio_returns - risk_free) / portfolio_stdev),3)
 		return sharpe
 
-
 	@classmethod
-	def volatility(self,**kwargs):
-		pass
+	def volatility(self,portfolio, current_prices):
+		c = Calculator()
+		rc = RiskCalculator()
+		portfolio_stdev = c.stdev(rc.returns_array(portfolio,current_prices),'returns')
+		return portfolio_stdev
 
