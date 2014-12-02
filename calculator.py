@@ -75,8 +75,8 @@ class Calculator:
 
 
 class RiskCalculator:
-	def __init__(self,portfolio):
-		self.portfolio = portfolio
+	def __init__(self):
+		# self.portfolio = portfolio
 		pass
 
 	@classmethod
@@ -90,6 +90,18 @@ class RiskCalculator:
 					current_value += (price['current_price']*asset['quantity'])
 		returns = (current_value - value_portfolio) / value_portfolio
 		return returns
+
+	@classmethod
+	def returns_array(self,portfolio,current_prices):
+		returns = []
+		for asset in portfolio:
+			for price in current_prices:
+				if price['symbol'] == asset['symbol']:
+					returns_per_share = round(float((current_prices['current_price'] - asset['price_purchased']) / asset['price_purchased']),3)
+					returns.append({ 'symbol' : asset['symbol'], 'returns' : returns_per_share})
+		return returns
+
+
 		
 	@classmethod
 	def alpha(self,return_portfolio,return_market,return_risk_free,beta):
@@ -105,8 +117,13 @@ class RiskCalculator:
 		return beta
 
 	@classmethod	
-	def sharpe(self,**kwargs):
-		pass
+	def sharpe(self,portfolio,current_prices,risk_free):
+		c = Calculator()
+		rc = RiskCalculator()
+		portfolio_returns = rc.total_returns(portfolio,current_prices)
+		portfolio_stdev = c.stdev(rc.returns_array(portfolio,current_prices),'returns')
+		sharpe = round(float((portfolio_returns - risk_free) / portfolio_stdev),3)
+		return sharpe
 
 
 	@classmethod
