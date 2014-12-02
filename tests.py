@@ -51,6 +51,19 @@ class Calc_Test:
 			{'date': '2000/01/01', 'pchange': 1.0},
 		    {'date': '2000/01/01', 'pchange': 1.0}]
 
+
+class Risk_Test:
+	def __init__(self):
+		self.portfolio = [
+			{'symbol' : 'IBM', 'quantity' : 20, 'price_purchased' : 200.00},
+			{'symbol' : 'AAPL', 'quantity' : 10, 'price_purchased' : 300.00},
+			{'symbol' : 'GOOG', 'quantity' : 200, 'price_purchased' : 500.00},
+			{'symbol' : 'NFLX', 'quantity' : 50, 'price_purchased' : 400.00}
+		]
+
+	def test_sharpe(self):
+		pass
+
 ## Run Tests ##
 
 c = Calc_Test()
@@ -61,3 +74,12 @@ c.test_stdev()
 c.test_find_index()
 c.test_percent_change()
 c.test_percent_change_array()
+
+
+
+
+
+
+
+
+

@@ -97,7 +97,8 @@ class RiskCalculator:
 
 	@classmethod
 	def total_returns(self,*args):
-		pass
+		returns = (price_sold - price_purchased) / price_purchased
+		return returns
 
 	@classmethod
 	def volatility(self,**kwargs):
