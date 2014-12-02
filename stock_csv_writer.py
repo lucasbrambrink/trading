@@ -32,7 +32,7 @@ def get_price(symbol):
 '''
 
 def create_the_entire_db():
-    stock_list = csv.reader(open('stock_list_wiki.csv', newline=''))
+    stock_list = csv.reader(open('csv_files/stock_list_wiki.csv', newline=''))
     stock_csv = csv.writer(open('stock_prices.csv', 'w', newline=''))
     counter = 0
     for row in stock_list:
