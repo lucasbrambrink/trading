@@ -61,6 +61,19 @@ class Risk_Test:
 			{'symbol' : 'NFLX', 'quantity' : 50, 'price_purchased' : 400.00}
 		]
 
+		self.current_values = [
+			{'symbol' : 'IBM', 'price_current' : 250.00},
+			{'symbol' : 'AAPL', 'price_current' : 100.00},
+			{'symbol' : 'GOOG', 'price_current' : 650.00},
+			{'symbol' : 'NFLX', 'price_current' : 450.00},
+		]
+
+		self.risk_free_rate = 0.030 ##suppose this is 3 months later
+		self.benchmark = [
+			{'symbol' : 'SP500', 'price_initial' : 550.00},
+			{'symbol' : 'SP500', 'price_current' : 600.00}
+		]
+
 	def test_sharpe(self):
 		pass
 
