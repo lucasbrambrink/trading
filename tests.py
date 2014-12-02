@@ -61,17 +61,36 @@ class Risk_Test:
 			{'symbol' : 'NFLX', 'quantity' : 50, 'price_purchased' : 400.00}
 		]
 
-		self.current_values = [
-			{'symbol' : 'IBM', 'price_current' : 250.00},
-			{'symbol' : 'AAPL', 'price_current' : 100.00},
-			{'symbol' : 'GOOG', 'price_current' : 650.00},
-			{'symbol' : 'NFLX', 'price_current' : 450.00},
+		self.stock_data = [
+			[
+				{'date': '2000/01/01', 'symbol' : 'IBM', 'current_price' : 250.00},
+				{'date': '2000/01/01', 'symbol' : 'AAPL', 'current_price' : 100.00},
+				{'date': '2000/01/01', 'symbol' : 'GOOG', 'current_price' : 650.00},
+				{'date': '2000/01/01', 'symbol' : 'NFLX', 'current_price' : 450.00},
+			],[
+				{'date': '2000/04/01', 'symbol' : 'IBM', 'current_price' : 350.00},
+				{'date': '2000/04/01', 'symbol' : 'AAPL', 'current_price' : 90.00},
+				{'date': '2000/04/01', 'symbol' : 'GOOG', 'current_price' : 600.00},
+				{'date': '2000/04/01', 'symbol' : 'NFLX', 'current_price' : 440.00},
+			],[
+				{'date': '2000/07/01', 'symbol' : 'IBM', 'current_price' : 450.00},
+				{'date': '2000/07/01', 'symbol' : 'AAPL', 'current_price' : 70.00},
+				{'date': '2000/07/01', 'symbol' : 'GOOG', 'current_price' : 550.00},
+				{'date': '2000/07/01', 'symbol' : 'NFLX', 'current_price' : 500.00},
+			],[
+				{'date': '2000/10/01', 'symbol' : 'IBM', 'current_price' : 455.00},
+				{'date': '2000/10/01', 'symbol' : 'AAPL', 'current_price' : 50.00},
+				{'date': '2000/10/01', 'symbol' : 'GOOG', 'current_price' : 600.00},
+				{'date': '2000/10/01', 'symbol' : 'NFLX', 'current_price' : 300.00},
+			]
 		]
 
 		self.risk_free_rate = 0.030 ##suppose this is 3 months later
 		self.market_data = [
 			{'date': '2000/01/01', 'symbol' : 'SP500', 'price' : 550.00},
-			{'date': '2000/04/01', 'symbol' : 'SP500', 'price' : 600.00}
+			{'date': '2000/04/01', 'symbol' : 'SP500', 'price' : 600.00},
+			{'date': '2000/07/01', 'symbol' : 'SP500', 'price' : 630.00},
+			{'date': '2000/10/01', 'symbol' : 'SP500', 'price' : 635.00}
 		]
 		self.risk_calc = RiskCalculator(self.portfolio,self.current_values,self.risk_free_rate,self.market_data)
 

@@ -24,7 +24,7 @@ class Calculator:
 		return variance
 
 	@classmethod
-	def covariance(self,arr1,arr2,key):
+	def covariance(self,arr1,arr2,key): ## arrays must be same length
 		c = Calculator()
 		mean1 = c.average(arr1,key)
 		mean2 = c.average(arr2,key)
@@ -91,7 +91,7 @@ class Calculator:
 		for asset in portfolio:
 			for price in current_prices:
 				if price['symbol'] == asset['symbol']:
-					returns_per_share = round(float((current_prices['current_price'] - asset['price_purchased']) / asset['price_purchased']),3)
+					returns_per_share = round(float((price['current_price'] - asset['price_purchased']) / asset['price_purchased']),3)
 					returns.append({ 'symbol' : asset['symbol'], 'returns' : returns_per_share})
 		return returns
 
@@ -103,10 +103,8 @@ class RiskCalculator:
 		self.risk_free = risk_free
 		self.market_returns = self.c.percent_change(market_data,0,(len(market_data)-1),'price')
 		self.market_returns_arr = self.c.percent_change_array(market_data,'price')
-		self.portfolio_returns = RiskCalculator().total_returns(self.portfolio,self.current_prices)
-		self.portfolio_returns_arr = RiskCalculator().returns_array(self.portfolio,self.current_prices)
-
-
+		self.portfolio_returns = self.c.total_returns(self.portfolio,self.current_prices)
+		self.portfolio_returns_arr = self.c.returns_array(self.portfolio,self.current_prices)
 
 	def alpha(self,beta):
 		alpha = self.portfolio_returns - (self.risk_free + beta*(return_market - return_risk_free))
