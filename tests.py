@@ -168,27 +168,20 @@ class Returns_Test:
 class Risk_Test:
 
 	def __init__(self,portfolio,stock_data,market_data,risk_free_returns):
-		self.risk_calc = RiskCalculator(portfolio,stock_data,market_data,risk_free_returns)
+		self.rc = RiskCalculator(portfolio,stock_data,market_data,risk_free_returns)
 
 	def test_alpha(self):
-		pass
+		assert self.rc.alpha() == 0.11800
 
 	def test_betas(self):
-		print(self.risk_calc.beta())
-		# assert self.risk_calc.betas()
-		pass
+		assert self.rc.beta() == 0.49565
 
 	def test_sharpe(self):
-		pass
+		assert self.rc.sharpe() == 5.41614
 
 	def test_volatility(self):
-		pass
+		assert self.rc.volatility() == 0.01949
 
-	def test_total_returns(self):
-		pass
-
-	def test_returns_array(self):
-		pass
 
 
 ## Run Tests ##
@@ -222,6 +215,9 @@ rt.test_risk_free()
 ## Run Risk Tests ##
 rm = Risk_Test(pc.portfolio,rt.stock_data,rt.market_data,rt.risk_free_returns)
 rm.test_betas()
+rm.test_sharpe()
+rm.test_volatility()
+rm.test_alpha()
 
 
 

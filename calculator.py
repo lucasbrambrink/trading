@@ -187,11 +187,11 @@ class RiskCalculator:
 		## initialize Calculator
 		self.c = Calculator()
 
-	def alpha(self,beta):
-		alpha = self.portfolio_returns - (self.risk_free + beta*(return_market - return_risk_free))
-		return alpha
-	
-	def beta(self):
+		## establish complementary arrays of portfolio and market returns
+		self.portfolio_returns_array,self.market_returns_array = self.complementary_arrays()
+
+
+	def complementary_arrays(self):
 		portfolio_returns_array = []
 		market_returns_array = []
 		for portfolio_date_point in self.portfolio_returns:
@@ -199,15 +199,23 @@ class RiskCalculator:
 				if portfolio_date_point['date'] == market_date_point['date']: ## date handshake
 					portfolio_returns_array.append({'returns' : portfolio_date_point['total_returns']})
 					market_returns_array.append(market_date_point['data'][0])
-		beta = round(float(self.c.covariance(portfolio_returns_array,market_returns_array,'returns') / self.c.variance(market_returns_array,'returns')),5)
+		return portfolio_returns_array,market_returns_array
+
+	def alpha(self):
+		beta = self.beta()
+		alpha = self.portfolio_returns_array[-1]['returns'] - (self.risk_free_returns[-1]['data'][-1]['returns'] + beta*(self.market_returns_array[-1]['returns'] - self.risk_free_returns[-1]['data'][-1]['returns']))
+		return round(alpha,5)
+	
+	def beta(self):
+		beta = round(float(self.c.covariance(self.portfolio_returns_array,self.market_returns_array,'returns') / self.c.variance(self.market_returns_array,'returns')),5)
 		return beta
 
 	def sharpe(self):
-		portfolio_stdev = self.c.stdev(self.portfolio_returns_arr,'returns')
-		sharpe = round(float((self.portfolio_returns - self.risk_free) / portfolio_stdev),5)
+		portfolio_stdev = self.c.stdev(self.portfolio_returns_array,'returns')
+		sharpe = round(float((self.portfolio_returns_array[-1]['returns'] - self.risk_free_returns[-1]['data'][-1]['returns']) / portfolio_stdev),5)
 		return sharpe
 
 	def volatility(self):
-		portfolio_stdev = self.c.stdev(self.portfolio_returns_arr,'returns')
+		portfolio_stdev = round(self.c.stdev(self.portfolio_returns_array,'returns'),5)
 		return portfolio_stdev
 
