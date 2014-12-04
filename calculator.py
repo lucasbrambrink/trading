@@ -73,45 +73,98 @@ class Calculator:
 				})
 		return percent_changes
 
-	@classmethod
-	def total_returns(self,portfolio,current_prices):
+
+class PorfolioCalculator:
+
+	def __init__(self,portfolio):
+		self.portfolio = portfolio
+		self.value = self.initial_value()
+
+	def initial_value(self):
 		value_portfolio = 0
-		current_value = 0
 		for asset in portfolio:
 			value_portfolio += (asset['price_purchased']*asset['quantity'])
-			for price in current_prices:
-				if price['symbol'] == asset['symbol']:
-					current_value += (price['current_price']*asset['quantity'])
-		returns = round(float((current_value - value_portfolio) / value_portfolio),3)
-		return returns
+		return value_portfolio
+
+
+class MarketCalculator:
+
+	def __init__(self,stock_data,market_data,risk_free_returns):
+		self.stock_data = stock_data
+		self.market_data = market_data
+
+		## returns preserve format
+		self.stock_data_returns = self.returns_per_date(self.stock_data)
+		self.market_data_returns = self.returns_per_date(self.market_data)
+		self.risk_free_returns = risk_free_returns
+
+	def returns_per_date(self,data):
+		date_returns = []
+		index = 1
+		while index < len(data):
+			data = []
+			for stock in data[index]['data']:
+				for stock_previous in data[index-1]['data']:
+					if stock['symbol'] == stock_previous['symbol']: ## handshake
+						returns_from_previous_date = round(float((stock['price'] - stock_previous['price']) / stock_previous['price']),3)
+				data.append({ 
+					'symbol' : stock['symbol'], 
+					'returns' : returns_from_previous_date
+					})
+			date_returns.append({
+				'date' : data[index]['date'],
+				'data' : data
+				})
+		return date_returns
+
+	
+class AssessCurrentValue:
+
+	def __init__(self):
+		pass
 
 	@classmethod
-	def returns_array(self,portfolio,current_prices):
-		returns = []
-		for asset in portfolio:
-			for price in current_prices:
-				if price['symbol'] == asset['symbol']:
-					returns_per_share = round(float((price['current_price'] - asset['price_purchased']) / asset['price_purchased']),3)
-					returns.append({ 'symbol' : asset['symbol'], 'returns' : returns_per_share})
-		return returns
+	def total_returns(self,portfolio,market_data,key):
+		value_portfolio = 0
+		current_value = 0
+		total = []
+		for date in portfolio:
+			for asset in date:
+				value_portfolio += (asset['price_purchased']*asset['quantity'])
+				for price in current_prices:
+					if price['symbol'] == asset['symbol']:
+						current_value += (price['price']*asset['quantity'])
+			returns = round(float((current_value - value_portfolio) / value_portfolio),3)
+			total.append(returns)
+		return sum(total)
+
+
+
+
+
 
 class RiskCalculator:
-	def __init__(self,portfolio,current_prices,risk_free,market_data):
+	def __init__(self,portfolio,stock_data,risk_free,market_data):
 		self.c = Calculator()
 		self.portfolio = portfolio
-		self.current_prices = current_prices
+		self.stock_data = stock_data
 		self.risk_free = risk_free
-		self.market_returns = self.c.percent_change(market_data,0,(len(market_data)-1),'price')
+		self.market_data = market_data
+
+		## calculate the returns of the data
+
+		self.market_total_returns = self.c.total_returns(market_data,0,(len(market_data)-1),'price')
 		self.market_returns_arr = self.c.percent_change_array(market_data,'price')
-		self.portfolio_returns = self.c.total_returns(self.portfolio,self.current_prices)
-		self.portfolio_returns_arr = self.c.returns_array(self.portfolio,self.current_prices)
+		self.portfolio_total_returns = self.c.total_returns(self.portfolio,self.stock_data)
+		self.portfolio_returns_arr = self.c.returns_array(self.portfolio,self.stock_data)
 
 	def alpha(self,beta):
 		alpha = self.portfolio_returns - (self.risk_free + beta*(return_market - return_risk_free))
 		return alpha
 	
 	def beta(self):
-		beta = round(float(self.c.covariance(self.portfolio_returns_arr,self.market_returns_arr,'returns') / self.c.variance(self.market_returns_arr,'returns')),3)
+		for asset in self.portfolio_returns_arr:
+			beta = round(float(self.c.covariance(self.portfolio_returns_arr,self.market_returns_arr,'returns') / self.c.variance(self.market_returns_arr,'returns')),3)
 		return beta
 
 	def sharpe(self):

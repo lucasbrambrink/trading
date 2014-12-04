@@ -61,38 +61,64 @@ class Risk_Test:
 			{'symbol' : 'NFLX', 'quantity' : 50, 'price_purchased' : 400.00}
 		]
 
+		## note format of portfolio is different than stock & market data (it has to be)
+		## [{'symbol', 'data' : [{}]},]
 		self.stock_data = [
-			[
-				{'date': '2000/01/01', 'symbol' : 'IBM', 'current_price' : 250.00},
-				{'date': '2000/01/01', 'symbol' : 'AAPL', 'current_price' : 100.00},
-				{'date': '2000/01/01', 'symbol' : 'GOOG', 'current_price' : 650.00},
-				{'date': '2000/01/01', 'symbol' : 'NFLX', 'current_price' : 450.00},
-			],[
-				{'date': '2000/04/01', 'symbol' : 'IBM', 'current_price' : 350.00},
-				{'date': '2000/04/01', 'symbol' : 'AAPL', 'current_price' : 90.00},
-				{'date': '2000/04/01', 'symbol' : 'GOOG', 'current_price' : 600.00},
-				{'date': '2000/04/01', 'symbol' : 'NFLX', 'current_price' : 440.00},
-			],[
-				{'date': '2000/07/01', 'symbol' : 'IBM', 'current_price' : 450.00},
-				{'date': '2000/07/01', 'symbol' : 'AAPL', 'current_price' : 70.00},
-				{'date': '2000/07/01', 'symbol' : 'GOOG', 'current_price' : 550.00},
-				{'date': '2000/07/01', 'symbol' : 'NFLX', 'current_price' : 500.00},
-			],[
-				{'date': '2000/10/01', 'symbol' : 'IBM', 'current_price' : 455.00},
-				{'date': '2000/10/01', 'symbol' : 'AAPL', 'current_price' : 50.00},
-				{'date': '2000/10/01', 'symbol' : 'GOOG', 'current_price' : 600.00},
-				{'date': '2000/10/01', 'symbol' : 'NFLX', 'current_price' : 300.00},
+				{'date': '2000/01/01', 'data': [ 
+					{'symbol' : 'IBM', 'price' : 250.00},
+					{'symbol' : 'AAPL', 'price' : 100.00},
+					{'symbol' : 'GOOG', 'price' : 650.00},
+					{'symbol' : 'NFLX', 'price' : 450.00},
+				]},
+				{'date': '2000/04/01', 'data' : [
+					{'symbol' : 'IBM', 'price' : 350.00},
+					{'symbol' : 'AAPL', 'price' : 90.00},
+					{'symbol' : 'GOOG', 'price' : 600.00},
+					{'symbol' : 'NFLX', 'price' : 440.00},
+				]},
+				{'date': '2000/07/01', 'data' : [
+					{'symbol' : 'IBM', 'price' : 450.00},
+					{'symbol' : 'AAPL', 'price' : 70.00},
+					{'symbol' : 'GOOG', 'price' : 550.00},
+					{'symbol' : 'NFLX', 'price' : 500.00},
+				]},
+				{'date': '2000/10/01', 'data': [
+					{'symbol' : 'IBM', 'price' : 455.00},
+					{'symbol' : 'AAPL', 'price' : 50.00},
+					{'symbol' : 'GOOG', 'price' : 600.00},
+					{'symbol' : 'NFLX', 'price' : 300.00},
+				]}
 			]
-		]
 
-		self.risk_free_rate = 0.030 ##suppose this is 3 months later
-		self.market_data = [
-			{'date': '2000/01/01', 'symbol' : 'SP500', 'price' : 550.00},
-			{'date': '2000/04/01', 'symbol' : 'SP500', 'price' : 600.00},
-			{'date': '2000/07/01', 'symbol' : 'SP500', 'price' : 630.00},
-			{'date': '2000/10/01', 'symbol' : 'SP500', 'price' : 635.00}
+		self.risk_free_rate = [
+				{'date': '2000/01/01', 'data': [
+					{'symbol': 'risk_free', 'returns' : 0.030}
+				]},
+				{'date': '2000/04/01', 'data': [
+					{'symbol': 'risk_free', 'returns' : 0.032}
+				]},
+				{'date': '2000/07/01', 'data': [
+					{'symbol': 'risk_free', 'returns' : 0.031}
+				]},
+				{'date': '2000/10/01', 'data': [
+					{'symbol': 'risk_free', 'returns' : 0.033}
+				]}
 		]
-		self.risk_calc = RiskCalculator(self.portfolio,self.current_values,self.risk_free_rate,self.market_data)
+		self.market_data = [
+				{'date': '2000/01/01', 'data': [
+					{'symbol' : 'SP500', 'price' : 550.00}
+				]},
+				{'date': '2000/04/01', 'data': [
+					{'symbol' : 'SP500', 'price' : 600.00}
+				]},
+				{'date': '2000/07/01', 'data': [
+					{'symbol' : 'SP500', 'price' : 630.00}
+				]},
+				{'date': '2000/10/01', 'data': [
+					{'symbol' : 'SP500', 'price' : 635.00}
+				]},
+		]
+		self.risk_calc = RiskCalculator(self.portfolio,self.stock_data,self.risk_free_rate,self.market_data)
 
 	def test_alpha(self):
 		pass
