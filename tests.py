@@ -143,10 +143,10 @@ class Returns_Test:
 		assert self.returns_calc.stock_data_returns[0]['data'][3]['returns'] == -0.022
 
 	def test_market(self):
-		pass
+		assert self.returns_calc.market_data_returns[0]['data'][0]['returns'] ==  0.091
 
 	def test_risk_free(self):
-		pass
+		assert self.returns_calc.risk_free_returns[0]['data'][0]['returns'] == 0.032
 
 
 class RiskTest:
@@ -195,6 +195,8 @@ pc.test_value()
 rt = Returns_Test()
 rt.test_format()
 rt.test_stocks()
+rt.test_market()
+rt.test_risk_free()
 
 
 
