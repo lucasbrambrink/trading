@@ -184,7 +184,7 @@ class Risk_Test:
 
 
 
-## Run Tests ##
+## Run Calculator Tests ##
 
 c = Calc_Test()
 c.test_mean()
@@ -213,6 +213,7 @@ rt.test_market()
 rt.test_risk_free()
 
 ## Run Risk Tests ##
+
 rm = Risk_Test(pc.portfolio,rt.stock_data,rt.market_data,rt.risk_free_returns)
 rm.test_betas()
 rm.test_sharpe()
