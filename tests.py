@@ -1,4 +1,4 @@
-from calculator import Calculator,RiskCalculator 
+from calculator import * 
 
 class Calc_Test:
 
@@ -52,7 +52,7 @@ class Calc_Test:
 		    {'date': '2000/01/01', 'returns': 1.0}]
 
 
-class Risk_Test:
+class Portfolio_Test:
 	def __init__(self):
 		self.portfolio = [
 			{'symbol' : 'IBM', 'quantity' : 20, 'price_purchased' : 200.00},
@@ -60,7 +60,15 @@ class Risk_Test:
 			{'symbol' : 'GOOG', 'quantity' : 200, 'price_purchased' : 500.00},
 			{'symbol' : 'NFLX', 'quantity' : 50, 'price_purchased' : 400.00}
 		]
+		self.pc = PortfolioCalculator(self.portfolio)
 
+	def test_value(self):
+		print(self.pc.value)
+		assert self.pc.value == 127000
+
+class Returns_Test:
+
+	def __init__(self):
 		## note format of portfolio is different than stock & market data (it has to be)
 		## [{'symbol', 'data' : [{}]},]
 		self.stock_data = [
@@ -90,20 +98,6 @@ class Risk_Test:
 				]}
 			]
 
-		self.risk_free_rate = [
-				{'date': '2000/01/01', 'data': [
-					{'symbol': 'risk_free', 'returns' : 0.030}
-				]},
-				{'date': '2000/04/01', 'data': [
-					{'symbol': 'risk_free', 'returns' : 0.032}
-				]},
-				{'date': '2000/07/01', 'data': [
-					{'symbol': 'risk_free', 'returns' : 0.031}
-				]},
-				{'date': '2000/10/01', 'data': [
-					{'symbol': 'risk_free', 'returns' : 0.033}
-				]}
-		]
 		self.market_data = [
 				{'date': '2000/01/01', 'data': [
 					{'symbol' : 'SP500', 'price' : 550.00}
@@ -118,7 +112,45 @@ class Risk_Test:
 					{'symbol' : 'SP500', 'price' : 635.00}
 				]},
 		]
-		self.risk_calc = RiskCalculator(self.portfolio,self.stock_data,self.risk_free_rate,self.market_data)
+
+		self.risk_free_returns = [ ## based on historical yields==returns
+				{'date': '2000/01/01', 'data': [
+					{'symbol': 'risk_free', 'returns' : 0.030}
+				]},
+				{'date': '2000/04/01', 'data': [
+					{'symbol': 'risk_free', 'returns' : 0.032}
+				]},
+				{'date': '2000/07/01', 'data': [
+					{'symbol': 'risk_free', 'returns' : 0.031}
+				]},
+				{'date': '2000/10/01', 'data': [
+					{'symbol': 'risk_free', 'returns' : 0.033}
+				]}
+		]
+
+		self.returns_calc = ReturnsCalculator(self.stock_data,self.market_data,self.risk_free_returns)
+
+	def test_format(self):
+		print(type(self.returns_calc.stock_data_returns[0]))
+		assert type(self.returns_calc.stock_data_returns[0]) == type({})
+		assert type(self.returns_calc.stock_data_returns[0])
+		assert type(self.returns_calc.stock_data_returns[0])
+		pass
+
+	def test_stocks(self):
+		pass
+
+	def test_market(self):
+		pass
+
+	def test_risk_free(self):
+		pass
+
+
+class RiskTest:
+
+	def __init__(self):
+		self.risk_calc = 'none'
 
 	def test_alpha(self):
 		pass
@@ -151,10 +183,15 @@ c.test_find_index()
 c.test_percent_change()
 c.test_percent_change_array()
 
-## Run Risk Tests ##
+## Run Portfolio Tests ##
 
-rc = Risk_Test()
-rc.test_beta()
+pc = Portfolio_Test()
+pc.test_value()
+
+## Run Returns Tests ##
+
+rt = Returns_Test()
+rt.test_format()
 
 
 

@@ -74,20 +74,20 @@ class Calculator:
 		return percent_changes
 
 
-class PorfolioCalculator:
+class PortfolioCalculator:
 
 	def __init__(self,portfolio):
 		self.portfolio = portfolio
-		self.value = self.initial_value()
+		self.value = self.value()
 
-	def initial_value(self):
+	def value(self):
 		value_portfolio = 0
-		for asset in portfolio:
+		for asset in self.portfolio:
 			value_portfolio += (asset['price_purchased']*asset['quantity'])
 		return value_portfolio
 
 
-class MarketCalculator:
+class ReturnsCalculator:
 
 	def __init__(self,stock_data,market_data,risk_free_returns):
 		self.stock_data = stock_data
@@ -96,18 +96,18 @@ class MarketCalculator:
 		## returns preserve format
 		self.stock_data_returns = self.returns_per_date(self.stock_data)
 		self.market_data_returns = self.returns_per_date(self.market_data)
-		self.risk_free_returns = risk_free_returns
+		self.risk_free_returns = risk_free_returns[1:] ## first value must be thrown out
 
 	def returns_per_date(self,data):
 		date_returns = []
 		index = 1
 		while index < len(data):
-			data = []
+			data_per_date = []
 			for stock in data[index]['data']:
 				for stock_previous in data[index-1]['data']:
 					if stock['symbol'] == stock_previous['symbol']: ## handshake
 						returns_from_previous_date = round(float((stock['price'] - stock_previous['price']) / stock_previous['price']),3)
-				data.append({ 
+				data_per_date.append({ 
 					'symbol' : stock['symbol'], 
 					'returns' : returns_from_previous_date
 					})
@@ -115,6 +115,7 @@ class MarketCalculator:
 				'date' : data[index]['date'],
 				'data' : data
 				})
+			index += 1
 		return date_returns
 
 	
@@ -137,9 +138,6 @@ class AssessCurrentValue:
 			returns = round(float((current_value - value_portfolio) / value_portfolio),3)
 			total.append(returns)
 		return sum(total)
-
-
-
 
 
 
