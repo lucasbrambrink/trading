@@ -63,7 +63,6 @@ class Portfolio_Test:
 		self.pc = PortfolioCalculator(self.portfolio)
 
 	def test_value(self):
-		print(self.pc.value)
 		assert self.pc.value == 127000
 
 class Returns_Test:
@@ -131,14 +130,17 @@ class Returns_Test:
 		self.returns_calc = ReturnsCalculator(self.stock_data,self.market_data,self.risk_free_returns)
 
 	def test_format(self):
-		print(type(self.returns_calc.stock_data_returns[0]))
+		assert type(self.returns_calc.stock_data_returns) == type([])
 		assert type(self.returns_calc.stock_data_returns[0]) == type({})
-		assert type(self.returns_calc.stock_data_returns[0])
-		assert type(self.returns_calc.stock_data_returns[0])
-		pass
+		assert type(self.returns_calc.stock_data_returns[0]['data']) == type([])
+		assert type(self.returns_calc.stock_data_returns[0]['data'][0]) == type({})
+		assert type(self.returns_calc.stock_data_returns[0]['data'][0]['returns']) == type(1.0)
 
 	def test_stocks(self):
-		pass
+		assert self.returns_calc.stock_data_returns[0]['data'][0]['returns'] ==  0.400
+		assert self.returns_calc.stock_data_returns[0]['data'][1]['returns'] == -0.100
+		assert self.returns_calc.stock_data_returns[0]['data'][2]['returns'] == -0.077
+		assert self.returns_calc.stock_data_returns[0]['data'][3]['returns'] == -0.022
 
 	def test_market(self):
 		pass
@@ -192,6 +194,7 @@ pc.test_value()
 
 rt = Returns_Test()
 rt.test_format()
+rt.test_stocks()
 
 
 

@@ -113,7 +113,7 @@ class ReturnsCalculator:
 					})
 			date_returns.append({
 				'date' : data[index]['date'],
-				'data' : data
+				'data' : data_per_date
 				})
 			index += 1
 		return date_returns
