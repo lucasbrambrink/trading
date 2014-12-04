@@ -86,6 +86,16 @@ class PortfolioCalculator:
 			value_portfolio += (asset['price_purchased']*asset['quantity'])
 		return value_portfolio
 
+	def assess_current_value(self,stock_data,date):
+		new_value_portfolio = 0
+		for date_point in stock_data:
+			if date_point['date'] == date: ## date handshake
+				for stock in self.portfolio:
+					for new_data in date_point['data']:
+						if stock['symbol'] == new_data['symbol']: ## symbol handshake
+							new_value_portfolio += (new_data['price']*stock['quantity'])
+		return new_value_portfolio
+
 
 class ReturnsCalculator:
 

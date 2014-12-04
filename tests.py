@@ -65,6 +65,9 @@ class Portfolio_Test:
 	def test_value(self):
 		assert self.pc.value == 127000
 
+	def test_assess_current_value(self,stock_data):
+		assert self.pc.assess_current_value(stock_data,'2000/07/01') == 144700
+
 class Returns_Test:
 
 	def __init__(self):
@@ -149,7 +152,8 @@ class Returns_Test:
 		assert self.returns_calc.risk_free_returns[0]['data'][0]['returns'] == 0.032
 
 
-class RiskTest:
+
+class Risk_Test:
 
 	def __init__(self):
 		self.risk_calc = 'none'
@@ -189,6 +193,7 @@ c.test_percent_change_array()
 
 pc = Portfolio_Test()
 pc.test_value()
+pc.test_assess_current_value(Returns_Test().stock_data)
 
 ## Run Returns Tests ##
 
@@ -197,6 +202,10 @@ rt.test_format()
 rt.test_stocks()
 rt.test_market()
 rt.test_risk_free()
+
+## Run Risk Tests ##
+rm = Risk_Test()
+
 
 
 
