@@ -96,6 +96,28 @@ class PortfolioCalculator:
 							new_value_portfolio += (new_data['price']*stock['quantity'])
 		return new_value_portfolio
 
+	def assess_total_returns(self,stock_data,date):
+		total_returns = 0
+		new_value_portfolio = self.assess_current_value(stock_data,date)
+		returns = round(float((new_value_portfolio - self.value) / self.value),3)
+		return returns
+
+	def assess_returns_per_asset(self,stock_data,date):
+		portfolio_returns_per_asset = []
+		for date_point in stock_data:
+			if date_point['date'] == date: ## date handshake
+				for asset in self.portfolio:
+					for new_data in date_point['data']:
+						if asset['symbol'] == new_data['symbol']: ## symbol handshake
+							## independent of quantity
+							asset_returns = round(float((new_data['price'] - asset['price_purchased']) / asset['price_purchased']),3)
+							portfolio_returns_per_asset.append({
+								'symbol' : asset['symbol'],
+								'quantity' : asset['quantity'],
+								'returns' : asset_returns
+								})
+		return portfolio_returns_per_asset
+
 
 class ReturnsCalculator:
 
@@ -128,43 +150,25 @@ class ReturnsCalculator:
 			index += 1
 		return date_returns
 
-	
-class AssessCurrentValue:
 
-	def __init__(self):
-		pass
-
-	@classmethod
-	def total_returns(self,portfolio,market_data,key):
-		value_portfolio = 0
-		current_value = 0
-		total = []
-		for date in portfolio:
-			for asset in date:
-				value_portfolio += (asset['price_purchased']*asset['quantity'])
-				for price in current_prices:
-					if price['symbol'] == asset['symbol']:
-						current_value += (price['price']*asset['quantity'])
-			returns = round(float((current_value - value_portfolio) / value_portfolio),3)
-			total.append(returns)
-		return sum(total)
-
-
+## This will serve as a superclass, in that it will execute all the calculations in __init__
 
 class RiskCalculator:
-	def __init__(self,portfolio,stock_data,risk_free,market_data):
-		self.c = Calculator()
+	def __init__(self,portfolio,stock_data,market_data,risk_free_returns):
 		self.portfolio = portfolio
 		self.stock_data = stock_data
-		self.risk_free = risk_free
 		self.market_data = market_data
+		
+		## calculate portfolio value
+		self.pc = PortfolioCalculator(self.portfolio)
+		self.portfolio_value = self.pc.value
 
-		## calculate the returns of the data
+		## calculate returns
+		self.rc = ReturnsCalculator(self.stock_data,self.market_data,risk_free_returns)
+		self.stock_data_returns = self.rc.stock_data_returns
+		self.market_data_returns = self.rc.market_data_returns
+		self.risk_free_returns = self.rc.risk_free_returns
 
-		self.market_total_returns = self.c.total_returns(market_data,0,(len(market_data)-1),'price')
-		self.market_returns_arr = self.c.percent_change_array(market_data,'price')
-		self.portfolio_total_returns = self.c.total_returns(self.portfolio,self.stock_data)
-		self.portfolio_returns_arr = self.c.returns_array(self.portfolio,self.stock_data)
 
 	def alpha(self,beta):
 		alpha = self.portfolio_returns - (self.risk_free + beta*(return_market - return_risk_free))

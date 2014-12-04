@@ -65,8 +65,17 @@ class Portfolio_Test:
 	def test_value(self):
 		assert self.pc.value == 127000
 
-	def test_assess_current_value(self,stock_data):
-		assert self.pc.assess_current_value(stock_data,'2000/07/01') == 144700
+	def test_assess_current_value(self,stock_data,date):
+		assert self.pc.assess_current_value(stock_data,date) == 144700
+
+	def test_assess_total_returns(self,stock_data,date):
+		assert self.pc.assess_total_returns(stock_data,date) == 0.139
+
+	def test_assess_returns_per_asset(self,stock_data,date):
+		assert self.pc.assess_returns_per_asset(stock_data,date)[0]['returns'] == 1.25
+		assert self.pc.assess_returns_per_asset(stock_data,date)[1]['returns'] == -0.767
+		assert self.pc.assess_returns_per_asset(stock_data,date)[2]['returns'] == 0.1
+		assert self.pc.assess_returns_per_asset(stock_data,date)[3]['returns'] == 0.25
 
 class Returns_Test:
 
@@ -193,7 +202,9 @@ c.test_percent_change_array()
 
 pc = Portfolio_Test()
 pc.test_value()
-pc.test_assess_current_value(Returns_Test().stock_data)
+pc.test_assess_current_value(stock_data=Returns_Test().stock_data,date='2000/07/01')
+pc.test_assess_total_returns(stock_data=Returns_Test().stock_data,date='2000/07/01')
+pc.test_assess_returns_per_asset(stock_data=Returns_Test().stock_data,date='2000/07/01')
 
 ## Run Returns Tests ##
 
