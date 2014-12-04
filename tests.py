@@ -69,13 +69,16 @@ class Portfolio_Test:
 		assert self.pc.assess_current_value(stock_data,date) == 144700
 
 	def test_assess_total_returns(self,stock_data,date):
-		assert self.pc.assess_total_returns(stock_data,date) == 0.139
+		assert self.pc.assess_total_returns(stock_data,date) == 0.13937
 
 	def test_assess_returns_per_asset(self,stock_data,date):
+		assert self.pc.assess_returns_per_asset(stock_data,date)[0]['symbol'] == 'IBM'
 		assert self.pc.assess_returns_per_asset(stock_data,date)[0]['returns'] == 1.25
-		assert self.pc.assess_returns_per_asset(stock_data,date)[1]['returns'] == -0.767
-		assert self.pc.assess_returns_per_asset(stock_data,date)[2]['returns'] == 0.1
-		assert self.pc.assess_returns_per_asset(stock_data,date)[3]['returns'] == 0.25
+		
+	def test_assess_returns_per_asset_per_date(self,stock_data):	
+		assert self.pc.assess_returns_per_asset_per_date(stock_data)[0]['date'] == '2000/04/01'
+		assert self.pc.assess_returns_per_asset_per_date(stock_data)[0]['total_returns'] == 0.18031
+		assert self.pc.assess_returns_per_asset_per_date(stock_data)[0]['data'][0]['returns'] == 0.75
 
 class Returns_Test:
 
@@ -151,11 +154,11 @@ class Returns_Test:
 	def test_stocks(self):
 		assert self.returns_calc.stock_data_returns[0]['data'][0]['returns'] ==  0.400
 		assert self.returns_calc.stock_data_returns[0]['data'][1]['returns'] == -0.100
-		assert self.returns_calc.stock_data_returns[0]['data'][2]['returns'] == -0.077
-		assert self.returns_calc.stock_data_returns[0]['data'][3]['returns'] == -0.022
+		assert self.returns_calc.stock_data_returns[0]['data'][2]['returns'] == -0.07692
+		assert self.returns_calc.stock_data_returns[0]['data'][3]['returns'] == -0.02222
 
 	def test_market(self):
-		assert self.returns_calc.market_data_returns[0]['data'][0]['returns'] ==  0.091
+		assert self.returns_calc.market_data_returns[0]['data'][0]['returns'] ==  0.09091
 
 	def test_risk_free(self):
 		assert self.returns_calc.risk_free_returns[0]['data'][0]['returns'] == 0.032
@@ -164,14 +167,15 @@ class Returns_Test:
 
 class Risk_Test:
 
-	def __init__(self):
-		self.risk_calc = 'none'
+	def __init__(self,portfolio,stock_data,market_data,risk_free_returns):
+		self.risk_calc = RiskCalculator(portfolio,stock_data,market_data,risk_free_returns)
 
 	def test_alpha(self):
 		pass
 
-	def test_beta(self):
-		assert self.risk_calc.beta()
+	def test_betas(self):
+		print(self.risk_calc.beta())
+		# assert self.risk_calc.betas()
 		pass
 
 	def test_sharpe(self):
@@ -205,6 +209,7 @@ pc.test_value()
 pc.test_assess_current_value(stock_data=Returns_Test().stock_data,date='2000/07/01')
 pc.test_assess_total_returns(stock_data=Returns_Test().stock_data,date='2000/07/01')
 pc.test_assess_returns_per_asset(stock_data=Returns_Test().stock_data,date='2000/07/01')
+pc.test_assess_returns_per_asset_per_date(stock_data=Returns_Test().stock_data)
 
 ## Run Returns Tests ##
 
@@ -215,7 +220,8 @@ rt.test_market()
 rt.test_risk_free()
 
 ## Run Risk Tests ##
-rm = Risk_Test()
+rm = Risk_Test(pc.portfolio,rt.stock_data,rt.market_data,rt.risk_free_returns)
+rm.test_betas()
 
 
 

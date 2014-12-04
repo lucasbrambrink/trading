@@ -7,9 +7,9 @@ class Calculator:
 	@classmethod
 	def average(self,arr,key):
 		sum = 0
-		for num in arr:
+		for num in arr:	
 			sum += num[key]
-		average = round(float(sum / len(arr)),2)
+		average = round(float(sum / len(arr)),5)
 		return average
 
 	@classmethod
@@ -58,7 +58,7 @@ class Calculator:
 
 	@classmethod
 	def percent_change(self,data,index,increment,key):
-		value = round(((data[index+increment][key] - data[index][key]) / (data[index][key])),2)
+		value = round(((data[index+increment][key] - data[index][key]) / (data[index][key])),5)
 		return value
 
 	@classmethod
@@ -99,7 +99,7 @@ class PortfolioCalculator:
 	def assess_total_returns(self,stock_data,date):
 		total_returns = 0
 		new_value_portfolio = self.assess_current_value(stock_data,date)
-		returns = round(float((new_value_portfolio - self.value) / self.value),3)
+		returns = round(float((new_value_portfolio - self.value) / self.value),5)
 		return returns
 
 	def assess_returns_per_asset(self,stock_data,date):
@@ -110,13 +110,25 @@ class PortfolioCalculator:
 					for new_data in date_point['data']:
 						if asset['symbol'] == new_data['symbol']: ## symbol handshake
 							## independent of quantity
-							asset_returns = round(float((new_data['price'] - asset['price_purchased']) / asset['price_purchased']),3)
+							asset_returns = round(float((new_data['price'] - asset['price_purchased']) / asset['price_purchased']),5)
 							portfolio_returns_per_asset.append({
 								'symbol' : asset['symbol'],
 								'quantity' : asset['quantity'],
 								'returns' : asset_returns
 								})
 		return portfolio_returns_per_asset
+
+	def assess_returns_per_asset_per_date(self,stock_data):
+		portfolio_returns_per_asset_per_date = []
+		for index,date_point in enumerate(stock_data):
+			if index == 0:
+				continue
+			portfolio_returns_per_asset_per_date.append({
+				'date' : date_point['date'],
+				'total_returns' : self.assess_total_returns(stock_data,date_point['date']),
+				'data' : self.assess_returns_per_asset(stock_data,date_point['date'])
+				})
+		return portfolio_returns_per_asset_per_date
 
 
 class ReturnsCalculator:
@@ -138,7 +150,7 @@ class ReturnsCalculator:
 			for stock in data[index]['data']:
 				for stock_previous in data[index-1]['data']:
 					if stock['symbol'] == stock_previous['symbol']: ## handshake
-						returns_from_previous_date = round(float((stock['price'] - stock_previous['price']) / stock_previous['price']),3)
+						returns_from_previous_date = round(float((stock['price'] - stock_previous['price']) / stock_previous['price']),5)
 				data_per_date.append({ 
 					'symbol' : stock['symbol'], 
 					'returns' : returns_from_previous_date
@@ -163,25 +175,36 @@ class RiskCalculator:
 		self.pc = PortfolioCalculator(self.portfolio)
 		self.portfolio_value = self.pc.value
 
-		## calculate returns
+		## calculate market returns
 		self.rc = ReturnsCalculator(self.stock_data,self.market_data,risk_free_returns)
 		self.stock_data_returns = self.rc.stock_data_returns
 		self.market_data_returns = self.rc.market_data_returns
 		self.risk_free_returns = self.rc.risk_free_returns
-
+		
+		## calculate portfolio returns
+		self.portfolio_returns = self.pc.assess_returns_per_asset_per_date(self.stock_data)
+		
+		## initialize Calculator
+		self.c = Calculator()
 
 	def alpha(self,beta):
 		alpha = self.portfolio_returns - (self.risk_free + beta*(return_market - return_risk_free))
 		return alpha
 	
 	def beta(self):
-		for asset in self.portfolio_returns_arr:
-			beta = round(float(self.c.covariance(self.portfolio_returns_arr,self.market_returns_arr,'returns') / self.c.variance(self.market_returns_arr,'returns')),3)
+		portfolio_returns_array = []
+		market_returns_array = []
+		for portfolio_date_point in self.portfolio_returns:
+			for market_date_point in self.market_data_returns:
+				if portfolio_date_point['date'] == market_date_point['date']: ## date handshake
+					portfolio_returns_array.append({'returns' : portfolio_date_point['total_returns']})
+					market_returns_array.append(market_date_point['data'][0])
+		beta = round(float(self.c.covariance(portfolio_returns_array,market_returns_array,'returns') / self.c.variance(market_returns_array,'returns')),5)
 		return beta
 
 	def sharpe(self):
 		portfolio_stdev = self.c.stdev(self.portfolio_returns_arr,'returns')
-		sharpe = round(float((self.portfolio_returns - self.risk_free) / portfolio_stdev),3)
+		sharpe = round(float((self.portfolio_returns - self.risk_free) / portfolio_stdev),5)
 		return sharpe
 
 	def volatility(self):
