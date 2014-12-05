@@ -1,12 +1,12 @@
 from backtest import *
+import csv
 
-class SampleAlgorithm:
+class CollectData:
 
-	def __init__(self):
-		start_date = '2000/01/01'
-		end_date = '2001/01/01' ## let's just try one year for now
+	def __init__(self,csv_target):
+		self.csv_file = csv_target
+		self.all_dates = self.prepare_dates_for_data_collection()
 
-	
 	def prepare_dates_for_data_collection(self):
 		all_dates = []
 		for year in range(2000,2014):
@@ -17,7 +17,7 @@ class SampleAlgorithm:
 					month_format = "0" + str(month)
 				first_half, second_half = [],[]
 				for date in range(1,32): ## it is okay for all months to go to 31 bc many of the dates wont be in the DB regardless (stock market closed)
-					string = str(year) + "/" + str(month_format) + "/"
+					string = str(year) + "-" + str(month_format) + "-"
 					if date < 10:
 						string += "0" + str(date)
 					else:
@@ -37,5 +37,28 @@ class SampleAlgorithm:
 				})
 		return all_dates
 
-print(SampleAlgorithm().prepare_dates_for_data_collection())
+	def market_snapshot_by_date(self,date):
+		## price == closing price
+		snapshot = []
+		with open(self.csv_file,'r') as stock_data:
+			data = csv.reader(stock_data)
+			for row in data:
+				if str(row[1]) == date:
+					snapshot.append({
+						'symbol' : row[0],
+						'price' : float(row[5])
+						})
+		return snapshot
+
+
+
+
+class SampleAlgorithm:
+
+	def __init__(self):
+		start_date = '2000-01-01'
+		end_date = '2001-01-01' ## let's just try one year for now
+
+
+print(CollectData('csv_files/stock_prices.csv').market_snapshot_by_date('2010-06-01'))
 
