@@ -4,6 +4,12 @@ class Calculator:
 
 	@staticmethod
 	def average(arr,key):
+		"""
+		:param arr1: [{ 'key' : value },...]
+		:param key: key
+
+		:return: float
+		"""
 		sum = 0
 		for num in arr:	
 			sum += num[key]
@@ -12,6 +18,12 @@ class Calculator:
 
 	@staticmethod
 	def variance(arr,key):
+		"""
+		:param arr1: [{ 'key' : value },...]
+		:param key: key
+
+		:return: float
+		"""
 		mean = Calculator.average(arr,key)
 		squared_differences = []
 		for item in arr:
@@ -22,6 +34,13 @@ class Calculator:
 
 	@staticmethod
 	def covariance(arr1,arr2,key): ## arrays must be same length
+		"""
+		:param arr1: [{ 'key' : value },...]
+		:param arr2: [{ 'key' : value },...]
+		:param key: key
+
+		:return: float
+		"""
 		if len(arr1) > len(arr2):
 			arr1 = arr1[:len(arr2)]
 		if len(arr1) < len(arr2):
@@ -38,6 +57,12 @@ class Calculator:
 
 	@staticmethod
 	def stdev(arr,key):
+		"""
+		:param arr1: [{ 'key' : value },...]
+		:param key: key
+
+		:return: float
+		"""
 		mean = Calculator.average(arr,key)
 		deviation = []
 		for index in range(0,len(arr)):
@@ -49,6 +74,13 @@ class Calculator:
 
 	@staticmethod
 	def find_indexes(data,date_of_investment,date_of_return):
+		"""
+		:param data: [{ 'date' : 'yyyy/mm/dd',...},...]
+		:param date_of_investment: "yyyy/mm/dd"
+		:param date_of_return: "yyyy/mm/dd"
+
+		:return: tuple(index_investment,index_return)
+		"""
 		for index in range(0,len(data)):
 			if data[index]['date'] == date_of_investment:
 				d_invest = index
@@ -58,11 +90,25 @@ class Calculator:
 
 	@staticmethod
 	def percent_change(data,index,increment,key):
+		"""
+		:param data: [{ 'key' : value,},...]
+		:param index: integer
+		:param increment: integer
+		:param key: key
+
+		:return: float
+		"""
 		value = round(((data[index+increment][key] - data[index][key]) / (data[index][key])),5)
 		return value
 
 	@staticmethod
 	def percent_change_array(obj_arr,key):
+		"""
+		:param obj_arr: [{ 'key' : value,},...]
+		:param key: key
+
+		:return: [{ 'date' : date, 'returns' : value},...]
+		"""
 		percent_changes = []
 		for index in range(0,(len(obj_arr)-1)):
 			pchange = Calculator.percent_change(obj_arr,index,1,key)
@@ -80,12 +126,21 @@ class PortfolioCalculator:
 		self.value = self.value()
 
 	def value(self):
+		"""
+		:return: float
+		"""
 		value_portfolio = 0
 		for asset in self.portfolio:
 			value_portfolio += (asset['price_purchased']*asset['quantity'])
 		return value_portfolio
 
 	def assess_current_value(self,stock_data,date):
+		"""
+		:param stock_data: [{ 'date' : date, 'data' : [{},...]},...]
+		:param date: 'yyyy/mm/dd'
+
+		:return: float
+		"""
 		new_value_portfolio = 0
 		for date_point in stock_data:
 			if date_point['date'] == date: ## date handshake
@@ -96,12 +151,24 @@ class PortfolioCalculator:
 		return new_value_portfolio
 
 	def assess_total_returns(self,stock_data,date):
+		"""
+		:param stock_data: [{ 'date' : date, 'data' : [{},...]},...]
+		:param date: 'yyyy/mm/dd'
+
+		:return: float
+		"""
 		total_returns = 0
 		new_value_portfolio = self.assess_current_value(stock_data,date)
 		returns = round(float((new_value_portfolio - self.value) / self.value),5)
 		return returns
 
 	def assess_returns_per_asset(self,stock_data,date):
+		"""
+		:param stock_data: [{ 'date' : date, 'data' : [{},...]},...]
+		:param date: 'yyyy/mm/dd'
+
+		:return: [{'symbol','quantity','returns'},...]
+		"""
 		portfolio_returns_per_asset = []
 		for date_point in stock_data:
 			if date_point['date'] == date: ## date handshake
@@ -118,6 +185,11 @@ class PortfolioCalculator:
 		return portfolio_returns_per_asset
 
 	def assess_returns_per_asset_per_date(self,stock_data):
+		"""
+		:param stock_data: [{ 'date' : date, 'data' : [{},...]},...]
+
+		:return: [{'date','data': [{},...]},...]
+		"""
 		portfolio_returns_per_asset_per_date = []
 		for index,date_point in enumerate(stock_data):
 			if index == 0:
@@ -133,6 +205,12 @@ class PortfolioCalculator:
 class ReturnsCalculator:
 
 	def __init__(self,stock_data,market_data,risk_free_returns):
+		"""
+		:param stock_data: [{ 'date' : date, 'data' : [{},...]},...]
+		:param market_data: [{ 'date' : date, 'data' : [{}]},...]
+		:param risk_free_returns: [{ 'date' : date, 'data' : [{}]},...]
+		"""
+
 		self.stock_data = stock_data
 		self.market_data = market_data
 
@@ -142,6 +220,11 @@ class ReturnsCalculator:
 		self.risk_free_returns = risk_free_returns[1:] ## first value must be thrown out
 
 	def returns_per_date(self,data):
+		"""
+		:param data: [{ 'date' : date, 'data' : [{},...]},...]
+
+		:return: [{'date','data': [{'symbol','returns'},...]},...]
+		"""
 		date_returns = []
 		index = 1
 		while index < len(data):
@@ -166,6 +249,12 @@ class ReturnsCalculator:
 
 class RiskCalculator:
 	def __init__(self,portfolio,stock_data,market_data,risk_free_returns):
+		"""
+		:param portfolio: [{'symbol','quantity','price_purchased'}]
+		:param stock_data: [{ 'date' : date, 'data' : [{},...]},]
+		:param market_data: [{ 'date' : date, 'data' : [{},...]},]
+		:param risk_free_returns: [{ 'date' : date, 'data' : [{}]},...]
+		"""
 		self.portfolio = portfolio
 		self.stock_data = stock_data
 		self.market_data = market_data
@@ -191,6 +280,9 @@ class RiskCalculator:
 
 
 	def complementary_arrays(self):
+		"""
+		:returns: [float,...],[float,...]
+		"""
 		portfolio_returns_array = []
 		market_returns_array = []
 		for portfolio_date_point in self.portfolio_returns:
@@ -201,20 +293,32 @@ class RiskCalculator:
 		return portfolio_returns_array,market_returns_array
 
 	def alpha(self):
+		"""
+		:returns: float
+		"""
 		beta = self.beta()
 		alpha = self.portfolio_returns_array[-1]['returns'] - (self.risk_free_returns[-1]['data'][-1]['returns'] + beta*(self.market_returns_array[-1]['returns'] - self.risk_free_returns[-1]['data'][-1]['returns']))
 		return round(alpha,5)
 	
 	def beta(self):
+		"""
+		:returns: float
+		"""
 		beta = round(float(self.c.covariance(self.portfolio_returns_array,self.market_returns_array,'returns') / self.c.variance(self.market_returns_array,'returns')),5)
 		return beta
 
 	def sharpe(self):
+		"""
+		:returns: float
+		"""
 		portfolio_stdev = self.c.stdev(self.portfolio_returns_array,'returns')
 		sharpe = round(float((self.portfolio_returns_array[-1]['returns'] - self.risk_free_returns[-1]['data'][-1]['returns']) / portfolio_stdev),5)
 		return sharpe
 
 	def volatility(self):
+		"""
+		:returns: float
+		"""
 		portfolio_stdev = round(self.c.stdev(self.portfolio_returns_array,'returns'),5)
 		return portfolio_stdev
 
