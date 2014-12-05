@@ -48,17 +48,50 @@ class CollectData:
 						'symbol' : row[0],
 						'price' : float(row[5])
 						})
-		return snapshot
+		day = { 'date' : date, 'data' : snapshot}
+		return day
+
+	def split_date_into_ints(self,date):
+		year,month,day = date.split('-')
+		year = int(year)
+		if month[0] == '0':
+			month = int(month[1])
+		else:
+			month = int(month)
+		if day[0] == '0':
+			day = int(day[1])
+		else:
+			day = int(day)
+		return year,month,day
+
 
 
 
 
 class SampleAlgorithm:
+## marks stocks whose SMA (simple moving average) has changed by more than 10%
 
 	def __init__(self):
-		start_date = '2000-01-01'
-		end_date = '2001-01-01' ## let's just try one year for now
+		self.start_date = '2010-01-01'
+		self.end_date = '2011-01-01' ## let's just try one year for now
+
+		## data ##
+		self.cd = CollectData('csv_files/stock_prices.csv')
 
 
-print(CollectData('csv_files/stock_prices.csv').market_snapshot_by_date('2010-06-01'))
+
+
+	def collect_dates_in_range(self):
+		dates_in_range = []
+		start_year,start_month,start_day = self.cd.split_date_into_ints(self.start_date)
+		end_year,end_month,end_day = self.cd.split_date_into_ints(self.end_date)
+		for date in self.cd.prepare_dates_for_data_collection():
+			year,month,day = self.cd.split_date_into_ints(date)
+			if start_year <= year <= end_year:
+				if start_month <= month <= end_month:
+					if start_day <= day <= end_day:
+						dates_in_range.append(date)
+		return dates_in_range
+
+
 
