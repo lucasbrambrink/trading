@@ -15,26 +15,13 @@ class CollectData:
 				month_format = str(month)
 				if month < 10:
 					month_format = "0" + str(month)
-				first_half, second_half = [],[]
-				for date in range(1,32): ## it is okay for all months to go to 31 bc many of the dates wont be in the DB regardless (stock market closed)
+				for day in range(1,32): ## it is okay for all months to go to 31 bc many of the dates wont be in the DB regardless (stock market closed)
 					string = str(year) + "-" + str(month_format) + "-"
-					if date < 10:
-						string += "0" + str(date)
+					if day < 10:
+						string += "0" + str(day)
 					else:
-						string += str(date)
-					if date < 16:
-						first_half.append(string)
-					else:
-						second_half.append(string)
-				one_year.append({
-					'month' : month_format,
-					'first_half' : first_half,
-					'second_half' : second_half
-					})
-			all_dates.append({
-				'year' : year,
-				'data' : one_year
-				})
+						string += str(day)
+					all_dates.append(string)
 		return all_dates
 
 	def market_snapshot_by_date(self,date):
@@ -50,6 +37,29 @@ class CollectData:
 						})
 		day = { 'date' : date, 'data' : snapshot}
 		return day
+
+	def market_snapshot_by_stock(self,symbol):
+		## price == closing price
+		stock_data = []
+		with open(self.csv_file, 'r') as stock_data:
+			data = csv.reader(stock_data)
+			for row in data:
+				if str(row[0]) == symbol:
+					stock_data.append({
+						'date' : row[0],
+						'price' : float(row[5])
+						})
+		stock = { 'symbol' : symbol, 'data' : stock_data}
+		return stock
+
+	def collect_stock_symbols(self):
+		symbols = []
+		with open(self.csv_file, 'r') as stock_data:
+			data = csv.reader(stock_data)
+			for row in data:
+				if row[0] not in symbols:
+					symbols.append(row[0])
+		return symbols
 
 	def split_date_into_ints(self,date):
 		year,month,day = date.split('-')
@@ -69,17 +79,32 @@ class CollectData:
 
 
 class SampleAlgorithm:
-## marks stocks whose SMA (simple moving average) has changed by more than 10%
+## marks stocks whose 30 day SMA (simple moving average) has changed by more than 10%
 
 	def __init__(self):
+		self.initial_balance = 1000000
 		self.start_date = '2010-01-01'
 		self.end_date = '2011-01-01' ## let's just try one year for now
 
-		## data ##
+		## data class ##
 		self.cd = CollectData('csv_files/stock_prices.csv')
+		
+		## relevant dates ##
+		self.dates_in_range = self.collect_dates_in_range()
+		
+		## data ##
+		self.relevant_data = self.fetch_data_in_range()
+		self.stocks_in_market = self.cd.collect_stock_symbols()
 
+		
+		## calculator ##
+		self.c = Calculator()
 
+		## averages
+		self.averages = self.get_simple_moving_averages()
 
+		## stocks to buy!!
+		self.stocks_to_buy = self.test_averages()
 
 	def collect_dates_in_range(self):
 		dates_in_range = []
@@ -89,9 +114,48 @@ class SampleAlgorithm:
 			year,month,day = self.cd.split_date_into_ints(date)
 			if start_year <= year <= end_year:
 				if start_month <= month <= end_month:
-					if start_day <= day <= end_day:
-						dates_in_range.append(date)
+					dates_in_range.append(date)
 		return dates_in_range
+
+	def fetch_data_in_range(self):
+		relevant_data = []
+		for date in self.dates_in_range:
+			days_stock_data = self.cd.market_snapshot_by_date(date)
+			relevant_data.append(days_stock_data)
+		return relevant_data
+
+	def get_simple_moving_averages(self):
+		averages = []
+		for symbol in self.stocks_in_market:
+			prices = []
+			this_symbol_data = self.cd.market_snapshot_by_stock(symbol)
+			for data in this_symbol_data['data']:
+				for date in self.dates_in_range:
+					if date == data['date']: ## date handshake
+						if len(prices) < 30: ## let's do a 30 day SMA
+							prices.append({'price' : data['price']})
+						else:
+							sma = self.c.average(prices,'price')
+							averages.append({
+								'symbol' : symbol,
+								'sma' : sma
+								})
+							prices = []
+		return averages
+
+	def test_averages(self):
+		stocks_to_buy = []
+		for average in self.averages:
+			if average['sma'] > 0.1:
+				stocks_to_buy.append(average)
+		return stocks_to_buy
+
+
+
+print(SampleAlgorithm().stocks_to_buy)
+
+
+
 
 
 
