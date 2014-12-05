@@ -1,54 +1,54 @@
 ## Calculator for Backtesting ## 
 
 class Calculator:
-	def __init__(self):
-		pass
 
-	@classmethod
-	def average(self,arr,key):
+	@staticmethod
+	def average(arr,key):
 		sum = 0
 		for num in arr:	
 			sum += num[key]
 		average = round(float(sum / len(arr)),5)
 		return average
 
-	@classmethod
-	def variance(self,arr,key):
-		c = Calculator()
-		mean = c.average(arr,key)
+	@staticmethod
+	def variance(arr,key):
+		mean = Calculator.average(arr,key)
 		squared_differences = []
 		for item in arr:
 			squared_difference = (item[key] - mean)**2
 			squared_differences.append({ key : squared_difference })
-		variance = c.average(squared_differences,key)
+		variance = Calculator.average(squared_differences,key)
 		return variance
 
-	@classmethod
-	def covariance(self,arr1,arr2,key): ## arrays must be same length
-		c = Calculator()
-		mean1 = c.average(arr1,key)
-		mean2 = c.average(arr2,key)
+	@staticmethod
+	def covariance(arr1,arr2,key): ## arrays must be same length
+		if len(arr1) > len(arr2):
+			arr1 = arr1[:len(arr2)]
+		if len(arr1) < len(arr2):
+			arr2 = arr2[:len(arr1)] ## shorten the arrays to complementary lengths
+		## by throwing out last elements -- or throw error, depending on what we want
+		mean1 = Calculator.average(arr1,key)
+		mean2 = Calculator.average(arr2,key)
 		tmp_points = []
 		for index in range(0,len(arr1)):
 			point = (arr1[index][key] - mean1)*(arr2[index][key] - mean2)
 			tmp_points.append({ key : point })
-		covariance = c.average(tmp_points,key)
+		covariance = Calculator.average(tmp_points,key)
 		return covariance
 
-	@classmethod
-	def stdev(self,arr,key):
-		c = Calculator()
-		mean = c.average(arr,key)
+	@staticmethod
+	def stdev(arr,key):
+		mean = Calculator.average(arr,key)
 		deviation = []
 		for index in range(0,len(arr)):
 			point = (arr[index][key] - mean)**2
 			deviation.append({ key : point })
-		av_deviation = c.average(deviation,key)
+		av_deviation = Calculator.average(deviation,key)
 		st_dev = av_deviation**(0.5)
 		return st_dev
 
-	@classmethod
-	def find_indexes(self,data,date_of_investment,date_of_return):
+	@staticmethod
+	def find_indexes(data,date_of_investment,date_of_return):
 		for index in range(0,len(data)):
 			if data[index]['date'] == date_of_investment:
 				d_invest = index
@@ -56,17 +56,16 @@ class Calculator:
 				d_return = index
 		return (d_invest,d_return)
 
-	@classmethod
-	def percent_change(self,data,index,increment,key):
+	@staticmethod
+	def percent_change(data,index,increment,key):
 		value = round(((data[index+increment][key] - data[index][key]) / (data[index][key])),5)
 		return value
 
-	@classmethod
-	def percent_change_array(self,obj_arr,key):
-		c = Calculator()
+	@staticmethod
+	def percent_change_array(obj_arr,key):
 		percent_changes = []
 		for index in range(0,(len(obj_arr)-1)):
-			pchange = c.percent_change(obj_arr,index,1,key)
+			pchange = Calculator.percent_change(obj_arr,index,1,key)
 			percent_changes.append({
 				'date' : obj_arr[index]['date'],
 				'returns' : pchange
