@@ -1,5 +1,7 @@
 ## Backtesting Suite ## 
 
+from calculator import *
+
 class Backtester:
 	def __init__(self, **kwargs):
 		# self.portfolio = portfolio ## accepts 'porfolio' kwarg as array
