@@ -40,17 +40,20 @@ class CollectData:
 
 	def market_snapshot_by_stock(self,symbol):
 		## price == closing price
-		stock_data = []
 		with open(self.csv_file, 'r') as stock_data:
+			market_data = []	
 			data = csv.reader(stock_data)
 			for row in data:
-				if str(row[0]) == symbol:
-					stock_data.append({
-						'date' : row[0],
-						'price' : float(row[5])
-						})
-		stock = { 'symbol' : symbol, 'data' : stock_data}
-		return stock
+				try:
+					if str(row[0]) == symbol:
+						market_data.append({
+							'date' : row[0],
+							'price' : float(row[5])
+							})
+				except:
+					continue
+			stock = { 'symbol' : symbol, 'data' : market_data}
+			return stock
 
 	def collect_stock_symbols(self):
 		symbols = []
@@ -59,6 +62,8 @@ class CollectData:
 			for row in data:
 				if row[0] not in symbols:
 					symbols.append(row[0])
+				if len(symbols) > 11:
+					break
 		return symbols
 
 	def split_date_into_ints(self,date):
@@ -93,7 +98,7 @@ class SampleAlgorithm:
 		self.dates_in_range = self.collect_dates_in_range()
 		
 		## data ##
-		self.relevant_data = self.fetch_data_in_range()
+		# self.relevant_data = self.fetch_data_in_range()
 		self.stocks_in_market = self.cd.collect_stock_symbols()
 
 		
@@ -133,9 +138,11 @@ class SampleAlgorithm:
 				for date in self.dates_in_range:
 					if date == data['date']: ## date handshake
 						if len(prices) < 30: ## let's do a 30 day SMA
+							print(data['price'])
 							prices.append({'price' : data['price']})
 						else:
 							sma = self.c.average(prices,'price')
+							print(sma)
 							averages.append({
 								'symbol' : symbol,
 								'sma' : sma
@@ -152,7 +159,7 @@ class SampleAlgorithm:
 
 
 
-print(SampleAlgorithm().stocks_to_buy)
+print(SampleAlgorithm().test_averages())
 
 
 
