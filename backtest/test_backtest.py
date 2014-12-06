@@ -1,12 +1,29 @@
 from backtest import *
+from models import Stocks,Prices
 import csv
 
 class CollectData:
 
-	def __init__(self,csv_target):
-		self.csv_file = csv_target
+	def market_snapshot_by_date(self,date):
+		all_stocks = Prices.objects.filter(date=date)
+		day = { 'date' : date, 'data' : all_stocks}
+		return day
+
+	def market_snapshot_by_stock(self,symbol):
+		stock = Stocks.objects.get(symbol=symbol)
+		all_prices = Prices.objects.filter(stock=stock)
+		stock = { 'symbol' : symbol, 'data' : all_prices}
+		return stock
+
+	def collect_stock_symbols(self):
+		return Stocks.objects.all()
+
+class ParseDates:
+
+	def __init__(self):
 		self.all_dates = self.prepare_dates_for_data_collection()
 
+	@staticmethod
 	def prepare_dates_for_data_collection(self):
 		all_dates = []
 		for year in range(2000,2014):
@@ -24,48 +41,7 @@ class CollectData:
 					all_dates.append(string)
 		return all_dates
 
-	def market_snapshot_by_date(self,date):
-		## price == closing price
-		snapshot = []
-		with open(self.csv_file,'r') as stock_data:
-			data = csv.reader(stock_data)
-			for row in data:
-				if str(row[1]) == date:
-					snapshot.append({
-						'symbol' : row[0],
-						'price' : float(row[5])
-						})
-		day = { 'date' : date, 'data' : snapshot}
-		return day
-
-	def market_snapshot_by_stock(self,symbol):
-		## price == closing price
-		with open(self.csv_file, 'r') as stock_data:
-			market_data = []	
-			data = csv.reader(stock_data)
-			for row in data:
-				try:
-					if str(row[0]) == symbol:
-						market_data.append({
-							'date' : row[0],
-							'price' : float(row[5])
-							})
-				except:
-					continue
-			stock = { 'symbol' : symbol, 'data' : market_data}
-			return stock
-
-	def collect_stock_symbols(self):
-		symbols = []
-		with open(self.csv_file, 'r') as stock_data:
-			data = csv.reader(stock_data)
-			for row in data:
-				if row[0] not in symbols:
-					symbols.append(row[0])
-				if len(symbols) > 11:
-					break
-		return symbols
-
+	@staticmethod
 	def split_date_into_ints(self,date):
 		year,month,day = date.split('-')
 		year = int(year)
@@ -79,6 +55,17 @@ class CollectData:
 			day = int(day)
 		return year,month,day
 
+	@staticmethod
+	def collect_dates_in_range(self,start_date,end_date):
+		dates_in_range = []
+		start_year,start_month,start_day = self.split_date_into_ints(start_date)
+		end_year,end_month,end_day = self.split_date_into_ints(end_date)
+		for date in self.prepare_dates_for_data_collection():
+			year,month,day = self.split_date_into_ints(date)
+			if start_year <= year <= end_year:
+				if start_month <= month <= end_month:
+					dates_in_range.append(date)
+		return dates_in_range
 
 
 
@@ -91,17 +78,12 @@ class SampleAlgorithm:
 		self.start_date = '2010-01-01'
 		self.end_date = '2011-01-01' ## let's just try one year for now
 
-		## data class ##
-		self.cd = CollectData('csv_files/stock_prices.csv')
-		
 		## relevant dates ##
 		self.dates_in_range = self.collect_dates_in_range()
 		
-		## data ##
 		# self.relevant_data = self.fetch_data_in_range()
 		self.stocks_in_market = self.cd.collect_stock_symbols()
 
-		
 		## calculator ##
 		self.c = Calculator()
 
@@ -110,17 +92,6 @@ class SampleAlgorithm:
 
 		## stocks to buy!!
 		self.stocks_to_buy = self.test_averages()
-
-	def collect_dates_in_range(self):
-		dates_in_range = []
-		start_year,start_month,start_day = self.cd.split_date_into_ints(self.start_date)
-		end_year,end_month,end_day = self.cd.split_date_into_ints(self.end_date)
-		for date in self.cd.prepare_dates_for_data_collection():
-			year,month,day = self.cd.split_date_into_ints(date)
-			if start_year <= year <= end_year:
-				if start_month <= month <= end_month:
-					dates_in_range.append(date)
-		return dates_in_range
 
 	def fetch_data_in_range(self):
 		relevant_data = []
