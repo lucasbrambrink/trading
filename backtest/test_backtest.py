@@ -82,8 +82,10 @@ class ParseDates:
 class SampleAlgorithm:
 ## marks stocks whose 30 day SMA (simple moving average) has changed by more than 10%
 
-	def __init__(self):
-		self.initial_balance = 1000000
+	def __init__(self,period,percent_difference_to_buy):
+		## Algorithm Information / Specifications
+		self.portfolio = []
+		self.balance = 1000000
 		self.start_date = '2010-01-01'
 		self.end_date = '2011-01-01' ## let's just try one year for now
 
@@ -99,7 +101,7 @@ class SampleAlgorithm:
 		## Sample Blocks ##
 		self.sma_period = period
 		self.percent_difference_to_buy = percent_difference_to_buy
-		self.percent_difference_to_sell = percent_difference_to_sell
+		# self.percent_difference_to_sell = percent_difference_to_sell
 
 		## Ideas ##
 		# - volatility of stock below certain threshold
@@ -108,12 +110,6 @@ class SampleAlgorithm:
 		# - covariance of stocks  to each other --> avoid holding on to similar covariances in portfolio
 		#############
 
-		## averages
-		self.averages = self.get_simple_moving_averages()
-
-		## stocks to buy!!
-		self.stocks_to_buy = self.test_averages()
-
 
 	def experience_time_period_with_algorithm(self):
 		portfolio = []
@@ -121,79 +117,96 @@ class SampleAlgorithm:
 			year,month,day = ParseDates.split_date_into_ints(date)
 			if month > 2: ## range for days to go back
 				if day == 1:
-					all_stock_sma_pairs = self.get_sma_pair_previous_15_days(date)
-					stocks_to_buy = []
-					for pair in all_stock_sma_pairs:
-						pd = self.c.percent_difference(pair,0,1,'sma')
-						if pd > self.percent_difference_to_buy:
-							stocks_to_buy.append(pair[0]['symbol'])
+					stocks_to_buy = self.find_stocks_to_buy(date)
+					## now you have all your stocks to buy
 
-					## now you have all your stocks
-					## rank their SMA's
-					best_three = sorted(stocks_to_buy,'sma')[:3]
-					
+					## sell everything in portfolio first ( just do it )
+					for asset in self.portfolio:
+						self.sell_stock(asset['symbol'],date)
 
+					## now buy stocks 
+					## rank their SMA pd's
+					best_three = sorted(stocks_to_buy,'pd')[:3]
+					## equally divide holdings in them
+					investment_per_stock = floor(self.balance / 3)
+					for stock in best_three:
+						self.buy_stock(investment_per_stock,stock['symbol'],date)
+					## done ## 
+					print(self.portfolio)
+					continue
+		return True
+
+
+	def buy_stock(dollar_amount,symbol,date):
+		stock = Stocks.objects.get(symbol=symbol)
+		price = Prices.objects.filter(stock=stock).filter(date=date)
+		quantity = floor(dollar_amount / price[0].close)
+		self.balance -= dollar_amount
+		self.portfolio.append({
+			'symbol' : stock.symbol,
+			'price_purchased' : price,
+			'quantity' : quantity
+			})
+		return True
+
+	def sell_stock(symbol,date):
+		stock = Stocks.objects.get(symbol=symbol)
+		price = Prices.objects.filter(stock=stock).filter(date=date)
+		for asset in self.portfolio:
+			if asset['symbol'] == symbol:
+				sale = asset['quantity']*price[0].close
+				self.balance += sale
+				self.portfolio.remove(asset)
+		return True
 
 
 	@staticmethod
-	def get_sma_pair_previous_15_days(date):
+	def get_sma_pair_previous_2_periods(date):
 		all_stock_sma_pairs = []
 		date_specific_index = self.dates_in_range.index(date)
 		for stock in self.stocks_in_market:
 			stock = Stocks.objects.get(symbol=stock_object.symbol)
-			stock_prices_previous_15_days = []
+			stock_prices_previous_period = []
 			sma_pair = []
 			count = 0
 			for date in self.dates_in_range[date_specific_index:]: # effectively going backwards 15 days
 				price = Prices.objects.filter(stock=stock).filter(date=date)
 				if len(price) > 0:
-					if len(stock_prices_previous_15_days) < 15: ## let's do a 15 day SMA
-						stock_prices_previous_15_days.append({'price' : float(price[0].close) })
+					if len(stock_prices_previous_period) < self.sma_period: ## let's do a 15 day SMA
+						stock_prices_previous_period.append({'price' : float(price[0].close) })
 					else:
-						sma = self.c.average(stock_prices_previous_15_days,'price')
+						sma = self.c.average(stock_prices_previous_period,'price')
 						sma_pair.append({
 							'symbol' : stock_object.symbol,
 							'sma' : sma
 							'date' : prices[-1].date
 							})
-						stock_prices_previous_15_days = []
+						stock_prices_previous_period = []
 						if len(sma_pair) == 2:
-							all_stock_smas = (sma_pair[0],sma_pair[1],) ## tuples
+							all_stock_sma_pairs.append((sma_pair[0],sma_pair[1],)) ## tuples
 							break
+		return all_stock_sma_pairs
 
 
-	def get_simple_moving_average(self):
-		self.all_sma_averages = []
-		for stock_object in self.stocks_in_market:
-			stock = Stocks.objects.get(symbol=stock_object.symbol)
-			prices = []
-			for date in self.dates_in_range[::-1]:
-				price = Prices.objects.filter(stock=stock).filter(date=date)
-				if len(price) > 0:
-					if len(prices) < 15: ## let's do a 15 day SMA
-						prices.append({'price' : float(price[0].close) })
-					else:
-						sma = self.c.average(prices,'price')
-						print(sma)
-						averages.append({
-							'symbol' : stock_object.symbol,
-							'sma' : sma
-							'date' : prices[-1].date
-							})
-						prices = []
-		return averages
-
-	def test_averages(self):
+	def find_stocks_to_buy(self,date):
+		all_stock_sma_pairs = self.get_sma_pair_previous_30_days(date)
 		stocks_to_buy = []
-		for index,average in enumerate(self.averages):
-			if index > 0:
-				pc_change = round(((average['sma'] - self.averages[index-1]['sma']) / (self.averages[index-1]['sma'])),5)
-				if pc_change > 0.10:
-					stocks_to_buy.append(average)
+		for pair in all_stock_sma_pairs:
+			pd = self.c.percent_difference(pair,0,1,'sma')
+			if pd > self.percent_difference_to_buy:
+				stocks_to_buy.append({
+					'symbol' : pair[0]['symbol'],
+					'pd' : pd
+					})
 		return stocks_to_buy
 
-sa = SampleAlgorithm()
-print(sa.stocks_to_buy)
+
+
+
+## Script ##
+if __name__ == '__main__':
+	sa = SampleAlgorithm(15,0.1) ## 15 day SMA for 0.1 percent difference to buy
+	sa.experience_time_period_with_algorithm()
 
 
 
