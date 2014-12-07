@@ -6,6 +6,7 @@ django.setup()
 from backtest import *
 from models import Stocks,Prices
 import csv
+import math
 
 class CollectData:
 
@@ -126,9 +127,9 @@ class SampleAlgorithm:
 
 					## now buy stocks 
 					## rank their SMA pd's
-					best_three = sorted(stocks_to_buy,'pd')[:3]
+					best_three = sorted(stocks_to_buy,key=lambda x: x['pd'])[:3]
 					## equally divide holdings in them
-					investment_per_stock = floor(self.balance / 3)
+					investment_per_stock = math.floor(self.balance / 3)
 					for stock in best_three:
 						self.buy_stock(investment_per_stock,stock['symbol'],date)
 					## done ## 
@@ -137,34 +138,39 @@ class SampleAlgorithm:
 		return True
 
 
-	def buy_stock(dollar_amount,symbol,date):
+	def buy_stock(self,dollar_amount,symbol,date):
 		stock = Stocks.objects.get(symbol=symbol)
 		price = Prices.objects.filter(stock=stock).filter(date=date)
-		quantity = floor(dollar_amount / price[0].close)
-		self.balance -= dollar_amount
-		self.portfolio.append({
-			'symbol' : stock.symbol,
-			'price_purchased' : price,
-			'quantity' : quantity
-			})
-		return True
+		if len(price) > 0:
+			quantity = math.floor(dollar_amount / float(price[0].close))
+			self.balance -= dollar_amount
+			self.portfolio.append({
+				'symbol' : stock.symbol,
+				'price_purchased' : float(price[0].close),
+				'quantity' : quantity
+				})
+			return True
+		else:
+			return False # unable to buy for this date
 
-	def sell_stock(symbol,date):
+	def sell_stock(self,symbol,date):
 		stock = Stocks.objects.get(symbol=symbol)
 		price = Prices.objects.filter(stock=stock).filter(date=date)
-		for asset in self.portfolio:
-			if asset['symbol'] == symbol:
-				sale = asset['quantity']*price[0].close
-				self.balance += sale
-				self.portfolio.remove(asset)
-		return True
+		if len(price) > 0:
+			for asset in self.portfolio:
+				if asset['symbol'] == symbol:
+					sale = round((asset['quantity']*float(price[0].close)),2)
+					self.balance += sale
+					self.portfolio.remove(asset)
+			return True
+		else:
+			return False
 
 
-	@staticmethod
-	def get_sma_pair_previous_2_periods(date):
+	def get_sma_pair_previous_2_periods(self,date):
 		all_stock_sma_pairs = []
 		date_specific_index = self.dates_in_range.index(date)
-		for stock in self.stocks_in_market:
+		for stock_object in self.stocks_in_market:
 			stock = Stocks.objects.get(symbol=stock_object.symbol)
 			stock_prices_previous_period = []
 			sma_pair = []
@@ -173,13 +179,13 @@ class SampleAlgorithm:
 				price = Prices.objects.filter(stock=stock).filter(date=date)
 				if len(price) > 0:
 					if len(stock_prices_previous_period) < self.sma_period: ## let's do a 15 day SMA
-						stock_prices_previous_period.append({'price' : float(price[0].close) })
+						stock_prices_previous_period.append({'price' : float(price[0].close),'date' : date })
 					else:
 						sma = self.c.average(stock_prices_previous_period,'price')
 						sma_pair.append({
 							'symbol' : stock_object.symbol,
-							'sma' : sma
-							'date' : prices[-1].date
+							'sma' : sma,
+							'date' : stock_prices_previous_period[-1]['date'],
 							})
 						stock_prices_previous_period = []
 						if len(sma_pair) == 2:
@@ -189,10 +195,10 @@ class SampleAlgorithm:
 
 
 	def find_stocks_to_buy(self,date):
-		all_stock_sma_pairs = self.get_sma_pair_previous_30_days(date)
+		all_stock_sma_pairs = self.get_sma_pair_previous_2_periods(date)
 		stocks_to_buy = []
 		for pair in all_stock_sma_pairs:
-			pd = self.c.percent_difference(pair,0,1,'sma')
+			pd = self.c.percent_change(pair,0,1,'sma')
 			if pd > self.percent_difference_to_buy:
 				stocks_to_buy.append({
 					'symbol' : pair[0]['symbol'],
