@@ -78,44 +78,33 @@ class ParseDates:
 		return dates_in_range
 
 
+class BacktestingEnvironment:
 
-
-class SampleAlgorithm:
-## marks stocks whose 30 day SMA (simple moving average) has changed by more than 10%
-
-	def __init__(self,period,percent_difference_to_buy):
-		## Algorithm Information / Specifications
-		self.portfolio = []
-		self.balance = 1000000
-		self.start_date = '2010-01-01'
-		self.end_date = '2011-01-01' ## let's just try one year for now
+	def __init__(self,start_date,end_date,initial_balance):
+		self.start_date = start_date
+		self.end_date = end_date
 
 		## relevant dates ##
 		self.dates_in_range = ParseDates().collect_dates_in_range(self.start_date,self.end_date)
 		
+		## initialize stocks ##
 		self.stocks_in_market = Stocks.objects.all()
 
-		## calculator ##
+		## calculators ##
 		self.c = Calculator()
+		self.pc = PortfolioCalculator()
+
+		## initialize portfolio ##
+		self.portfolio = []
+		self.initial_balance = initial_balance
+		self.balance = initial_balance
 
 
-		## Sample Blocks ##
-		self.sma_period = period
-		self.percent_difference_to_buy = percent_difference_to_buy
-		# self.percent_difference_to_sell = percent_difference_to_sell
-
-		## Ideas ##
-		# - volatility of stock below certain threshold
-		# - all other economic data can be used (P/E,R/E,...)
-		# - covariance of sectors, industries --> aim for diversity in stocks
-		# - covariance of stocks to each other --> avoid holding on to similar covariances in portfolio
-		#############
-
-
+	## main backtesting method ##
 	def run_period_with_algorithm(self):
 		portfolio = []
 		index = 0
-		while a < len(self.dates_in_range):
+		while index < len(self.dates_in_range):
 			date = self.dates_in_range[index]
 			year,month,day = ParseDates.split_date_into_ints(date)
 			if month > 2: ## range for days to go back
@@ -123,30 +112,33 @@ class SampleAlgorithm:
 					## test if it's a proper trading day
 					sample = Prices.objects.filter(date=date)
 					if len(sample) == 0:
-						a += 1
+						index += 1
 					else:
 						## wont repeat more than once
-						stocks_to_buy = self.find_stocks_to_buy(date)
-						## now you have all your stocks to buy
-
-						## sell everything in portfolio first ( just do it )
-						for asset in self.portfolio:
-							self.sell_stock(asset['symbol'],date)
-
-						## now buy stocks 
-						## rank their SMA pd's
-						best_three = sorted(stocks_to_buy,key=lambda x: x['pd'])[:3]
-						## equally divide holdings in them
-						investment_per_stock = math.floor(self.balance / 3)
-						for stock in best_three:
-							self.buy_stock(investment_per_stock,stock['symbol'],date)
-						## done ## 
+						self.execute_trading_session(date)
 						self.print_information(date)
-						a += 5 ## ensures if condition won't be met twice per month
-			a += 1
+						index += 15 ## ensures if condition won't be met twice per month
+			index += 1
 		return True
 
+	## helper method ##
+	def execute_trading_session(self,date):
+		stocks_to_buy = self.find_stocks_to_buy(date)
 
+		## sell everything in portfolio first ( just do it )
+		for asset in self.portfolio:
+			self.sell_stock(asset['symbol'],date)
+
+		## now buy stocks 
+		## rank their SMA pd's
+		best_three = sorted(stocks_to_buy,key=(lambda x: x['pd']),reverse=True)[:3]
+		## equally divide holdings to all three
+		investment_per_stock = math.floor(self.balance / 3)
+		for stock in best_three:
+			self.buy_stock(investment_per_stock,stock['symbol'],date)
+		return True
+
+	## support methods ##
 	def buy_stock(self,dollar_amount,symbol,date):
 		stock = Stocks.objects.get(symbol=symbol)
 		price = Prices.objects.filter(stock=stock).filter(date=date)
@@ -175,17 +167,15 @@ class SampleAlgorithm:
 		else:
 			return False
 
-
 	def get_sma_pair_previous_2_periods(self,date):
 		all_stock_sma_pairs = []
 		date_specific_index = self.dates_in_range.index(date)
 		for stock_object in self.stocks_in_market:
-			stock = Stocks.objects.get(symbol=stock_object.symbol)
 			stock_prices_previous_period = []
 			sma_pair = []
 			count = 0
-			for date in self.dates_in_range[date_specific_index:]: # effectively going backwards 15 days
-				price = Prices.objects.filter(stock=stock).filter(date=date)
+			for date in self.dates_in_range[date_specific_index::-1]: # effectively going backwards 15 days
+				price = Prices.objects.filter(stock=stock_object).filter(date=date)
 				if len(price) > 0:
 					if len(stock_prices_previous_period) < self.sma_period: ## let's do a 15 day SMA
 						stock_prices_previous_period.append({'price' : float(price[0].close),'date' : date })
@@ -215,6 +205,7 @@ class SampleAlgorithm:
 					})
 		return stocks_to_buy
 
+	## Views ##
 	def print_information(self,date):
 		print("------------------------------------------------")
 		print("Date : ",date)
@@ -231,10 +222,32 @@ class SampleAlgorithm:
 
 
 
+class SampleAlgorithm:
+## marks stocks whose 30 day SMA (simple moving average) has changed by more than 10%
+
+	def __init__(self,period,percent_difference_to_buy):
+
+		## Sample Blocks ##
+		self.sma_period = period
+		self.percent_difference_to_buy = percent_difference_to_buy
+		# self.percent_difference_to_sell = percent_difference_to_sell
+
+		## Ideas ##
+		# - volatility of stock below certain threshold
+		# - all other economic data can be used (P/E,R/E,...)
+		# - covariance of sectors, industries --> aim for diversity in stocks
+		# - covariance of stocks to each other --> avoid holding on to similar covariances in portfolio
+		#############
+
+	def __run__(self):
+		be = self.BacktestingEnvironment('2010-01-01','2011-01-01',1000000)
+		be.run_period_with_algorithm()
+		be.print_information()
+
 ## Script ##
 if __name__ == '__main__':
 	sa = SampleAlgorithm(15,0.1) ## 15 day SMA for 0.1 percent difference to buy
-	sa.experience_time_period_with_algorithm()
+	sa.__run__()
 
 
 

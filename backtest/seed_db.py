@@ -15,7 +15,9 @@ if __name__ == '__main__':
     with open(csv_file,'r') as stock_data:
             data = csv.reader(stock_data)
             for date in data:
-                if date[1][0].isalpha():
+                if len(date[1]) == 0:
+                    continue
+                if date[1][0].isalpha() or date[1][1].isalpha():
                     stock = {
                         'symbol' : date[0],
                         'name' : date[1],
