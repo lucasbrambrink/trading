@@ -3,7 +3,8 @@ import os, django, sys
 sys.path.append('../')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "graph_trader.settings.dev")
 django.setup()
-asdfadf
+
+
 ## get contingencies
 from calculator import *
 from models import Stocks,Prices
