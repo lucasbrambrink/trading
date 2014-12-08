@@ -55,6 +55,11 @@ class ParseDates:
 
 	@staticmethod
 	def split_date_into_ints(date):
+		"""
+		params: date = "yyyy-mm-dd"
+
+		returns: year,month,date
+		"""
 		year,month,day = date.split('-')
 		year = int(year)
 		if month[0] == '0':
@@ -86,7 +91,7 @@ class ParseDates:
 
 class BacktestingEnvironment:
 
-	def __init__(self,start_date,end_date,initial_balance):
+	def __init__(self,start_date,end_date,initial_balance,sma_period,percent_difference_to_buy):
 		self.start_date = start_date
 		self.end_date = end_date
 
@@ -98,12 +103,15 @@ class BacktestingEnvironment:
 
 		## calculators ##
 		self.c = Calculator()
-		self.pc = PortfolioCalculator()
 
 		## initialize portfolio ##
 		self.portfolio = []
 		self.initial_balance = initial_balance
 		self.balance = initial_balance
+
+		## initialize blocks & specifications ##
+		self.sma_period = sma_period
+		self.percent_difference_to_buy = percent_difference_to_buy
 
 
 	## main backtesting method ##
@@ -141,7 +149,7 @@ class BacktestingEnvironment:
 		## rank their SMA pd's
 		best_three = sorted(stocks_to_buy,key=(lambda x: x['pd']),reverse=True)[:3]
 		## equally divide holdings to all three
-		investment_per_stock = math.floor(self.balance / 3)
+		investment_per_stock = math.floor(self.balance / len(best_three))
 		for stock in best_three:
 			self.buy_stock(investment_per_stock,stock['symbol'],date)
 		return True
@@ -182,7 +190,6 @@ class BacktestingEnvironment:
 		for stock_object in self.stocks_in_market:
 			stock_prices_previous_period = []
 			sma_pair = []
-			count = 0
 			for date in self.dates_in_range[date_specific_index::-1]: # effectively going backwards 15 days
 				price = Prices.objects.filter(stock=stock_object).filter(date=date)
 				if len(price) > 0:
@@ -252,7 +259,7 @@ class SampleAlgorithm:
 		#############
 
 	def __run__(self):
-		be = self.BacktestingEnvironment('2010-01-01','2011-01-01',1000000)
+		be = BacktestingEnvironment('2010-01-01','2011-01-01',1000000,self.sma_period,self.percent_difference_to_buy)
 		be.run_period_with_algorithm()
 		be.print_information()
 

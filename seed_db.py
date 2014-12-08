@@ -4,7 +4,7 @@ sys.path.append('../')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "graph_trader.settings.dev")
 django.setup()
 
-from models import Stocks,Prices
+from backtest.models import Stocks,Prices
 
 import csv
 

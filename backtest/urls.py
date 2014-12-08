@@ -3,5 +3,5 @@ from django.contrib import admin
 from backtest.views import *
 
 urlpatterns = patterns('',
-	(r'^home/', RootView.as_view(), name='root'),
+	url(r'^$', RootView.as_view(), name='root'),
 )

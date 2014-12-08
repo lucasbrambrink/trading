@@ -5,8 +5,10 @@ from django.views.generic.base import View
 # Create your views here.
 
 class RootView(View):
+	template_name = 'backtest/root.html'
+	
 	def get(self,request):
-		pass
+		return render(request, self.template_name)
 
 	def post(self,request):
 		pass
