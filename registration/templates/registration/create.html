@@ -1,0 +1,41 @@
+{% extends 'app/base.html' %}
+{% load addcss %}
+
+{% block content %}
+
+	<div class='form-group'>
+		<label class="col-md-offset-1 control-label">Register Using</label>
+		<a href='/facebook/authenticate/' class='btn btn-primary' style='margin-left:5em;'>Facebook</a>
+		<a href='/twitter/authenticate/' class='btn btn-primary' style='margin-left:5em;'>Twitter</a>
+		<a href='/google/authenticate/' class='btn btn-primary' style='margin-left:5em;'>Google+</a>
+	</div>
+
+	<hr>
+
+	<form class='form-horizontal' role='form' action='' method = "POST">{%csrf_token%}
+		<div class='row'>
+		{% for field in form %}
+		{{ field.errors }}
+		<div class='form-group'>
+			<label class="col-md-2 control-label" for='id_{{ field.name }}'>{{ field.label }}</label>
+			<div class='col-md-2'>
+				{{ field | addcss:'form-control'}}
+    		</div>
+		</div>
+		{% endfor %}
+		<div class='col-md-offset-2'>
+		<button style='margin-left:5px;' class='btn btn-primary col-md-1' class='col-md-offset-2' type = "submit">Register</button></div>
+		</div>
+	</form>
+
+	<hr>
+	
+	<div class='form-group'>
+		<label class="col-md-offset-0 control-label" style='margin-left:1.9em;'>Already registered?</label>
+		<a href='/registration/login/' class='btn btn-primary' style='margin-left:1.7em;'>Log In</a>
+	</div>
+
+
+
+
+{% endblock %}
