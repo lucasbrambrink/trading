@@ -3,6 +3,7 @@ $(document).ready(function(){
 
 	$('.droppable').droppable({	
  		drop: function(event, ui) {
+ 			// possible to run AJAX post/get request if we want
  			$(ui.draggable).css('color','white');
     		$( this )
     		  .addClass( "ui-state-highlight" )
