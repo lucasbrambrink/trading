@@ -1,0 +1,40 @@
+{% extends 'app/base.html' %}
+{% block navbar %}
+<nav class="navbar navbar-inverse" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Trading Env</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/my_algorithms/">My Algorithms</a></li>
+        <li class="dropdown">
+          <a href="/backtest/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Examples<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/examples/sma/">SMA based</a></li>
+            <li><a href="/examples/volatility/">Volatility based</a></li>
+            <li><a href="/examples/pe/">P/E based</a></li>
+            <li class="divider"></li>
+            <li><a href="/examples/about/">About Algorithms</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="/backtest/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Backtesting<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/backtest/run/">Run Algorithm</a></li>
+            <li><a href="/backtest/graph/risk/">Graph Risk Metrics</a></li>
+            <li><a href="/backtest/graph/results/">Graph Results</a></li>
+            <li class="divider"></li>
+            <li><a href="/backtest/about/env/">About Backtesting Environment</a></li>
+            <li><a href="/backtest/about/risks/">About Risk Metrics</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+{% endblock %}
