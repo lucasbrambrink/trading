@@ -1,0 +1,15 @@
+.draggable {
+	display: inline-block;
+	width:170px; 
+	height:100px; 
+	border:1px solid black;
+	padding: 1em;
+}
+
+.droppable {
+	display: inline-block;
+	width:250px; 
+	height:250px; 
+	border:1px solid black;
+	margin: 1em;
+}
