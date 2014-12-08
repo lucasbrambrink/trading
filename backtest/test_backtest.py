@@ -108,16 +108,22 @@ class SampleAlgorithm:
 		# - volatility of stock below certain threshold
 		# - all other economic data can be used (P/E,R/E,...)
 		# - covariance of sectors, industries --> aim for diversity in stocks
-		# - covariance of stocks  to each other --> avoid holding on to similar covariances in portfolio
+		# - covariance of stocks to each other --> avoid holding on to similar covariances in portfolio
 		#############
 
 
-	def experience_time_period_with_algorithm(self):
+	def run_period_with_algorithm(self):
 		portfolio = []
 		for date in self.dates_in_range:
 			year,month,day = ParseDates.split_date_into_ints(date)
 			if month > 2: ## range for days to go back
-				if day == 1:
+				event = False
+				if day < 1:
+					## test if it's a proper trading day
+					sample = Prices.objects.filter(date=date)
+					if len(sample) == 0:
+						continue
+					else:
 					stocks_to_buy = self.find_stocks_to_buy(date)
 					## now you have all your stocks to buy
 
@@ -133,7 +139,7 @@ class SampleAlgorithm:
 					for stock in best_three:
 						self.buy_stock(investment_per_stock,stock['symbol'],date)
 					## done ## 
-					print(self.portfolio)
+					self.print_information(date)
 					continue
 		return True
 
@@ -205,6 +211,19 @@ class SampleAlgorithm:
 					'pd' : pd
 					})
 		return stocks_to_buy
+
+	def print_information(self,date):
+		print("------------------------------------------------")
+		print("Date : ",date)
+		for asset in self.portfolio:
+			line = "Stock : " + asset['symbol'] + ', quantity : ' + str(asset['quantity']) + ', at : ' + str(asset['price_purchased'])
+			print(line)
+		print("Balance : ",round(self.balance,2))
+		value = round(PortfolioCalculator(self.portfolio).value,2)
+		print("Portfolio Value : ",value)
+		returns = round(float(((self.balance + value) - 1000000) / 1000000),2)
+		print("Returns : ",returns)
+		return True
 
 
 
