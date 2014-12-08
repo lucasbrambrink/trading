@@ -114,33 +114,36 @@ class SampleAlgorithm:
 
 	def run_period_with_algorithm(self):
 		portfolio = []
-		for date in self.dates_in_range:
+		index = 0
+		while a < len(self.dates_in_range):
+			date = self.dates_in_range[index]
 			year,month,day = ParseDates.split_date_into_ints(date)
 			if month > 2: ## range for days to go back
-				event = False
-				if day < 1:
+				if day < 5:
 					## test if it's a proper trading day
 					sample = Prices.objects.filter(date=date)
 					if len(sample) == 0:
-						continue
+						a += 1
 					else:
-					stocks_to_buy = self.find_stocks_to_buy(date)
-					## now you have all your stocks to buy
+						## wont repeat more than once
+						stocks_to_buy = self.find_stocks_to_buy(date)
+						## now you have all your stocks to buy
 
-					## sell everything in portfolio first ( just do it )
-					for asset in self.portfolio:
-						self.sell_stock(asset['symbol'],date)
+						## sell everything in portfolio first ( just do it )
+						for asset in self.portfolio:
+							self.sell_stock(asset['symbol'],date)
 
-					## now buy stocks 
-					## rank their SMA pd's
-					best_three = sorted(stocks_to_buy,key=lambda x: x['pd'])[:3]
-					## equally divide holdings in them
-					investment_per_stock = math.floor(self.balance / 3)
-					for stock in best_three:
-						self.buy_stock(investment_per_stock,stock['symbol'],date)
-					## done ## 
-					self.print_information(date)
-					continue
+						## now buy stocks 
+						## rank their SMA pd's
+						best_three = sorted(stocks_to_buy,key=lambda x: x['pd'])[:3]
+						## equally divide holdings in them
+						investment_per_stock = math.floor(self.balance / 3)
+						for stock in best_three:
+							self.buy_stock(investment_per_stock,stock['symbol'],date)
+						## done ## 
+						self.print_information(date)
+						a += 5 ## ensures if condition won't be met twice per month
+			a += 1
 		return True
 
 
