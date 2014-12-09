@@ -248,19 +248,21 @@ class BacktestingEnvironment:
     def get_sma_pair_per_stock(self,date,stock_object):
         sma1_prices = []
         sma2_prices = []
-        end_id = Prices.objects.filter(stock=stock_object).filter(date=date)
-        if len(end_id) > 0:
-        	end_id = end_id[0].id
+        start_id = Prices.objects.filter(stock=stock_object).filter(date=date)
+        if len(start_id) > 0:
+        	start_id = start_id[0].id
         else:
         	return {'symbol' : 'ZZZ', 'sma_pair' : (1,1,), 'date' : date,}
         ## DB is seeded backwards (starts with latest date)
-        start_id = end_id - (self.sma_period * 2) ## pair
+        end_id = start_id + (self.sma_period * 2) ## pair
         prices_in_range = Prices.objects.filter(id__range=(start_id,end_id))
-        for index,price in enumerate(prices_in_range):
-        	if index < (len(prices_in_range)/2):
-        		sma1_prices.append({'price' : float(prices_in_range[index].close),'date' : date })
-        	else:
-        		sma2_prices.append({'price' : float(prices_in_range[index].close),'date' : date })
+        for index,price in enumerate(prices_in_range[::-1]): ## arrange into proper order
+            if len(prices_in_range[index].close) == 0:
+                continue 
+            if index < (len(prices_in_range)/2):
+                sma1_prices.append({'price' : float(prices_in_range[index].close),'date' : date })
+            else:
+                sma2_prices.append({'price' : float(prices_in_range[index].close),'date' : date })
         sma1 = self.c.average(sma1_prices,'price')
         sma2 = self.c.average(sma2_prices,'price')
         sma_pair = {
@@ -304,11 +306,28 @@ class SampleAlgorithm:
 ## marks stocks whose 30 day SMA (simple moving average) has changed by more than 10%
 
     def __init__(self,period,percent_difference_to_buy):
+        ## Testing Environment ##
+        self.start_date = "Null"
+        self.end_date = "Null"
+        self.initial_balance = "Null"
+
+
+        ## Frequency ##
+        self.frequency = 'frequency'
+
 
         ## Sample Blocks ##
         self.sma_period = period
         self.percent_difference_to_buy = percent_difference_to_buy
-        # self.percent_difference_to_sell = percent_difference_to_sell
+        self.percent_difference_to_sell = "Null"
+
+        ## Threshold Contions ##
+        self.price = "Null"
+        self.sector = "Null"
+        self.industry = "Null"
+
+        ## Crisis Conditions ##
+        self.threshold = "Null"
 
         ## Ideas ##
         # - volatility of stock below certain threshold
@@ -327,7 +346,7 @@ class SampleAlgorithm:
 
 ## Script ##
 if __name__ == '__main__':
-    sa = SampleAlgorithm(1,0.1) ## 15 day SMA for 0.1 percent difference to buy
+    sa = SampleAlgorithm(10,0.1) ## 15 day SMA for 0.1 percent difference to buy
     sa.__run__()
     
 
