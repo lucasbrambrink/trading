@@ -5,7 +5,10 @@ class Stocks(models.Model):
     name = models.CharField(max_length=100)
     sector = models.CharField(max_length=100)
     industry = models.CharField(max_length=100)
-    ticker = models.CharField(max_length=6, unique=True, db_index=True)
+    symbol = models.CharField(max_length=6, unique=True, db_index=True)
+
+    class Meta:
+        app_label = 'backtest'
 
 
 class Prices(models.Model):
@@ -16,6 +19,8 @@ class Prices(models.Model):
     low = models.CharField(max_length=20)
     close = models.CharField(max_length=20)
 
+    class Meta:
+        app_label = 'backtest'
 
 """
 class Algorithms(models.Model):

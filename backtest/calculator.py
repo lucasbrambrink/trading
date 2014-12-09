@@ -89,6 +89,16 @@ class Calculator:
 		return (d_invest,d_return)
 
 	@staticmethod
+	def percent_change_simple(point1,point2):
+		"""
+		:param1: integer
+		:param2: integer
+		:return: float
+		"""
+		value = round(((point2 - point1) / point1),5)
+		return value
+
+	@staticmethod
 	def percent_change(data,index,increment,key):
 		"""
 		:param data: [{ 'key' : value,},...]

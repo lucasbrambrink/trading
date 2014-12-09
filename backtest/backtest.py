@@ -5,8 +5,8 @@ django.setup()
 
 
 ## get contingencies
-from .calculator import *
-from .models import Stocks,Prices
+from calculator import *
+from models import Stocks,Prices
 import math
 
 
@@ -121,19 +121,21 @@ class ParseDates:
             r = data_len-1
             while l < r:
                 mid = int((r - l) / 2) + l
-                if ParseDates.compare_two_dates(self.all_dates[mid], start_date) == 0:
+                if ParseDates.compare_two_dates(self.all_dates[mid], end_date) == 0:
                     upper_bound = mid
                     break
-                elif ParseDates.compare_two_dates(self.all_dates[mid], start_date) > 0:
+                elif ParseDates.compare_two_dates(self.all_dates[mid], end_date) > 0:
                     r = mid-1
                 else:
                     l = mid+1
             if l == r:
-                if ParseDates.compare_two_dates(self.all_dates[l], start_date) <= 0:
+                if ParseDates.compare_two_dates(self.all_dates[l], end_date) <= 0:
                     upper_bound = l
                 else:
                     upper_bound = l-1
 
+        print(lower_bound)
+        print(upper_bound)
         return self.all_dates[lower_bound:upper_bound+1]
 
 
@@ -197,6 +199,8 @@ class BacktestingEnvironment:
         ## rank their SMA pd's
         best_three = sorted(stocks_to_buy,key=(lambda x: x['pd']),reverse=True)[:3]
         ## equally divide holdings to all three
+        if len(best_three) == 0:
+        	return False
         investment_per_stock = math.floor(self.balance / len(best_three))
         for stock in best_three:
             self.buy_stock(investment_per_stock,stock['symbol'],date)
@@ -214,6 +218,7 @@ class BacktestingEnvironment:
                 'price_purchased' : float(price[0].close),
                 'quantity' : quantity
                 })
+            print(dollar_amount,': ',quantity," of ",stock.symbol," for ",price[0].close)
             return True
         else:
             return False # unable to buy for this date
@@ -227,6 +232,7 @@ class BacktestingEnvironment:
                     sale = round((asset['quantity']*float(price[0].close)),2)
                     self.balance += sale
                     self.portfolio.remove(asset)
+                    print(sale,": ",asset['symbol']," for ",price[0].close)
             return True
         else:
             return False
@@ -236,36 +242,43 @@ class BacktestingEnvironment:
         all_stock_sma_pairs = []
         date_specific_index = self.dates_in_range.index(date)
         for stock_object in self.stocks_in_market:
-            stock_prices_previous_period = []
-            sma_pair = []
-            for date in self.dates_in_range[date_specific_index::-1]: # effectively going backwards 15 days
-                price = Prices.objects.filter(stock=stock_object).filter(date=date)
-                if len(price) > 0:
-                    if len(stock_prices_previous_period) < self.sma_period: ## let's do a 15 day SMA
-                        stock_prices_previous_period.append({'price' : float(price[0].close),'date' : date })
-                    else:
-                        sma = self.c.average(stock_prices_previous_period,'price')
-                        sma_pair.append({
-                            'symbol' : stock_object.symbol,
-                            'sma' : sma,
-                            'date' : stock_prices_previous_period[-1]['date'],
-                            })
-                        stock_prices_previous_period = []
-                        if len(sma_pair) == 2:
-                            all_stock_sma_pairs.append((sma_pair[0],sma_pair[1],)) ## tuples
-                            break
+            all_stock_sma_pairs.append(self.get_sma_pair_per_stock(date,stock_object))
         return all_stock_sma_pairs
 
+    def get_sma_pair_per_stock(self,date,stock_object):
+        sma1_prices = []
+        sma2_prices = []
+        end_id = Prices.objects.filter(stock=stock_object).filter(date=date)
+        if len(end_id) > 0:
+        	end_id = end_id[0].id
+        else:
+        	return {'symbol' : 'ZZZ', 'sma_pair' : (1,1,), 'date' : date,}
+        ## DB is seeded backwards (starts with latest date)
+        start_id = end_id - (self.sma_period * 2) ## pair
+        prices_in_range = Prices.objects.filter(id__range=(start_id,end_id))
+        for index,price in enumerate(prices_in_range):
+        	if index < (len(prices_in_range)/2):
+        		sma1_prices.append({'price' : float(prices_in_range[index].close),'date' : date })
+        	else:
+        		sma2_prices.append({'price' : float(prices_in_range[index].close),'date' : date })
+        sma1 = self.c.average(sma1_prices,'price')
+        sma2 = self.c.average(sma2_prices,'price')
+        sma_pair = {
+            'symbol' : stock_object.symbol,
+            'sma_pair' : (sma1,sma2,),
+            'date' : date,
+            }
+        return sma_pair
 
     def find_stocks_to_buy(self,date):
         print('determining stocks to match sma threshold')
         all_stock_sma_pairs = self.get_sma_pair_previous_2_periods(date)
         stocks_to_buy = []
         for pair in all_stock_sma_pairs:
-            pd = self.c.percent_change(pair,0,1,'sma')
+            pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
             if pd > self.percent_difference_to_buy:
                 stocks_to_buy.append({
-                    'symbol' : pair[0]['symbol'],
+                    'symbol' : pair['symbol'],
                     'pd' : pd
                     })
         return stocks_to_buy
@@ -280,7 +293,7 @@ class BacktestingEnvironment:
         print("Balance : ",round(self.balance,2))
         value = round(PortfolioCalculator(self.portfolio).value,2)
         print("Portfolio Value : ",value)
-        returns = round(float(((self.balance + value) - 1000000) / 1000000),2)
+        returns = round(float(((self.balance + value) - self.initial_balance) / self.initial_balance),2)
         print("Returns : ",returns)
         return True
 
@@ -307,19 +320,16 @@ class SampleAlgorithm:
         #############
 
     def __run__(self):
-        be = BacktestingEnvironment('2010-01-01','2011-01-01',1000000,self.sma_period,self.percent_difference_to_buy)
+        be = BacktestingEnvironment('2007-01-01','2009-01-01',100,self.sma_period,self.percent_difference_to_buy)
         be.run_period_with_algorithm()
-        be.print_information()
 
 
 
 ## Script ##
 if __name__ == '__main__':
-    print('hello')
-    sa = SampleAlgorithm(15,0.1) ## 15 day SMA for 0.1 percent difference to buy
+    sa = SampleAlgorithm(1,0.1) ## 15 day SMA for 0.1 percent difference to buy
     sa.__run__()
-
-
+    
 
 
 
