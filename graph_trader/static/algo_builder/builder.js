@@ -6,9 +6,8 @@ $(document).ready(function(){
  			// possible to run AJAX post/get request if we want
  			$(ui.draggable).css('color','white');
     		$( this )
-    		  .addClass( "ui-state-highlight" )
 	          .css('background-color','green')
-	          .css('color','white')
+	          // .css('color','white')
 	          .find( "p" )
 	            .html( "Dropped!" );
             $(this.ui)

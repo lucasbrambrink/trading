@@ -3,17 +3,33 @@
 
 {% block container %}
 <script src="{%static 'algo_builder/builder.js'%}"></script>
-<link rel="stylesheet" href="{%static 'algo_builder/builder.css'%}">
+<link rel="stylesheet" href="{%static 'algo_builder/builder.css'%}"></div>
+<div class='fixed_logic'><span><h1>IF</h1></span></div>
+<div class='droppable'><span class='item'>ITEM</span></div>
+<div class='droppable'><span class='logic' id='block1'>LOGIC</span></div>
+<div class='droppable'><span class='number'>NUMBER</span></div>
+<div class='fixed_logic'><span><h1>THEN</h1></span></div>
+<div class='droppable'><span class='behavior' id='block2'>BEHAVIOR</span></div>
+<div class='droppable'><span class='asset' id='block2'>ASSET</span></div>
+<hr><span id='page_break'> </span><hr>
+<div class='draggable'><span <span class='logic'>greater than</span></span></div>
+<div class='draggable'><span class='logic'>less than</span></div>
+<div class='draggable'><span class='logic'>equal to</span></div>
+<div class='draggable'><span class='item'>SMA</span></div>
+<div class='draggable'><span class='item'>Volatility</span></div>
+<div class='draggable'><span class='item'>P/E</span></div>
+<div class='draggable'><span class='item'>Previous Day</span></div>
+<div class='draggable'><span class='behavior'>Buy</span></div>
+<div class='draggable'><span class='behavior'>Sell</span></div>
+<div class='draggable'><span class='behavior'>Hold</span></div>
+<div class='draggable'><span class='behavior'>Diversify</span></div>
+<div class='draggable'><span class='behavior'>All in</span></div>
+<div class='draggable'><span class='asset'>Stock ID</span></div>
 
-<div class='droppable' id='block1'><p>Block 1</p></div>
-<div class='droppable' id='block2'><p>Block 2</p></div>
-<div class='droppable' id='block3'><p>Block 3</p></div>
-<div class='droppable' id='block4'><p>Block 4</p></div>
 
-<div class='draggable'><h1>Block 1</h1></div>
-<div class='draggable'><h1>Block 2</h1></div>
-<div class='draggable'><h1>Block 3</h1></div>
-<div class='draggable'><h1>Block 4</h1></div>
 
+<hr>
+<a href='/backtest/run/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
+<a href='/backtest/run/' class='btn btn-primary' style='margin-left:1.7em;'>Run Algorithm</a>
 
 {% endblock %}
