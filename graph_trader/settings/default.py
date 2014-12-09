@@ -112,14 +112,13 @@ MEDIA_URL = '/media/'
 #### STATIC FILE CONFIGURATION
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-STATIC_ROOT = normpath(join(BASE_DIR, 'static'))
+STATIC_ROOT = normpath(join(BASE_DIR, 'root'))
 
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    normpath(join(BASE_DIR, 'assets')),
+    normpath(join(BASE_DIR,'static')),
 )
-
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
