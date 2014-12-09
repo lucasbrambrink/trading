@@ -72,3 +72,5 @@ staticfiles
 
 # PyCharm
 .idea
+
+bower_components
