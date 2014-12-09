@@ -141,27 +141,16 @@ class ParseDates:
 
 class BacktestingEnvironment:
 
-    def __init__(self, start_date, end_date,initial_balance, sma_period, percent_difference_to_buy):
-        self.start_date = start_date
-        self.end_date = end_date
+    def __init__(self,**kwargs):
+        for key in kwargs:
+            setattr(self,key,kwargs[key])
 
         ## relevant dates ##
         self.dates_in_range = ParseDates().collect_dates_in_range(self.start_date, self.end_date)
-        
-        ## initialize stocks ##
         self.stocks_in_market = Stocks.objects.all()
-
-        ## calculators ##
         self.c = Calculator()
-
-        ## initialize portfolio ##
         self.portfolio = []
-        self.initial_balance = initial_balance
-        self.balance = initial_balance
-
-        ## initialize blocks & specifications ##
-        self.sma_period = sma_period
-        self.percent_difference_to_buy = percent_difference_to_buy
+        self.balance = self.initial_balance
 
 
     ## main backtesting method ##
@@ -193,7 +182,8 @@ class BacktestingEnvironment:
 
         ## sell everything in portfolio first ( just do it )
         for asset in self.portfolio:
-            self.sell_stock(asset['symbol'],date)
+            stock = Stocks.objects.get(symbol=asset['symbol'])
+            self.sell_stock(stock,date)
 
         ## now buy stocks 
         ## rank their SMA pd's
@@ -223,16 +213,14 @@ class BacktestingEnvironment:
         else:
             return False # unable to buy for this date
 
-    def sell_stock(self,symbol,date):
-        stock = Stocks.objects.get(symbol=symbol)
+    def sell_stock(self,stock,date):
         price = Prices.objects.filter(stock=stock).filter(date=date)
         if len(price) > 0:
-            for asset in self.portfolio:
-                if asset['symbol'] == symbol:
-                    sale = round((asset['quantity']*float(price[0].close)),2)
-                    self.balance += sale
-                    self.portfolio.remove(asset)
-                    print(sale,": ",asset['symbol']," for ",price[0].close)
+            asset = [x for x in self.portfolio if x['symbol'] == stock.symbol][0]
+            sale = round((asset['quantity']*float(price[0].close)),2)
+            self.balance += sale
+            self.portfolio.remove(asset)
+            print(sale,": ",asset['symbol']," for ",price[0].close)
             return True
         else:
             return False
@@ -278,7 +266,7 @@ class BacktestingEnvironment:
         stocks_to_buy = []
         for pair in all_stock_sma_pairs:
             pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
-            if pd > self.percent_difference_to_buy:
+            if pd > self.sma_percent_difference_to_buy:
                 stocks_to_buy.append({
                     'symbol' : pair['symbol'],
                     'pd' : pd
@@ -305,21 +293,26 @@ class BacktestingEnvironment:
 class SampleAlgorithm:
 ## marks stocks whose 30 day SMA (simple moving average) has changed by more than 10%
 
-    def __init__(self,period,percent_difference_to_buy):
-        ## Testing Environment ##
-        self.start_date = "Null"
-        self.end_date = "Null"
-        self.initial_balance = "Null"
+    def __init__(self,**kwargs):
 
+        #### SET DEFAULTS ####
+
+        ## Testing Environment ##
+        self.start_date = "2013-01-01"
+        self.end_date = "2014-01-01"
+        self.initial_balance = 1000000
 
         ## Frequency ##
-        self.frequency = 'frequency'
+        self.frequency = 12 ## represent as times per year the code should execute
 
 
         ## Sample Blocks ##
-        self.sma_period = period
-        self.percent_difference_to_buy = percent_difference_to_buy
-        self.percent_difference_to_sell = "Null"
+        self.sma_period = "Null"
+        self.sma_percent_difference_to_buy = "Null"
+        self.sma_percent_difference_to_sell = "Null"
+        
+        self.sma_volatility = "Null"
+        self.sma_volatility_threshold = "Null"
 
         ## Threshold Contions ##
         self.price = "Null"
@@ -327,7 +320,11 @@ class SampleAlgorithm:
         self.industry = "Null"
 
         ## Crisis Conditions ##
-        self.threshold = "Null"
+        self.crisis_threshold = "Null"
+        ## could be general downturn in market (all sma's get calculated)
+
+        for key in kwargs:
+            setattr(self,key,kwargs[key])
 
         ## Ideas ##
         # - volatility of stock below certain threshold
@@ -339,14 +336,16 @@ class SampleAlgorithm:
         #############
 
     def __run__(self):
-        be = BacktestingEnvironment('2007-01-01','2009-01-01',100,self.sma_period,self.percent_difference_to_buy)
+        be = BacktestingEnvironment(**self.__dict__)
         be.run_period_with_algorithm()
 
 
 
 ## Script ##
 if __name__ == '__main__':
-    sa = SampleAlgorithm(10,0.1) ## 15 day SMA for 0.1 percent difference to buy
+    ## at this point, back end expects a JSON
+    json = {'sma_period' : 15, 'sma_percent_difference_to_buy':0.1}
+    sa = SampleAlgorithm(**json) ## 15 day SMA for 0.1 percent difference to buy
     sa.__run__()
     
 

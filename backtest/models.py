@@ -13,7 +13,7 @@ class Stocks(models.Model):
 
 class Prices(models.Model):
     stock = models.ForeignKey(Stocks)
-    date = models.CharField(max_length=15) ## dates are processed as strings
+    date = models.DateField()
     open = models.CharField(max_length=20)
     high = models.CharField(max_length=20)
     low = models.CharField(max_length=20)
