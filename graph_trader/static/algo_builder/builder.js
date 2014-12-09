@@ -2,6 +2,7 @@ $(document).ready(function(){
 	$('.draggable').draggable();
 
 	$('.droppable').droppable({	
+		accept: '.item',
  		drop: function(event, ui) {
  			// possible to run AJAX post/get request if we want
  			$(ui.draggable).css('color','white');

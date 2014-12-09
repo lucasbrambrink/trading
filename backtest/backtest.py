@@ -9,23 +9,6 @@ from calculator import *
 from models import Stocks,Prices
 import math
 
-
-## Helper Class
-class CollectData:
-
-    @staticmethod
-    def market_snapshot_by_date(date):
-        all_stocks = Prices.objects.filter(date=date)
-        day = {'date': date, 'data': all_stocks}
-        return day
-
-    @staticmethod
-    def market_snapshot_by_stock(symbol):
-        stock = Stocks.objects.get(symbol=symbol)
-        all_prices = Prices.objects.filter(stock=stock)
-        stock = {'symbol': symbol, 'data': all_prices}
-        return stock
-
 ## Helper Class
 class ParseDates:
 
@@ -56,87 +39,13 @@ class ParseDates:
         return map(lambda x: int(x), date.split('-'))
 
     @staticmethod
-    def compare_two_dates(date1, date2):
-        """
-        Compare dates in chronological order.
-
-        :param date1: date string
-        :param date2: date string
-        :return: -1 if date1 is smaller than date2. 0 equals. 1 date1 is larger than date2.
-        """
-        y1, m1, d1 = ParseDates.split_date_into_ints(date1)
-        y2, m2, d2 = ParseDates.split_date_into_ints(date2)
-
-        if y1 > y2:
-            return 1
-        elif y1 < y2:
-            return -1
-        else:
-            if m1 > m2:
-                return 1
-            elif m1 < m2:
-                return -1
-            else:
-                if d1 > d2:
-                    return 1
-                elif d1 < d2:
-                    return -1
-                else:
-                    return 0
-
-    def collect_dates_in_range(self, start_date, end_date):
-        """
-        Return a list of dates between start_date and end_date
-
-        :param start_date: date string
-        :param end_date: date string
-        :return: a list of date string
-        """
-        data_len = len(self.all_dates)
-        lower_bound = 0
-        if ParseDates.compare_two_dates(self.all_dates[0], start_date) < 0:
-            # start_date is larger than the first date in database
-            # Look for lower bound
-            l = 0
-            r = data_len-1
-            while l < r:
-                mid = int((r - l) / 2) + l
-                if ParseDates.compare_two_dates(self.all_dates[mid], start_date) == 0:
-                    lower_bound = mid
-                    break
-                elif ParseDates.compare_two_dates(self.all_dates[mid], start_date) > 0:
-                    r = mid-1
-                else:
-                    l = mid+1
-            if ParseDates.compare_two_dates(self.all_dates[l], start_date) >= 0:
-                lower_bound = l
-            else:
-                lower_bound = l+1
-
-        upper_bound = data_len-1
-        if ParseDates.compare_two_dates(self.all_dates[data_len-1], end_date) > 0:
-            # end_date is smaller than the last date in database
-            # Look for upper bound
-            l = 0
-            r = data_len-1
-            while l < r:
-                mid = int((r - l) / 2) + l
-                if ParseDates.compare_two_dates(self.all_dates[mid], end_date) == 0:
-                    upper_bound = mid
-                    break
-                elif ParseDates.compare_two_dates(self.all_dates[mid], end_date) > 0:
-                    r = mid-1
-                else:
-                    l = mid+1
-            if l == r:
-                if ParseDates.compare_two_dates(self.all_dates[l], end_date) <= 0:
-                    upper_bound = l
-                else:
-                    upper_bound = l-1
-
-        print(lower_bound)
-        print(upper_bound)
-        return self.all_dates[lower_bound:upper_bound+1]
+    def dates_in_range(start_date,end_date):
+        stock = Stocks.objects.filter(symbol='GOOG')
+        dates = Prices.objects.filter(stock=stock).filter(date__range(start_date,end_date))
+        dates_in_rage = []
+        for date in dates:
+            dates_in_range.append(date.date)
+        return dates_in_range
 
 
 class BacktestingEnvironment:
@@ -146,7 +55,7 @@ class BacktestingEnvironment:
             setattr(self,key,kwargs[key])
 
         ## relevant dates ##
-        self.dates_in_range = ParseDates().collect_dates_in_range(self.start_date, self.end_date)
+        self.dates_in_range = ParseDates().dates_in_range(self.start_date, self.end_date)
         self.stocks_in_market = Stocks.objects.all()
         self.c = Calculator()
         self.portfolio = []
@@ -156,43 +65,28 @@ class BacktestingEnvironment:
     ## main backtesting method ##
     def run_period_with_algorithm(self):
         print('run algorithm')
-        portfolio = []
-        index = 0
-        while index < len(self.dates_in_range):
-            date = self.dates_in_range[index]
-            year,month,day = ParseDates.split_date_into_ints(date)
-            if month > 2: ## range for days to go back
-                if day < 5:
-                    ## test if it's a proper trading day
-                    sample = Prices.objects.filter(date=date)
-                    if len(sample) == 0:
-                        index += 1
-                    else:
-                        ## wont repeat more than once
-                        self.execute_trading_session(date)
-                        self.print_information(date)
-                        index += 15 ## ensures if condition won't be met twice per month
-            index += 1
+        for index,date in enumerate(self.dates_in_range):
+            if index % math.floor(365/self.frequency) == 0:
+                self.execute_trading_session(date)
+                self.print_information(date)
         return True
 
     ## helper method ##
     def execute_trading_session(self,date):
         print('executing trading session, date: ',date)
         stocks_to_buy = self.find_stocks_to_buy(date)
+        if len(stocks_to_buy) == 0:
+            return False
 
-        ## sell everything in portfolio first ( just do it )
+        ## sell first ##
         for asset in self.portfolio:
             stock = Stocks.objects.get(symbol=asset['symbol'])
             self.sell_stock(stock,date)
 
-        ## now buy stocks 
-        ## rank their SMA pd's
-        best_three = sorted(stocks_to_buy,key=(lambda x: x['pd']),reverse=True)[:3]
-        ## equally divide holdings to all three
-        if len(best_three) == 0:
-        	return False
-        investment_per_stock = math.floor(self.balance / len(best_three))
-        for stock in best_three:
+        ## buy stocks based on portfolio customization ##
+        holdings = sorted(stocks_to_buy,key=(lambda x: x['pd']),reverse=True)[:self.holdings]
+        investment_per_stock = math.floor(self.balance / len(holdings))
+        for stock in holdings:
             self.buy_stock(investment_per_stock,stock['symbol'],date)
         return True
 
@@ -305,6 +199,8 @@ class SampleAlgorithm:
         ## Frequency ##
         self.frequency = 12 ## represent as times per year the code should execute
 
+        ## Customize Portfolio
+        self.number_of_holdings = 3
 
         ## Sample Blocks ##
         self.sma_period = "Null"
