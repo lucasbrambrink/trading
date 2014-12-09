@@ -31,6 +31,15 @@ span {
 	margin: 1em;
 }
 
+.number {
+	display: inline-block;
+	background-color: black;
+	height: 10em;
+	padding: 1em;
+	margin: 1em;
+}
+
+
 .item {
 	background-color: gray;
 }
