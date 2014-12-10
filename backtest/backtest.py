@@ -6,14 +6,27 @@ django.setup()
 
 ## get contingencies
 from calculator import *
+from blocks import *
 from models import Stocks,Prices
 import math
+import re
+
+
 
 class BacktestingEnvironment:
 
     def __init__(self,**kwargs):
+        self.blocks = []
+        self.conditions = {}
         for key in kwargs:
-            setattr(self,key,kwargs[key])
+            if key == 'testing_environment':
+                for attr in kwargs[key]:
+                    setattr(self,attr,kwargs[key][attr])
+            if re.search('_block',key):
+                self.blocks.append(kwargs[key])
+            if re.search('_condition',key):
+                short_key = key.split('_')[0]
+                self.conditions[short_key] = kwargs[key]
 
         ## relevant dates ##
         self.dates_in_range = ParseDates().dates_in_range(self.start_date, self.end_date)
@@ -78,66 +91,17 @@ class BacktestingEnvironment:
         else:
             return False
 
-    def get_sma_pair_per_stock(self,date,stock_object):
-        sma1_prices = []
-        sma2_prices = []
-        start_id = Prices.objects.filter(stock=stock_object).filter(date=date)
-        ## DB is seeded backwards (starts with latest date)
-        end_id = start_id + (self.sma_period * 2) ## pair
-        prices_in_range = Prices.objects.filter(id__range=(start_id,end_id))
-        for index,price in enumerate(prices_in_range[::-1]): ## arrange into proper order
-            if len(prices_in_range[index].close) == 0:
-                continue 
-            price = {'price': float(prices_in_range[index].close), 'date' : date}
-            if index < (len(prices_in_range)/2):
-                sma1_prices.append(price)
-            else:
-                sma2_prices.append(price)
-        sma1 = self.c.average(sma1_prices,'price')
-        sma2 = self.c.average(sma2_prices,'price')
-        sma_pair = {
-            'symbol' : stock_object.symbol,
-            'sma_pair' : (sma1,sma2,),
-            'date' : date,
-            'close' : prices_in_range[0].close,
-            'object' : stock_object
-            }
-        return sma_pair
-
 
     ## this needs to be encapsulated further ##
     def find_stocks_to_buy(self,date):
         stocks_to_buy = []  
-        if self.sma_period != 'Null':
-            all_stock_sma_pairs = [self.get_sma_pair_per_stock(date,stock_object) for stock_object in self.stocks_in_market]
-            for pair in all_stock_sma_pairs:
-                pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
-                if pd > self.sma_percent_difference_to_buy:
-                    stocks_to_buy.append({
-                        'symbol' : pair['symbol'],
-                        'sma_dif' : pd,
-                        'price' : pair['close'],
-                        'object' : pair['object']
-                        })
-        if self.volatility != 'Null':
-            pass
-        # etc.
-        ## other blocks run their conditions
         
-
-        ## now throw out ones that don't pass threshold ##
-        ## i think it's easiest to do now rather than add into every block logic  
-
-        for stock in stocks_to_buy:
-            for key,value in self.threshold_price:
-                if ((key == 'below' and value > stock['price']) or
-                    (key == 'above' and value < stock['price'])):
-                    stocks_to_buy.remove(stock)
-                    break
-            if ((stock['object'].sector in self.threshold_sector) or
-                (stock['object'].industry in self.threshold_industry)):
-                    stocks_to_buy.remove(stock)
-                    break
+        for block in self.blocks:
+            if block['status'] != "off":
+                stocks_to_buy.append(block['class'].aggregate_stocks())
+        
+        survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()
+        ## now rank survivors 
 
         return sorted(stocks_to_buy,key=(lambda x: x['pd']+self.risk_appetite*x['vol_dif']),reverse=True)[:self.holdings]
 
@@ -159,7 +123,7 @@ class BacktestingEnvironment:
 
 ## Algorithms built from Blocks ##
 
-class SampleAlgorithm:
+class BaseAlgorithm:
 ## marks stocks whose 30 day SMA (simple moving average) has changed by more than 10%
 
     def __init__(self,**kwargs):
@@ -167,53 +131,80 @@ class SampleAlgorithm:
         #### SET DEFAULTS ####
 
         ## Testing Environment ##
-        self.start_date = "2013-01-01"
-        self.end_date = "2014-01-01"
-        self.initial_balance = 1000000
+        self.testing_environment = {
+            'start_date' : "2013-01-01",
+            'end_date' : "2014-01-01",
+            'initial_balance' : 1000000,
+            'frequency' : 12,
+            'num_holdings' : 3,
+        }
 
-        ## Frequency ##
-        self.frequency = 12 ## represent as times per year the code should execute
+        ## Sample Blocks Attributes ##
+        self.sma = {
+            'period' : 'Null',
+            'percent_difference_to_buy' : 'Null',
+            'percent_difference_to_sell' : 'Null',
+            'appetite' : 0,
+        }
+        self.volatility = {
+            'period' : 'Null',
+            'threshold_to_buy' : 'Null',
+            'threshold_to_sell' : 'Null', 
+            'appetite' : 0,
+        }
+        self.covariance = {
+            'benchmark' : 'Null',
+            'period' : 'Null',
+            'desired' : {'above' : 'Null', 'below' : 'Null'},
+            'threshold_to_sell' : 'Null',
+            'appetite' : 0,
+        }
+        self.diversity = {
+            'num_sector' : 99999999, ## can't exeed threshold in portfolio
+            'num_industry' : 99999999, ## e.g. 2 --> can't have more than 2 of same industry
+        }
+        self.thresholds = {
+            'price' : {'above' : 0, 'below' : 9999999999},
+            'sector' : {'include' : 'Null', 'exclude' : 'Null'},
+            'industry' : {'include' : 'Null', 'exclude' : 'Null'}
+        }
+        self.crisis = {
+            'appetite' : 0,
+            'behavior' : 'Null' ## Hold, Sell All, diversify..
+        }
 
-        ## Customize Portfolio
-        self.number_of_holdings = 3
-
-        ## Sample Blocks ##
-        self.sma_period = "Null"
-        self.sma_percent_difference_to_buy = "Null"
-        self.sma_percent_difference_to_sell = "Null"
-        
-        self.sma_volatility = "Null"
-        self.sma_volatility_threshold = "Null"
-
-        self.risk_appetite = 0
-        
-        ## Threshold Contions ##
-        self.threshold_price = "Null" ## {'below' : 500,'above' : 200}
-        self.threshold_sector = "Null" ## {'yes' : 'healthcare'}
-        self.threshold_industry = "Null" ## {'yes' : 'biotechnology'}
-
-        ## Covariance Conditions ##
-        self.covariance_appetite = 0
-        self.desired_covariance = "Null" # {'above':1,'below':10}
-
-        ## Diversity Conditions ##
-        self.diversity_appetite = 0
-        self.desired_diversity_sector = "Null" # {'average no more than 1.2'}
-        self.desired_diversity_industry = "Null" # {'below' : 1.5}
-
-        ## Crisis Conditions ##
-        self.crisis_threshold = "Null"
-        ## could be general downturn in market (all sma's get calculated)
-
+        ## Overwrite Defaults ##
         for key in kwargs:
             setattr(self,key,kwargs[key])
 
-        ## Ideas ## 
-        # - all other economic data can be used (P/E,R/E,...)
-        # - covariance of sectors, industries --> aim for diversity in stocks
-        # - covariance of stocks to each other --> avoid holding on to similar covariances in portfolio
-        # - different parameter with averages
-        #############
+        ## Encapsulate Blocks for Processing ##
+        self.sma_block = {
+            'status' : 'off',
+            'class' : SMA_Block(**self.sma),
+        }
+        self.volatility_block = {
+            'status' : 'off',
+            'class' : Volatlity_Block(**self.volatility)
+        }
+
+        self.covariance_block = {
+            'status' : 'off',
+            'class' : Covariance_Block(**self.covariance)
+        }
+
+        self.diversity_condition = {
+            'status' : 'off',
+            'attributes' : self.diversity
+        }
+        self.threshold_condition = {
+            'status' : 'off',
+            'attributes' : self.thresholds
+        }
+        self.crisis_condition = {
+            'status' : 'off',
+            'attributes' : self.crisis
+        }
+
 
     def __run__(self):
         be = BacktestingEnvironment(**self.__dict__)
@@ -225,8 +216,8 @@ class SampleAlgorithm:
 if __name__ == '__main__':
     ## at this point, back end expects a JSON
     json = {'sma_period' : 15, 'sma_percent_difference_to_buy':0.1}
-    sa = SampleAlgorithm(**json) ## 15 day SMA for 0.1 percent difference to buy
-    sa.__run__()
+    base = BaseAlgorithm(**json) ## 15 day SMA for 0.1 percent difference to buy
+    base.__run__()
     
 
 

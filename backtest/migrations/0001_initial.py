@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
                 ('sector', models.CharField(max_length=100)),
                 ('industry', models.CharField(max_length=100)),
-                ('ticker', models.CharField(db_index=True, max_length=6, unique=True)),
+                ('symbol', models.CharField(db_index=True, max_length=6, unique=True)),
             ],
             options={
             },

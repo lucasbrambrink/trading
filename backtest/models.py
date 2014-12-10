@@ -18,6 +18,7 @@ class Prices(models.Model):
     high = models.CharField(max_length=20)
     low = models.CharField(max_length=20)
     close = models.CharField(max_length=20)
+    volume = models.CharField(max_length=20)
 
     class Meta:
         app_label = 'backtest'
