@@ -9,42 +9,6 @@ from calculator import *
 from models import Stocks,Prices
 import math
 
-## Helper Class
-class ParseDates:
-
-    def __init__(self):
-        self.prepare_dates_for_data_collection()
-
-    def prepare_dates_for_data_collection(self):
-        """
-        Generate a list of dates in the format of "yyyy-mm-dd" from 2000-01-01 to 2013-12-31
-
-        :return: date list
-        """
-        self.all_dates = []
-        for year in range(2000, 2014):
-            for month in range(1,13):
-                for day in range(1,32): ## it is okay for all months to go to 31 bc many of the dates wont be in the DB regardless (stock market closed)
-                    date_str = "{y}-{m:0=2d}-{d:0=2d}".format(y=year, m=month, d=day)
-                    self.all_dates.append(date_str)
-
-    @staticmethod
-    def split_date_into_ints(date):
-        """
-        Split date string into (year, month, day) integers
-
-        params: date = "yyyy-mm-dd"
-        returns: (year, month, day) integers
-        """
-        return map(lambda x: int(x), date.split('-'))
-
-    @staticmethod
-    def dates_in_range(start_date,end_date):
-        stock = Stocks.objects.filter(symbol='GOOG')
-        dates = Prices.objects.filter(stock=stock).filter(date__range(start_date,end_date))
-        return [date.date for date in dates]
-
-
 class BacktestingEnvironment:
 
     def __init__(self,**kwargs):
@@ -61,7 +25,6 @@ class BacktestingEnvironment:
 
     ## main backtesting method ##
     def run_period_with_algorithm(self):
-        print('run algorithm')
         for index,date in enumerate(self.dates_in_range):
             if index % math.floor(365/self.frequency) == 0:
                 self.execute_trading_session(date)
@@ -70,7 +33,6 @@ class BacktestingEnvironment:
 
     ## helper method ##
     def execute_trading_session(self,date):
-        print('executing trading session, date: ',date)
         stocks_to_buy = self.find_stocks_to_buy(date)
         if len(stocks_to_buy) == 0:
             return False
@@ -230,6 +192,15 @@ class SampleAlgorithm:
         self.threshold_sector = "Null" ## {'yes' : 'healthcare'}
         self.threshold_industry = "Null" ## {'yes' : 'biotechnology'}
 
+        ## Covariance Conditions ##
+        self.covariance_appetite = 0
+        self.desired_covariance = "Null" # {'above':1,'below':10}
+
+        ## Diversity Conditions ##
+        self.diversity_appetite = 0
+        self.desired_diversity_sector = "Null" # {'average no more than 1.2'}
+        self.desired_diversity_industry = "Null" # {'below' : 1.5}
+
         ## Crisis Conditions ##
         self.crisis_threshold = "Null"
         ## could be general downturn in market (all sma's get calculated)
@@ -237,9 +208,7 @@ class SampleAlgorithm:
         for key in kwargs:
             setattr(self,key,kwargs[key])
 
-        ## Ideas ##
-        # - volatility of stock below certain threshold
-        # - limit scope on sector / industry
+        ## Ideas ## 
         # - all other economic data can be used (P/E,R/E,...)
         # - covariance of sectors, industries --> aim for diversity in stocks
         # - covariance of stocks to each other --> avoid holding on to similar covariances in portfolio
