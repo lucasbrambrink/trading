@@ -120,20 +120,17 @@ class BacktestingEnvironment:
         sma1_prices = []
         sma2_prices = []
         start_id = Prices.objects.filter(stock=stock_object).filter(date=date)
-        if len(start_id) > 0:
-        	start_id = start_id[0].id
-        else:
-        	return {'symbol' : 'ZZZ', 'sma_pair' : (1,1,), 'date' : date,}
         ## DB is seeded backwards (starts with latest date)
         end_id = start_id + (self.sma_period * 2) ## pair
         prices_in_range = Prices.objects.filter(id__range=(start_id,end_id))
         for index,price in enumerate(prices_in_range[::-1]): ## arrange into proper order
             if len(prices_in_range[index].close) == 0:
                 continue 
+            price = {'price': float(prices_in_range[index].close), 'date' : date}
             if index < (len(prices_in_range)/2):
-                sma1_prices.append({'price' : float(prices_in_range[index].close),'date' : date })
+                sma1_prices.append(price)
             else:
-                sma2_prices.append({'price' : float(prices_in_range[index].close),'date' : date })
+                sma2_prices.append(price)
         sma1 = self.c.average(sma1_prices,'price')
         sma2 = self.c.average(sma2_prices,'price')
         sma_pair = {
@@ -156,7 +153,7 @@ class BacktestingEnvironment:
                 if pd > self.sma_percent_difference_to_buy:
                     stocks_to_buy.append({
                         'symbol' : pair['symbol'],
-                        'pd' : pd,
+                        'sma_dif' : pd,
                         'price' : pair['close'],
                         'object' : pair['object']
                         })
@@ -171,20 +168,17 @@ class BacktestingEnvironment:
 
         for stock in stocks_to_buy:
             for key,value in self.threshold_price:
-                if (key == 'below' and value > stock['price'] or
-                    key == 'above' and value < stock['price']):
+                if ((key == 'below' and value > stock['price']) or
+                    (key == 'above' and value < stock['price'])):
                     stocks_to_buy.remove(stock)
                     break
-            if (stock['object'].sector in self.threshold_sector or
-                stock['object'].industry in self.threshold_industry):
+            if ((stock['object'].sector in self.threshold_sector) or
+                (stock['object'].industry in self.threshold_industry)):
                     stocks_to_buy.remove(stock)
                     break
-        return stocks_to_buy
 
-        
+        return sorted(stocks_to_buy,key=(lambda x: x['pd']+self.risk_appetite*x['vol_dif']),reverse=True)[:self.holdings]
 
-
-        return stocks_to_buy
 
     ## Views ##
     def print_information(self,date):
@@ -229,6 +223,8 @@ class SampleAlgorithm:
         self.sma_volatility = "Null"
         self.sma_volatility_threshold = "Null"
 
+        self.risk_appetite = 0
+        
         ## Threshold Contions ##
         self.threshold_price = "Null" ## {'below' : 500,'above' : 200}
         self.threshold_sector = "Null" ## {'yes' : 'healthcare'}
