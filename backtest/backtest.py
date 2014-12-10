@@ -42,10 +42,7 @@ class ParseDates:
     def dates_in_range(start_date,end_date):
         stock = Stocks.objects.filter(symbol='GOOG')
         dates = Prices.objects.filter(stock=stock).filter(date__range(start_date,end_date))
-        dates_in_rage = []
-        for date in dates:
-            dates_in_range.append(date.date)
-        return dates_in_range
+        return [date.date for date in dates]
 
 
 class BacktestingEnvironment:
@@ -119,14 +116,6 @@ class BacktestingEnvironment:
         else:
             return False
 
-    def get_sma_pair_previous_2_periods(self,date):
-        print('get previous 2 smas')
-        all_stock_sma_pairs = []
-        date_specific_index = self.dates_in_range.index(date)
-        for stock_object in self.stocks_in_market:
-            all_stock_sma_pairs.append(self.get_sma_pair_per_stock(date,stock_object))
-        return all_stock_sma_pairs
-
     def get_sma_pair_per_stock(self,date,stock_object):
         sma1_prices = []
         sma2_prices = []
@@ -151,20 +140,50 @@ class BacktestingEnvironment:
             'symbol' : stock_object.symbol,
             'sma_pair' : (sma1,sma2,),
             'date' : date,
+            'close' : prices_in_range[0].close,
+            'object' : stock_object
             }
         return sma_pair
 
+
+    ## this needs to be encapsulated further ##
     def find_stocks_to_buy(self,date):
-        print('determining stocks to match sma threshold')
-        all_stock_sma_pairs = self.get_sma_pair_previous_2_periods(date)
-        stocks_to_buy = []
-        for pair in all_stock_sma_pairs:
-            pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
-            if pd > self.sma_percent_difference_to_buy:
-                stocks_to_buy.append({
-                    'symbol' : pair['symbol'],
-                    'pd' : pd
-                    })
+        stocks_to_buy = []  
+        if self.sma_period != 'Null':
+            all_stock_sma_pairs = [self.get_sma_pair_per_stock(date,stock_object) for stock_object in self.stocks_in_market]
+            for pair in all_stock_sma_pairs:
+                pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
+                if pd > self.sma_percent_difference_to_buy:
+                    stocks_to_buy.append({
+                        'symbol' : pair['symbol'],
+                        'pd' : pd,
+                        'price' : pair['close'],
+                        'object' : pair['object']
+                        })
+        if self.volatility != 'Null':
+            pass
+        # etc.
+        ## other blocks run their conditions
+        
+
+        ## now throw out ones that don't pass threshold ##
+        ## i think it's easiest to do now rather than add into every block logic  
+
+        for stock in stocks_to_buy:
+            for key,value in self.threshold_price:
+                if (key == 'below' and value > stock['price'] or
+                    key == 'above' and value < stock['price']):
+                    stocks_to_buy.remove(stock)
+                    break
+            if (stock['object'].sector in self.threshold_sector or
+                stock['object'].industry in self.threshold_industry):
+                    stocks_to_buy.remove(stock)
+                    break
+        return stocks_to_buy
+
+        
+
+
         return stocks_to_buy
 
     ## Views ##
@@ -211,9 +230,9 @@ class SampleAlgorithm:
         self.sma_volatility_threshold = "Null"
 
         ## Threshold Contions ##
-        self.price = "Null"
-        self.sector = "Null"
-        self.industry = "Null"
+        self.threshold_price = "Null" ## {'below' : 500,'above' : 200}
+        self.threshold_sector = "Null" ## {'yes' : 'healthcare'}
+        self.threshold_industry = "Null" ## {'yes' : 'biotechnology'}
 
         ## Crisis Conditions ##
         self.crisis_threshold = "Null"
