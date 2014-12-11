@@ -6,47 +6,80 @@ django.setup()
 
 ## get contingencies
 from calculator import *
-from models import Stocks,Prices
+from blocks import *
+from conditions import *
+from algorithm import BaseAlgorithm
+from models import *
 import math
+import re
+
+
 
 class BacktestingEnvironment:
 
-    def __init__(self,**kwargs):
-        for key in kwargs:
-            setattr(self,key,kwargs[key])
-
+    def __init__(self,backtest,algorithm):
+        self.start_date = backtest['start_date']
+        self.end_date = backtest['end_date']
+        self.initial_balance = backtest['initial_balance']
+        self.frequency = backtest['frequency']
+        self.num_holdings = backtest['num_holdings']
+    
+        self.blocks = []
+        self.conditions = []
+        for key in algorithm:
+            if re.search('_block', key):
+                self.blocks.append(algorithm[key])
+            if re.search('_condition', key):
+                short_key = key.split('_')[0]
+                self.conditions[short_key] = algorithm[key]
+        self.algorithm = algorithm['algorithm']
+        
         ## relevant dates ##
-        self.dates_in_range = ParseDates().dates_in_range(self.start_date, self.end_date)
+        self.dates_in_range = self.dates_in_range()
         self.stocks_in_market = Stocks.objects.all()
         self.c = Calculator()
         self.portfolio = []
         self.balance = self.initial_balance
 
+    def dates_in_range(self):
+        robust_stock = Stocks.objects.get(symbol='ACE')
+        return [x.date for x in Prices.objects.filter(stock=robust_stock).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
 
     ## main backtesting method ##
     def run_period_with_algorithm(self):
         for index,date in enumerate(self.dates_in_range):
             if index % math.floor(365/self.frequency) == 0:
                 self.execute_trading_session(date)
+                ## send portfolio to front end
                 self.print_information(date)
         return True
 
     ## helper method ##
-    def execute_trading_session(self,date):
-        stocks_to_buy = self.find_stocks_to_buy(date)
-        if len(stocks_to_buy) == 0:
-            return False
-
+    def execute_trading_session(self, date):
         ## sell first ##
         for asset in self.portfolio:
             stock = Stocks.objects.get(symbol=asset['symbol'])
-            self.sell_stock(stock,date)
+            self.sell_stock(stock, date)
 
         ## buy stocks based on portfolio customization ##
-        holdings = sorted(stocks_to_buy,key=(lambda x: x['pd']),reverse=True)[:self.holdings]
+        holdings = self.find_stocks_to_buy(date)
         investment_per_stock = math.floor(self.balance / len(holdings))
         for stock in holdings:
-            self.buy_stock(investment_per_stock,stock['symbol'],date)
+            self.buy_stock(investment_per_stock, stock['symbol'], date)
+        
+        ## Save State in DB ##
+        # user_id = request.sessions['user_id']
+        for asset in self.portfolio:
+            stock = Stocks.objects.get(symbol=asset['symbol'])
+            asset_db = {
+                'algorithm' : self.algorithm,
+                'stock' : stock,
+                'quantity' : asset['quantity'],
+                'price_purchased' : asset['price_purchased'],
+                'date' : date,
+            }
+            Assets.objects.create(**asset_db)
+
         return True
 
     ## support methods ##
@@ -78,68 +111,28 @@ class BacktestingEnvironment:
         else:
             return False
 
-    def get_sma_pair_per_stock(self,date,stock_object):
-        sma1_prices = []
-        sma2_prices = []
-        start_id = Prices.objects.filter(stock=stock_object).filter(date=date)
-        ## DB is seeded backwards (starts with latest date)
-        end_id = start_id + (self.sma_period * 2) ## pair
-        prices_in_range = Prices.objects.filter(id__range=(start_id,end_id))
-        for index,price in enumerate(prices_in_range[::-1]): ## arrange into proper order
-            if len(prices_in_range[index].close) == 0:
-                continue 
-            price = {'price': float(prices_in_range[index].close), 'date' : date}
-            if index < (len(prices_in_range)/2):
-                sma1_prices.append(price)
-            else:
-                sma2_prices.append(price)
-        sma1 = self.c.average(sma1_prices,'price')
-        sma2 = self.c.average(sma2_prices,'price')
-        sma_pair = {
-            'symbol' : stock_object.symbol,
-            'sma_pair' : (sma1,sma2,),
-            'date' : date,
-            'close' : prices_in_range[0].close,
-            'object' : stock_object
-            }
-        return sma_pair
-
 
     ## this needs to be encapsulated further ##
     def find_stocks_to_buy(self,date):
         stocks_to_buy = []  
-        if self.sma_period != 'Null':
-            all_stock_sma_pairs = [self.get_sma_pair_per_stock(date,stock_object) for stock_object in self.stocks_in_market]
-            for pair in all_stock_sma_pairs:
-                pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
-                if pd > self.sma_percent_difference_to_buy:
-                    stocks_to_buy.append({
-                        'symbol' : pair['symbol'],
-                        'sma_dif' : pd,
-                        'price' : pair['close'],
-                        'object' : pair['object']
-                        })
-        if self.volatility != 'Null':
-            pass
-        # etc.
-        ## other blocks run their conditions
+        for block in self.blocks:
+            stocks_to_buy.append(block.aggregate_stocks(self.stocks_in_market,date))
         
-
-        ## now throw out ones that don't pass threshold ##
-        ## i think it's easiest to do now rather than add into every block logic  
-
-        for stock in stocks_to_buy:
-            for key,value in self.threshold_price:
-                if ((key == 'below' and value > stock['price']) or
-                    (key == 'above' and value < stock['price'])):
-                    stocks_to_buy.remove(stock)
-                    break
-            if ((stock['object'].sector in self.threshold_sector) or
-                (stock['object'].industry in self.threshold_industry)):
-                    stocks_to_buy.remove(stock)
-                    break
-
-        return sorted(stocks_to_buy,key=(lambda x: x['pd']+self.risk_appetite*x['vol_dif']),reverse=True)[:self.holdings]
+        survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()[0]
+        ## now rank survivors 
+        scored_survivors = []
+        for survivor in survivors:
+            mult = [x for x in survivors if x['symbol'] == survivor['symbol']]
+            scores = []
+            for point in mult:
+                scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
+            aggregate_score = 0
+            for score in scores:
+                if len(score) > 0:
+                    aggregate_score += score[0]
+            survivor['agg_score'] = aggregate_score
+            scored_survivors.append(survivor)
+        return sorted(scored_survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
 
 
     ## Views ##
@@ -156,79 +149,33 @@ class BacktestingEnvironment:
         print("Returns : ",returns)
         return True
 
-
-## Algorithms built from Blocks ##
-
-class SampleAlgorithm:
-## marks stocks whose 30 day SMA (simple moving average) has changed by more than 10%
-
-    def __init__(self,**kwargs):
-
-        #### SET DEFAULTS ####
-
-        ## Testing Environment ##
-        self.start_date = "2013-01-01"
-        self.end_date = "2014-01-01"
-        self.initial_balance = 1000000
-
-        ## Frequency ##
-        self.frequency = 12 ## represent as times per year the code should execute
-
-        ## Customize Portfolio
-        self.number_of_holdings = 3
-
-        ## Sample Blocks ##
-        self.sma_period = "Null"
-        self.sma_percent_difference_to_buy = "Null"
-        self.sma_percent_difference_to_sell = "Null"
-        
-        self.sma_volatility = "Null"
-        self.sma_volatility_threshold = "Null"
-
-        self.risk_appetite = 0
-        
-        ## Threshold Contions ##
-        self.threshold_price = "Null" ## {'below' : 500,'above' : 200}
-        self.threshold_sector = "Null" ## {'yes' : 'healthcare'}
-        self.threshold_industry = "Null" ## {'yes' : 'biotechnology'}
-
-        ## Covariance Conditions ##
-        self.covariance_appetite = 0
-        self.desired_covariance = "Null" # {'above':1,'below':10}
-
-        ## Diversity Conditions ##
-        self.diversity_appetite = 0
-        self.desired_diversity_sector = "Null" # {'average no more than 1.2'}
-        self.desired_diversity_industry = "Null" # {'below' : 1.5}
-
-        ## Crisis Conditions ##
-        self.crisis_threshold = "Null"
-        ## could be general downturn in market (all sma's get calculated)
-
-        for key in kwargs:
-            setattr(self,key,kwargs[key])
-
-        ## Ideas ## 
-        # - all other economic data can be used (P/E,R/E,...)
-        # - covariance of sectors, industries --> aim for diversity in stocks
-        # - covariance of stocks to each other --> avoid holding on to similar covariances in portfolio
-        # - different parameter with averages
-        #############
-
     def __run__(self):
-        be = BacktestingEnvironment(**self.__dict__)
-        be.run_period_with_algorithm()
-
+        self.run_period_with_algorithm()
 
 
 ## Script ##
 if __name__ == '__main__':
     ## at this point, back end expects a JSON
-    json = {'sma_period' : 15, 'sma_percent_difference_to_buy':0.1}
-    sa = SampleAlgorithm(**json) ## 15 day SMA for 0.1 percent difference to buy
-    sa.__run__()
-    
-
+    json = {
+        'backtest': {
+            'start_date': "2013-01-01",
+            'end_date': "2014-01-01",
+            'initial_balance': 1000000,
+            'frequency': 12,
+            'num_holdings': 3,
+            }, 
+        'algorithm': {
+            'name' : 'Test',
+            'sma': {
+                'period1': 15, 
+                'period2': 10,
+                'percent_difference_to_buy': 0.1,
+                'appetite': 5
+                },
+            }
+        }
+    base = BaseAlgorithm(json['algorithm'])
+    BacktestingEnvironment(json['backtest'], base.__dict__).__run__()
 
 
 

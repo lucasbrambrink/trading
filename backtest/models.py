@@ -14,30 +14,31 @@ class Stocks(models.Model):
 class Prices(models.Model):
     stock = models.ForeignKey(Stocks)
     date = models.DateField()
-    open = models.CharField(max_length=20)
-    high = models.CharField(max_length=20)
-    low = models.CharField(max_length=20)
-    close = models.CharField(max_length=20)
+    open = models.FloatField()
+    high = models.FloatField()
+    low = models.FloatField()
+    close = models.FloatField()
+    volume = models.FloatField()
 
     class Meta:
         app_label = 'backtest'
 
-"""
 class Algorithms(models.Model):
-    created_by = models.ForeignKey(Users)
-    up_votes = models.IntegerField()
-
-
-class Portfolios(models.Model):
+    # user = models.ForeignKey(Users)
     name = models.CharField(max_length=30)
-    algorithm = models.ForeignKey(Algorithms)
-    blocks = models.CharField(max_length=50) ## once we know what these are
-    balance = models.CharField(max_length=25)
+    # created_by = models.ForeignKey(Users)
+    # up_votes = models.IntegerField()
+
+    class Meta:
+        app_label = 'backtest'
 
 
 class Assets(models.Model):
-    portfolio = models.ForeignKey(Portfolios)
+    algorithm = models.ForeignKey(Algorithms)
     stock = models.ForeignKey(Stocks)
     quantity = models.IntegerField()
     price_purchased = models.CharField(max_length=10)
-"""
+    date = models.DateField()
+
+    class Meta:
+        app_label = 'backtest'
