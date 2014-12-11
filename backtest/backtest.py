@@ -48,7 +48,7 @@ class BacktestingEnvironment:
     ## main backtesting method ##
     def run_period_with_algorithm(self):
         for index,date in enumerate(self.dates_in_range):
-            if index % math.floor(365/self.frequency) == 0:
+            if index % math.floor(252/self.frequency) == 0:
                 self.execute_trading_session(date)
                 ## send portfolio to front end
                 self.print_information(date)
@@ -63,10 +63,11 @@ class BacktestingEnvironment:
 
         ## buy stocks based on portfolio customization ##
         holdings = self.find_stocks_to_buy(date)
-        investment_per_stock = math.floor(self.balance / len(holdings))
-        for stock in holdings:
-            self.buy_stock(investment_per_stock, stock['symbol'], date)
-        
+        if len(holdings) > 0:
+            investment_per_stock = math.floor(self.balance / len(holdings))
+            for stock in holdings:
+                self.buy_stock(investment_per_stock, stock['symbol'], date)
+            
         ## Save State in DB ##
         # user_id = request.sessions['user_id']
         for asset in self.portfolio:
