@@ -115,11 +115,17 @@ class BacktestingEnvironment:
         
         survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()
         ## now rank survivors 
-
-        return sorted(stocks_to_buy,key=(lambda x: (
-            self.sma['appetite']*x['pd']+
-            self.volatility['appetite']*x['vol']+
-            self.covariance['appetite']*x['']),reverse=True)[:self.holdings]
+        scored_survivors = []
+        for survivor in survivors:
+            mult = [x for x in survivors if x['symbol'] == survivor['symbol']]
+            sma_score,volatility_score,covariance_score = 0,0,0
+            for point in mult:
+                sma_score = [self.sma['appetite']*point[key] for key in point if key=='pd'][0]
+                volatility_score = [self.volatility['appetite']*point[key] for key in point if key == 'vol'][0]
+                covariance_score = [self.covariance['appetite']*point[key] for key in point if key == 'covariance'][0]
+            survivor['agg_score'] = sma_score + volatility_score + covariance_score
+            scored_survivors.append(survivor)
+        return sorted(scored_survivors,key=(lambda x: x['agg_score'],reverse=True)[:self.holdings]
 
 
     ## Views ##
