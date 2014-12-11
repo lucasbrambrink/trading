@@ -42,7 +42,7 @@ class BacktestingEnvironment:
 
     def dates_in_range(self):
         robust_stock = Stocks.objects.get(symbol='ACE')
-        return [x.date for x in Prices.objects.filter(stock=robust_stock).filter(date__range=(self.start_date,self.end_date))]
+        return [x.date for x in Prices.objects.filter(stock=robust_stock).filter(date__range=(self.start_date,self.end_date)).order_by('date')]
 
     ## main backtesting method ##
     def run_period_with_algorithm(self):
@@ -121,7 +121,6 @@ class BacktestingEnvironment:
         survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()[0]
         ## now rank survivors 
         scored_survivors = []
-        print(survivors)
         for survivor in survivors:
             mult = [x for x in survivors if x['symbol'] == survivor['symbol']]
             scores = []

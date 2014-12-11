@@ -10,7 +10,7 @@ class DB_Helper:
 
     @staticmethod
     def prices_in_range(period1_identifier,period2_identifier,stock_object,date):
-        start_id = Prices.objects.filter(stock=stock_object).filter(date=date)
+        start_id = Prices.objects.filter(stock=stock_object).filter(date=date).order_by('date')
         if len(start_id) > 0:
             start_id = start_id[0].id
             end_id = start_id + (period1_identifier + period2_identifier) ## pair
