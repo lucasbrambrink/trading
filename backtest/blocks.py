@@ -72,7 +72,7 @@ class Volatility_Block:
         return {
             'object' : stock_object,
             'volatility' : volatility,
-            'price' : float(prices_in_range[0].close),
+            'price' : price_objects[-1]['price'],
             'symbol' : stock_object.symbol
         }
 
@@ -81,7 +81,26 @@ class Volatility_Block:
         all_volatilities = [get_volatility_per_stock(stock_object,date) for stock_object in self.stocks_in_market]
         return [volatility for volatility in all_volatilities if volatility['volatility'] > self.threshold_to_buy]
 
-class 
+class Covariance_Block:
+
+    def __init__(self,**kwargs):
+        for key in kwargs:
+            setattr(self,key,kwargs[key])
+
+    def get_covariance_per_stock(self,stock_object,date):
+        prices_in_range = DB_Helper.prices_in_range(self.period,stock_object,date)
+        price_objects = [{'price' : float(x.close)} for x in prices_in_range]
+        covariance = Calculator.covariance(price_objects,self.benchmark,'price')
+        return {
+            'object' : stock_object,
+            'covariance' : covariance,
+            'price' : price_objects[-1]['price'],
+            'symbol' : stock_object.symbol
+        }
+
+    def aggregate_stocks(self,date):
+        self.benchmark = Prices.objects.filter(stock=)
+
 
 
 
