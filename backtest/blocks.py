@@ -24,9 +24,8 @@ class SMA_Block:
     def __init__(self,**kwargs):
         self.c = Calculator()
         for key in kwargs:
-            setattr(self,key,kwargs[key])
-        self.stocks_in_market = Stocks.objects.all()
-
+            setattr(self, key, kwargs[key])
+    
     def get_sma_pair_per_stock(self,date,stock_object):
         sma1_prices,sma2_prices = [],[]
         prices_in_range = DB_Helper.prices_in_range(self.period1,self.period2,stock_object,date)
@@ -49,18 +48,18 @@ class SMA_Block:
             }
         return sma_pair
 
-    def aggregate_stocks(self,date):
+    def aggregate_stocks(self,stocks,date):
         stocks_to_buy = []
-        all_stock_sma_pairs = [self.get_sma_pair_per_stock(date,stock_object) for stock_object in self.stocks_in_market]
+        all_stock_sma_pairs = [self.get_sma_pair_per_stock(date,stock_object) for stock_object in stocks]
         for pair in all_stock_sma_pairs:
             if pair is not None:
                 pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
                 if pd > self.percent_difference_to_buy:
                     stocks_to_buy.append({
-                        'symbol' : pair['symbol'],
-                        'sma_score' : self.appetite*pd,
-                        'price' : pair['close'],
-                        'object' : pair['object']
+                        'symbol': pair['symbol'],
+                        'sma_score': self.appetite*pd,
+                        'price': pair['close'],
+                        'object': pair['object']
                         })
         return stocks_to_buy
 
@@ -77,15 +76,14 @@ class Volatility_Block:
         price_objects = [{'price' : float(x.close)} for x in prices_in_range]
         volatility = Calculator.stdev(price_objects,'price')
         return {
-            'object' : stock_object,
-            'volatility_score' : self.appetite*volatility,
-            'price' : price_objects[-1]['price'],
-            'symbol' : stock_object.symbol
+            'object': stock_object,
+            'volatility_score': self.appetite*volatility,
+            'price': price_objects[-1]['price'],
+            'symbol': stock_object.symbol
         }
 
-
-    def aggregate_stocks(self,date):
-        all_volatilities = [get_volatility_per_stock(stock_object,date) for stock_object in self.stocks_in_market]
+    def aggregate_stocks(self,stocks,date):
+        all_volatilities = [get_volatility_per_stock(stock_object,date) for stock_object in stocks]
         return [volatility for volatility in all_volatilities if volatility['volatility'] > self.threshold_to_buy]
 
 class Covariance_Block:
@@ -101,10 +99,10 @@ class Covariance_Block:
         price_objects = [{'price' : float(x.close)} for x in prices_in_range]
         covariance = Calculator.covariance(price_objects,self.benchmark,'price')
         return {
-            'object' : stock_object,
-            'covariance_score' : self.appetite*covariance,
-            'price' : price_objects[-1]['price'],
-            'symbol' : stock_object.symbol
+            'object': stock_object,
+            'covariance_score': self.appetite*covariance,
+            'price': price_objects[-1]['price'],
+            'symbol': stock_object.symbol
         }
 
     def parse_benchmark(self):
@@ -113,8 +111,8 @@ class Covariance_Block:
         self.benchmark = [{'price' : float(x.close)} for x in prices]
         return True
 
-    def aggregate_stocks(self,date):
-        all_covariances = [get_covariance_per_stock(stock_object,date) for stock_object in self.stocks_in_market]
+    def aggregate_stocks(self,stocks,date):
+        all_covariances = [get_covariance_per_stock(stock_object,date) for stock_object in stocks]
         return [c for c in all_covariances if c > self.threshold_to_buy]
 
 

@@ -115,7 +115,7 @@ class BacktestingEnvironment:
         for block in self.blocks:
             if block['status'] == "on":
                 # print(block['class'])
-                stocks_to_buy.append(block['class'].aggregate_stocks(date))
+                stocks_to_buy.append(block['class'].aggregate_stocks(self.stocks_in_market,date))
         
         survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()[0]
         ## now rank survivors 
@@ -156,7 +156,10 @@ class BacktestingEnvironment:
 ## Script ##
 if __name__ == '__main__':
     ## at this point, back end expects a JSON
-    json = { 'sma' : {
+    json = { 'backtest' : {}, 'algorithm' : [ ] } 
+
+
+    'sma' : {
         'period1' : 15, 
         'period2' : 10,
         'percent_difference_to_buy':0.1,
