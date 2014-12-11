@@ -35,7 +35,7 @@ class BacktestingEnvironment:
         self.algorithm = algorithm['algorithm']
         
         ## relevant dates ##
-        self.dates_in_range = self.dates_in_range()
+        self.dates_in_range = set(self.dates_in_range())
         self.stocks_in_market = Stocks.objects.all()
         self.c = Calculator()
         self.portfolio = []
@@ -49,9 +49,10 @@ class BacktestingEnvironment:
     def run_period_with_algorithm(self):
         for index,date in enumerate(self.dates_in_range):
             if index % math.floor(252/self.frequency) == 0:
-                self.execute_trading_session(date)
+                print(index)
+                # self.execute_trading_session(date)
                 ## send portfolio to front end
-                self.print_information(date)
+                # self.print_information(date)
         return True
 
     ## helper method ##
