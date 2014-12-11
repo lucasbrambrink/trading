@@ -34,7 +34,6 @@ class Conditions:
             	stock['object'].industry not in self.conditions['threshold']['attributes']['industry']['include'])):
                     self.stocks_to_buy.remove(stock)
                     break
-        
         return True
 		
     def diversity_purge(self):

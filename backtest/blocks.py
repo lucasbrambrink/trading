@@ -6,6 +6,14 @@ from calculator import *
 from models import Stocks,Prices
 import math
 
+class DB_Helper:
+
+    @staticmethod
+    def prices_in_range(period_identifier,stock_object,date):
+        start_id = Prices.objects.filter(stock=stock_object).filter(date=date)[0].id
+        end_id = start_id + (period_identifier) ## pair
+        return Prices.objects.filter(id__range=(start_id,end_id))
+        
 
 class SMA_Block:
     
@@ -14,15 +22,9 @@ class SMA_Block:
         for key in kwargs:
             setattr(self,key,kwargs[key])
 
-        self.recommendations = self.aggregate_stocks()
-
     def get_sma_pair_per_stock(self,date,stock_object):
-        sma1_prices = []
-        sma2_prices = []
-        start_id = Prices.objects.filter(stock=stock_object).filter(date=date)
-        ## DB is seeded backwards (starts with latest date)
-        end_id = start_id + (self.sma_period * 2) ## pair
-        prices_in_range = Prices.objects.filter(id__range=(start_id,end_id))
+        sma1_prices,sma2_prices = [],[]
+        prices_in_range = DB_Helper.prices_in_range((self.period*2),stock_object,date)
         for index,price in enumerate(prices_in_range[::-1]): ## arrange into proper order
             if len(prices_in_range[index].close) == 0:
                 continue 
@@ -42,7 +44,7 @@ class SMA_Block:
             }
         return sma_pair
 
-    def aggregate_stocks(self):
+    def aggregate_stocks(self,date):
         stocks_to_buy = []
         all_stock_sma_pairs = [self.get_sma_pair_per_stock(date,stock_object) for stock_object in self.stocks_in_market]
         for pair in all_stock_sma_pairs:
@@ -63,8 +65,24 @@ class Volatility_Block:
         for key in kwargs:
             setattr(self,key,kwargs[key])
 
-    def get_volatility_per_stock(self):
-        pass
+    def get_volatility_per_stock(self,stock_object,date):
+        prices_in_range = DB_Helper.prices_in_range(self.period,stock_object,date)
+        price_objects = [{'price' : float(x.close)} for x in prices_in_range]
+        volatility = Calculator.stdev(price_objects,'price')
+        return {
+            'object' : stock_object,
+            'volatility' : volatility,
+            'price' : float(prices_in_range[0].close),
+            'symbol' : stock_object.symbol
+        }
 
-    def aggregate_stocks(self):
+
+    def aggregate_stocks(self,date):
+        all_volatilities = [get_volatility_per_stock(stock_object,date) for stock_object in self.stocks_in_market]
+        return [volatility for volatility in all_volatilities if volatility['volatility'] > self.threshold_to_buy]
+
+class 
+
+
+
 
