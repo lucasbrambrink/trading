@@ -9,7 +9,7 @@ from calculator import *
 from blocks import *
 from conditions import *
 from algorithm import BaseAlgorithm
-from models import Stocks,Prices,Portfolios,Assets
+from models import *
 import math
 import re
 
@@ -23,16 +23,17 @@ class BacktestingEnvironment:
         self.initial_balance = backtest['initial_balance']
         self.frequency = backtest['frequency']
         self.num_holdings = backtest['num_holdings']
-        
+    
         self.blocks = []
         self.conditions = []
         for key in algorithm:
-            if re.search('_block',key):
+            if re.search('_block', key):
                 self.blocks.append(algorithm[key])
-            if re.search('_condition',key):
+            if re.search('_condition', key):
                 short_key = key.split('_')[0]
                 self.conditions[short_key] = algorithm[key]
-
+        self.algorithm = algorithm['algorithm']
+        
         ## relevant dates ##
         self.dates_in_range = self.dates_in_range()
         self.stocks_in_market = Stocks.objects.all()
@@ -42,7 +43,7 @@ class BacktestingEnvironment:
 
     def dates_in_range(self):
         robust_stock = Stocks.objects.get(symbol='ACE')
-        return [x.date for x in Prices.objects.filter(stock=robust_stock).filter(date__range=(self.start_date,self.end_date)).order_by('date')]
+        return [x.date for x in Prices.objects.filter(stock=robust_stock).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
 
     ## main backtesting method ##
     def run_period_with_algorithm(self):
@@ -54,31 +55,30 @@ class BacktestingEnvironment:
         return True
 
     ## helper method ##
-    def execute_trading_session(self,date):
+    def execute_trading_session(self, date):
         ## sell first ##
         for asset in self.portfolio:
             stock = Stocks.objects.get(symbol=asset['symbol'])
-            self.sell_stock(stock,date)
+            self.sell_stock(stock, date)
 
         ## buy stocks based on portfolio customization ##
         holdings = self.find_stocks_to_buy(date)
         investment_per_stock = math.floor(self.balance / len(holdings))
         for stock in holdings:
-            self.buy_stock(investment_per_stock,stock['symbol'],date)
+            self.buy_stock(investment_per_stock, stock['symbol'], date)
         
-        ## Save Portfolio State in DB ##
+        ## Save State in DB ##
         # user_id = request.sessions['user_id']
-        # portfolio_object = Portfolios.objects.get(user=user_id)
-        # for asset in self.portfolio:
-        #     stock = Stocks.objects.get(symbol=asset['symbol'])
-        #     asset_db = {
-        #         'portfolio' : portfolio_object,
-        #         'stock' : stock,
-        #         'quantity' : asset['quantity'],
-        #         'price_purchased' : asset['price_purchased'],
-        #         'date' : date,
-        #     }
-        #     Assets.objects.create(**asset_db)
+        for asset in self.portfolio:
+            stock = Stocks.objects.get(symbol=asset['symbol'])
+            asset_db = {
+                'algorithm' : self.algorithm,
+                'stock' : stock,
+                'quantity' : asset['quantity'],
+                'price_purchased' : asset['price_purchased'],
+                'date' : date,
+            }
+            Assets.objects.create(**asset_db)
 
         return True
 
@@ -165,6 +165,7 @@ if __name__ == '__main__':
             'num_holdings': 3,
             }, 
         'algorithm': {
+            'name' : 'Test',
             'sma': {
                 'period1': 15, 
                 'period2': 10,

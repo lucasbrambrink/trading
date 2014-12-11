@@ -1,6 +1,7 @@
 
 ## Algorithms built from Blocks ##
 from blocks import *
+from models import Algorithms
 
 class BaseAlgorithm:
 
@@ -18,6 +19,7 @@ class BaseAlgorithm:
         }
 
         ## Sample Blocks Attributes ##
+
         self.sma = {
             'period1': 0,
             'period2': 0,
@@ -76,4 +78,10 @@ class BaseAlgorithm:
             
         if 'crisis' in algorithm:
             self.crisis_condition = self.crisis
+
+        self.algorithm = self.save_db()
+
+    def save_db(self):
+        a = Algorithms.objects.create(name=self.name)
+        return a
            
