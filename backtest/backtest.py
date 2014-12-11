@@ -166,11 +166,11 @@ if __name__ == '__main__':
             'num_holdings': 3,
             }, 
         'algorithm': {
-            'sma' : {
-                'period1' : 15, 
-                'period2' : 10,
-                'percent_difference_to_buy':0.1,
-                'appetite' : 5
+            'sma': {
+                'period1': 15, 
+                'period2': 10,
+                'percent_difference_to_buy': 0.1,
+                'appetite': 5
                 },
             }
         }
