@@ -14,11 +14,11 @@ class Stocks(models.Model):
 class Prices(models.Model):
     stock = models.ForeignKey(Stocks)
     date = models.DateField()
-    open = models.CharField(max_length=20)
-    high = models.CharField(max_length=20)
-    low = models.CharField(max_length=20)
-    close = models.CharField(max_length=20)
-    volume = models.CharField(max_length=20)
+    open = models.FloatField()
+    high = models.FloatField()
+    low = models.FloatField()
+    close = models.FloatField()
+    volume = models.FloatField()
 
     class Meta:
         app_label = 'backtest'
@@ -41,4 +41,5 @@ class Assets(models.Model):
     stock = models.ForeignKey(Stocks)
     quantity = models.IntegerField()
     price_purchased = models.CharField(max_length=10)
+    date = DateField()
 """

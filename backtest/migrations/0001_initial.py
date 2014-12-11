@@ -14,11 +14,12 @@ class Migration(migrations.Migration):
             name='Prices',
             fields=[
                 ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('date', models.CharField(max_length=15)),
-                ('open', models.CharField(max_length=20)),
-                ('high', models.CharField(max_length=20)),
-                ('low', models.CharField(max_length=20)),
-                ('close', models.CharField(max_length=20)),
+                ('date', models.DateField()),
+                ('open', models.FloatField()),
+                ('high', models.FloatField()),
+                ('low', models.FloatField()),
+                ('close', models.FloatField()),
+                ('volume', models.FloatField()),
             ],
             options={
             },

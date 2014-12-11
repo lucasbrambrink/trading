@@ -9,9 +9,9 @@ import math
 class DB_Helper:
 
     @staticmethod
-    def prices_in_range(period_identifier,stock_object,date):
+    def prices_in_range(period1_identifier,period2_identifier,stock_object,date):
         start_id = Prices.objects.filter(stock=stock_object).filter(date=date)[0].id
-        end_id = start_id + (period_identifier) ## pair
+        end_id = start_id + (period1_identifier + period2_identifier) ## pair
         return Prices.objects.filter(id__range=(start_id,end_id))
         
 
@@ -21,15 +21,16 @@ class SMA_Block:
         self.c = Calculator()
         for key in kwargs:
             setattr(self,key,kwargs[key])
+        self.stocks_in_market = Stocks.objects.all()
 
     def get_sma_pair_per_stock(self,date,stock_object):
         sma1_prices,sma2_prices = [],[]
-        prices_in_range = DB_Helper.prices_in_range((self.period*2),stock_object,date)
+        prices_in_range = DB_Helper.prices_in_range((self.period1,self.period2),stock_object,date)
         for index,price in enumerate(prices_in_range[::-1]): ## arrange into proper order
             if len(prices_in_range[index].close) == 0:
                 continue 
             price = {'price': float(prices_in_range[index].close), 'date' : date}
-            if index < (len(prices_in_range)/2):
+            if index < self.period1:
                 sma1_prices.append(price)
             else:
                 sma2_prices.append(price)
@@ -64,9 +65,10 @@ class Volatility_Block:
     def __init__(self,**kwargs):
         for key in kwargs:
             setattr(self,key,kwargs[key])
+        self.stocks_in_market = Stocks.objects.all()
 
     def get_volatility_per_stock(self,stock_object,date):
-        prices_in_range = DB_Helper.prices_in_range(self.period,stock_object,date)
+        prices_in_range = DB_Helper.prices_in_range(self.period,0,stock_object,date)
         price_objects = [{'price' : float(x.close)} for x in prices_in_range]
         volatility = Calculator.stdev(price_objects,'price')
         return {
@@ -86,9 +88,11 @@ class Covariance_Block:
     def __init__(self,**kwargs):
         for key in kwargs:
             setattr(self,key,kwargs[key])
+        self.parse_benchmark()
+        self.stocks_in_market = Stocks.objects.all()
 
     def get_covariance_per_stock(self,stock_object,date):
-        prices_in_range = DB_Helper.prices_in_range(self.period,stock_object,date)
+        prices_in_range = DB_Helper.prices_in_range(self.period,0,stock_object,date)
         price_objects = [{'price' : float(x.close)} for x in prices_in_range]
         covariance = Calculator.covariance(price_objects,self.benchmark,'price')
         return {
@@ -98,8 +102,15 @@ class Covariance_Block:
             'symbol' : stock_object.symbol
         }
 
+    def parse_benchmark(self):
+        benchmark = Stocks.objects.get(symbol=self.benchmark)
+        prices = Prices.objects.filter(stock=benchmark).filter(id__range(benchmark.id,(benchmark.id + self.period)))
+        self.benchmark = [{'price' : float(x.close)} for x in prices]
+        return True
+
     def aggregate_stocks(self,date):
-        self.benchmark = Prices.objects.filter(stock=)
+        all_covariances = [get_covariance_per_stock(stock_object,date) for stock_object in self.stocks_in_market]
+        return [c for c in all_covariances if c > self.threshold_to_buy]
 
 
 
