@@ -7,7 +7,9 @@ django.setup()
 ## get contingencies
 from calculator import *
 from blocks import *
-from models import Stocks,Prices
+from conditions import *
+from algorithm import BaseAlgorithm
+from models import Stocks,Prices,Portfolios,Assets
 import math
 import re
 
@@ -29,49 +31,51 @@ class BacktestingEnvironment:
                 self.conditions[short_key] = kwargs[key]
 
         ## relevant dates ##
-        self.dates_in_range = ParseDates().dates_in_range(self.start_date, self.end_date)
+        self.dates_in_range = self.dates_in_range()
         self.stocks_in_market = Stocks.objects.all()
         self.c = Calculator()
         self.portfolio = []
         self.balance = self.initial_balance
 
+    def dates_in_range(self):
+        robust_stock = Stocks.objects.get(symbol='ACE')
+        return [x.date for x in Prices.objects.filter(stock=robust_stock).filter(date__range=(self.start_date,self.end_date))]
 
     ## main backtesting method ##
     def run_period_with_algorithm(self):
         for index,date in enumerate(self.dates_in_range):
             if index % math.floor(365/self.frequency) == 0:
                 self.execute_trading_session(date)
+                ## send portfolio to front end
                 self.print_information(date)
         return True
 
     ## helper method ##
     def execute_trading_session(self,date):
-        stocks_to_buy = self.find_stocks_to_buy(date)
-
         ## sell first ##
         for asset in self.portfolio:
             stock = Stocks.objects.get(symbol=asset['symbol'])
             self.sell_stock(stock,date)
 
         ## buy stocks based on portfolio customization ##
-        holdings = sorted(stocks_to_buy,key=(lambda x: x['pd']),reverse=True)[:self.holdings]
+        holdings = self.find_stocks_to_buy(date)
         investment_per_stock = math.floor(self.balance / len(holdings))
         for stock in holdings:
             self.buy_stock(investment_per_stock,stock['symbol'],date)
         
         ## Save Portfolio State in DB ##
         # user_id = request.sessions['user_id']
-        portfolio_object = Portfolios.objects.get(user_id=user_id)
-        for asset in self.portfolio:
-            stock = Stocks.objects.get(symbol=asset['symbol'])
-            asset_db = {
-                'portfolio' : portfolio_object,
-                'stock' : stock,
-                'quantity' : asset['quantity'],
-                'price_purchased' : asset['price_purchased'],
-                'date' : date,
-            }
-            Asset.objects.create(**asset_db)
+        # portfolio_object = Portfolios.objects.get(user=user_id)
+        # for asset in self.portfolio:
+        #     stock = Stocks.objects.get(symbol=asset['symbol'])
+        #     asset_db = {
+        #         'portfolio' : portfolio_object,
+        #         'stock' : stock,
+        #         'quantity' : asset['quantity'],
+        #         'price_purchased' : asset['price_purchased'],
+        #         'date' : date,
+        #     }
+        #     Assets.objects.create(**asset_db)
 
         return True
 
@@ -108,24 +112,27 @@ class BacktestingEnvironment:
     ## this needs to be encapsulated further ##
     def find_stocks_to_buy(self,date):
         stocks_to_buy = []  
-        
         for block in self.blocks:
-            if block['status'] != "off":
-                stocks_to_buy.append(block['class'].aggregate_stocks())
+            if block['status'] == "on":
+                # print(block['class'])
+                stocks_to_buy.append(block['class'].aggregate_stocks(date))
         
-        survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()
+        survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()[0]
         ## now rank survivors 
         scored_survivors = []
+        print(survivors)
         for survivor in survivors:
             mult = [x for x in survivors if x['symbol'] == survivor['symbol']]
-            sma_score,volatility_score,covariance_score = 0,0,0
+            scores = []
             for point in mult:
-                sma_score = [self.sma['appetite']*point[key] for key in point if key=='pd'][0]
-                volatility_score = [self.volatility['appetite']*point[key] for key in point if key == 'vol'][0]
-                covariance_score = [self.covariance['appetite']*point[key] for key in point if key == 'covariance'][0]
-            survivor['agg_score'] = sma_score + volatility_score + covariance_score
+                scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
+            aggregate_score = 0
+            for score in scores:
+                if len(score) > 0:
+                    aggregate_score += score[0]
+            survivor['agg_score'] = aggregate_score
             scored_survivors.append(survivor)
-        return sorted(scored_survivors,key=(lambda x: x['agg_score'],reverse=True)[:self.holdings]
+        return sorted(scored_survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
 
 
     ## Views ##
@@ -142,16 +149,21 @@ class BacktestingEnvironment:
         print("Returns : ",returns)
         return True
 
+    def __run__(self):
+        self.run_period_with_algorithm()
 
 
 ## Script ##
 if __name__ == '__main__':
     ## at this point, back end expects a JSON
-    json = {'sma_period' : 15, 'sma_percent_difference_to_buy':0.1}
-    base = BaseAlgorithm(**json) ## 15 day SMA for 0.1 percent difference to buy
-    base.__run__()
-    
-
+    json = { 'sma' : {
+        'period1' : 15, 
+        'period2' : 10,
+        'percent_difference_to_buy':0.1,
+        'appetite' : 5}
+        }
+    base = BaseAlgorithm(**json)
+    BacktestingEnvironment(**base.__dict__).__run__()
 
 
 

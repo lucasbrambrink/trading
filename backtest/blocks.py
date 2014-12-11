@@ -10,9 +10,13 @@ class DB_Helper:
 
     @staticmethod
     def prices_in_range(period1_identifier,period2_identifier,stock_object,date):
-        start_id = Prices.objects.filter(stock=stock_object).filter(date=date)[0].id
-        end_id = start_id + (period1_identifier + period2_identifier) ## pair
-        return Prices.objects.filter(id__range=(start_id,end_id))
+        start_id = Prices.objects.filter(stock=stock_object).filter(date=date)
+        if len(start_id) > 0:
+            start_id = start_id[0].id
+            end_id = start_id + (period1_identifier + period2_identifier) ## pair
+            return Prices.objects.filter(id__range=(start_id,end_id))
+        else:
+            return []
         
 
 class SMA_Block:
@@ -25,10 +29,10 @@ class SMA_Block:
 
     def get_sma_pair_per_stock(self,date,stock_object):
         sma1_prices,sma2_prices = [],[]
-        prices_in_range = DB_Helper.prices_in_range((self.period1,self.period2),stock_object,date)
+        prices_in_range = DB_Helper.prices_in_range(self.period1,self.period2,stock_object,date)
+        if len(prices_in_range) == 0:
+            return None
         for index,price in enumerate(prices_in_range[::-1]): ## arrange into proper order
-            if len(prices_in_range[index].close) == 0:
-                continue 
             price = {'price': float(prices_in_range[index].close), 'date' : date}
             if index < self.period1:
                 sma1_prices.append(price)
@@ -49,14 +53,15 @@ class SMA_Block:
         stocks_to_buy = []
         all_stock_sma_pairs = [self.get_sma_pair_per_stock(date,stock_object) for stock_object in self.stocks_in_market]
         for pair in all_stock_sma_pairs:
-            pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
-            if pd > self.sma_percent_difference_to_buy:
-                stocks_to_buy.append({
-                    'symbol' : pair['symbol'],
-                    'sma_dif' : pd,
-                    'price' : pair['close'],
-                    'object' : pair['object']
-                    })
+            if pair is not None:
+                pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
+                if pd > self.percent_difference_to_buy:
+                    stocks_to_buy.append({
+                        'symbol' : pair['symbol'],
+                        'sma_score' : self.appetite*pd,
+                        'price' : pair['close'],
+                        'object' : pair['object']
+                        })
         return stocks_to_buy
 
 
@@ -73,7 +78,7 @@ class Volatility_Block:
         volatility = Calculator.stdev(price_objects,'price')
         return {
             'object' : stock_object,
-            'volatility' : volatility,
+            'volatility_score' : self.appetite*volatility,
             'price' : price_objects[-1]['price'],
             'symbol' : stock_object.symbol
         }
@@ -97,14 +102,14 @@ class Covariance_Block:
         covariance = Calculator.covariance(price_objects,self.benchmark,'price')
         return {
             'object' : stock_object,
-            'covariance' : covariance,
+            'covariance_score' : self.appetite*covariance,
             'price' : price_objects[-1]['price'],
             'symbol' : stock_object.symbol
         }
 
     def parse_benchmark(self):
         benchmark = Stocks.objects.get(symbol=self.benchmark)
-        prices = Prices.objects.filter(stock=benchmark).filter(id__range(benchmark.id,(benchmark.id + self.period)))
+        prices = Prices.objects.filter(stock=benchmark).filter(id__range=(benchmark.id,(benchmark.id + self.period)))
         self.benchmark = [{'price' : float(x.close)} for x in prices]
         return True
 

@@ -27,19 +27,23 @@ class Prices(models.Model):
 class Algorithms(models.Model):
     created_by = models.ForeignKey(Users)
     up_votes = models.IntegerField()
-
+"""
 
 class Portfolios(models.Model):
     name = models.CharField(max_length=30)
-    algorithm = models.ForeignKey(Algorithms)
-    blocks = models.CharField(max_length=50) ## once we know what these are
+    # algorithm = models.ForeignKey(Algorithms)
+    # blocks = models.CharField(max_length=50) ## once we know what these are
     balance = models.CharField(max_length=25)
 
+    class Meta:
+        app_label = 'backtest'
 
 class Assets(models.Model):
     portfolio = models.ForeignKey(Portfolios)
     stock = models.ForeignKey(Stocks)
     quantity = models.IntegerField()
     price_purchased = models.CharField(max_length=10)
-    date = DateField()
-"""
+    date = models.DateField()
+
+    class Meta:
+        app_label = 'backtest'

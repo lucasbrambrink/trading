@@ -1,5 +1,6 @@
 
 ## Algorithms built from Blocks ##
+from blocks import *
 
 class BaseAlgorithm:
 
@@ -18,25 +19,27 @@ class BaseAlgorithm:
 
         ## Sample Blocks Attributes ##
         self.sma = {
-            'period1' : 'Null',
-            'period2' : 'Null',
+            'period1' : 0,
+            'period2' : 0,
             'percent_difference_to_buy' : 'Null',
             'percent_difference_to_sell' : 'Null',
             'appetite' : 0,
         }
         self.volatility = {
-            'period' : 'Null',
+            'period' : 0,
             'threshold_to_buy' : 'Null',
             'threshold_to_sell' : 'Null', 
             'appetite' : 0,
         }
         self.covariance = {
-            'benchmark' : 'Null',
-            'period' : 'Null',
+            'benchmark' : 'GOOG',
+            'period' : 0,
             'desired' : {'above' : 'Null', 'below' : 'Null'},
             'threshold_to_sell' : 'Null',
             'appetite' : 0,
         }
+        ## Conditions ## 
+
         self.diversity = {
             'num_sector' : 99999999, ## can't exeed threshold in portfolio
             'num_industry' : 99999999, ## e.g. 2 --> can't have more than 2 of same industry
@@ -56,34 +59,62 @@ class BaseAlgorithm:
             setattr(self,key,kwargs[key])
 
         ## Encapsulate Blocks for Processing ##
-        self.sma_block = {
-            'status' : 'off',
-            'class' : SMA_Block(**self.sma),
-        }
-        self.volatility_block = {
-            'status' : 'off',
-            'class' : Volatlity_Block(**self.volatility)
-        }
+        if 'sma' in kwargs:
+            self.sma_block = {
+                'status' : 'on',
+                'class' : SMA_Block(**self.sma),
+            }
+        else:
+            self.sma_block = {
+                'status' : 'off'
+            }
 
-        self.covariance_block = {
-            'status' : 'off',
-            'class' : Covariance_Block(**self.covariance)
-        }
+        if 'volatility' in kwargs:
+            self.volatility_block = {
+                'status' : 'on',
+                'class' : Volatility_Block(**self.volatility)
+            }
+        else:
+            self.volatility_block = {
+                'status' : 'off'
+            }
 
-        self.diversity_condition = {
-            'status' : 'off',
-            'attributes' : self.diversity
-        }
-        self.threshold_condition = {
-            'status' : 'off',
-            'attributes' : self.thresholds
-        }
-        self.crisis_condition = {
-            'status' : 'off',
-            'attributes' : self.crisis
-        }
+        if 'covariance' in kwargs:
+            self.covariance_block = {
+                'status' : 'on',
+                'class' : Covariance_Block(**self.covariance)
+            }
+        else:
+            self.covariance_block = {
+                'status' : 'off'
+            }
 
+        if 'diversity' in kwargs:
+            self.diversity_condition = {
+                'status' : 'on',
+                'attributes' : self.diversity
+            }
+        else:
+            self.diversity_condition = {
+                'status' : 'off'
+            }
 
-    def __run__(self):
-        be = BacktestingEnvironment(**self.__dict__)
-        be.run_period_with_algorithm()
+        if 'threshold' in kwargs:
+            self.threshold_condition = {
+                'status' : 'on',
+                'attributes' : self.thresholds
+            }
+        else:
+            self.threshold_condition = {
+                'status' : 'off'
+            }
+
+        if 'crisis' in kwargs:
+            self.crisis_condition = {
+                'status' : 'on',
+                'attributes' : self.crisis
+            }
+        else:
+            self.crisis_condition = {
+                'status' : 'off'
+            }
