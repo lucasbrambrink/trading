@@ -4,7 +4,7 @@ from blocks import *
 
 class BaseAlgorithm:
 
-    def __init__(self,**kwargs):
+    def __init__(self,algorithm):
 
         #### SET DEFAULTS ####
 
@@ -55,25 +55,25 @@ class BaseAlgorithm:
         }
 
         ## Overwrite Defaults ##
-        for key in kwargs:
-            setattr(self,key,kwargs[key])
+        for key in algorithm:
+            setattr(self,key,algorithm[key])
 
         ## Encapsulate Blocks for Processing ##
-        if 'sma' in kwargs:
+        if 'sma' in algorithm:
             self.sma_block = SMA_Block(**self.sma)
 
-        if 'volatility' in kwargs:
+        if 'volatility' in algorithm:
             self.volatility_block = Volatility_Block(**self.volatility)
     
-        if 'covariance' in kwargs:
+        if 'covariance' in algorithm:
             self.covariance_block = Covariance_Block(**self.covariance)
         
-        if 'diversity' in kwargs:
+        if 'diversity' in algorithm:
             self.diversity_condition = self.diversity
     
-        if 'threshold' in kwargs:
+        if 'threshold' in algorithm:
             self.threshold_condition = self.thresholds
             
-        if 'crisis' in kwargs:
+        if 'crisis' in algorithm:
             self.crisis_condition = self.crisis
            

@@ -17,18 +17,21 @@ import re
 
 class BacktestingEnvironment:
 
-    def __init__(self,**kwargs):
+    def __init__(self,backtest,algorithm):
+        self.start_date = backtest['start_date']
+        self.end_date = backtest['end_date']
+        self.initial_balance = backtest['initial_balance']
+        self.frequency = backtest['frequency']
+        self.num_holdings = backtest['num_holdings']
+        
         self.blocks = []
-        self.conditions = {}
-        for key in kwargs:
-            if key == 'testing_environment':
-                for attr in kwargs[key]:
-                    setattr(self,attr,kwargs[key][attr])
+        self.conditions = []
+        for key in algorithm:
             if re.search('_block',key):
-                self.blocks.append(kwargs[key])
+                self.blocks.append(algorithm[key])
             if re.search('_condition',key):
                 short_key = key.split('_')[0]
-                self.conditions[short_key] = kwargs[key]
+                self.conditions[short_key] = algorithm[key]
 
         ## relevant dates ##
         self.dates_in_range = self.dates_in_range()
@@ -113,9 +116,7 @@ class BacktestingEnvironment:
     def find_stocks_to_buy(self,date):
         stocks_to_buy = []  
         for block in self.blocks:
-            if block['status'] == "on":
-                # print(block['class'])
-                stocks_to_buy.append(block['class'].aggregate_stocks(self.stocks_in_market,date))
+            stocks_to_buy.append(block.aggregate_stocks(self.stocks_in_market,date))
         
         survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()[0]
         ## now rank survivors 
@@ -156,17 +157,25 @@ class BacktestingEnvironment:
 ## Script ##
 if __name__ == '__main__':
     ## at this point, back end expects a JSON
-    json = { 'backtest' : {}, 'algorithm' : [ ] } 
-
-
-    'sma' : {
-        'period1' : 15, 
-        'period2' : 10,
-        'percent_difference_to_buy':0.1,
-        'appetite' : 5}
+    json = {
+        'backtest': {
+            'start_date': "2013-01-01",
+            'end_date': "2014-01-01",
+            'initial_balance': 1000000,
+            'frequency': 12,
+            'num_holdings': 3,
+            }, 
+        'algorithm': {
+            'sma' : {
+                'period1' : 15, 
+                'period2' : 10,
+                'percent_difference_to_buy':0.1,
+                'appetite' : 5
+                },
+            }
         }
-    base = BaseAlgorithm(**json)
-    BacktestingEnvironment(**base.__dict__).__run__()
+    base = BaseAlgorithm(json['algorithm'])
+    BacktestingEnvironment(json['backtest'], base.__dict__).__run__()
 
 
 

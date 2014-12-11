@@ -49,12 +49,13 @@ class Conditions:
 		return True
 
 	def aggregate_survivors(self):
-		if self.conditions['threshold'] == 'on':
-			self.threshold_purge()
-		if self.conditions['diversity'] == 'on':
-			self.diversity_purge()
-		if self.conditions['crisis'] == 'on':
-			self.test_crisis_event()
+		for condition in self.conditions:
+			if condition == 'threshold':
+				self.threshold_purge()
+			if condition == 'diversity':
+				self.diversity_purge()
+			if conditions == 'crisis':
+				self.test_crisis_event()
 		return self.stocks_to_buy
 
 
