@@ -15,7 +15,7 @@ class Conditions:
 
 	def threshold_purge(self):
 		for stock in self.stocks_to_buy:
-			for key,value in self.conditions['threshold']['price']]:
+			for key,value in self.conditions['threshold']['price']:
 				if [(key == 'below' and value > stock['price']) or
 				 (key == 'above' and value < stock['price'])]:
 					self.stocks_to_buy.remove(stock)

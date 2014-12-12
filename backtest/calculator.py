@@ -95,7 +95,7 @@ class Calculator:
 		:param2: integer
 		:return: float
 		"""
-		value = round(((point2 - point1) / point1),5)
+		value = round(((point2 - point1) / point1),10)
 		return value
 
 	@staticmethod
@@ -108,7 +108,7 @@ class Calculator:
 
 		:return: float
 		"""
-		value = round(((data[index+increment][key] - data[index][key]) / (data[index][key])),5)
+		value = round(((data[index+increment][key] - data[index][key]) / (data[index][key])),10)
 		return value
 
 	@staticmethod

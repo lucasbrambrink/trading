@@ -6,6 +6,7 @@ django.setup()
 
 ## get contingencies
 from calculator import *
+from risk_calculator import *
 from blocks import *
 from conditions import *
 from algorithm import BaseAlgorithm
@@ -39,15 +40,11 @@ class BacktestingEnvironment:
         self.dates_in_range = sorted(set(self.dates_in_range()))
         self.stocks_in_market = Stocks.objects.all()
         self.c = Calculator()
-        self.rc = RiskCalculator()
         self.portfolio = []
         self.balance = self.initial_balance
 
         ## risk calc
-        self.market_index = [{'price': x.close, 'date': x.date} for x in Prices.objects.filter(id=387).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
-        self.risk_free_rates = ## add to DB
-        self.rc = RiskCalculator()
-        self.returns = []
+        self.market_index = [{'price': x.close, 'date': x.date} for x in Prices.objects.filter(stock_id=387).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
 
     def dates_in_range(self):
         robust_stock = Stocks.objects.get(symbol='ACE')
@@ -59,7 +56,8 @@ class BacktestingEnvironment:
             if index % math.floor(252/self.frequency) == 0:
                 self.execute_trading_session(date)
                 # calculate risk metrics
-                self.calculate_risk_metrics(self.most_recent_trade,date)
+                if index > 0:
+                    print(self.calculate_risk_metrics(self.most_recent_trade,date))
                 # send portfolio to front end
                 self.print_information(date)
                 self.most_recent_trade = date
@@ -155,7 +153,7 @@ class BacktestingEnvironment:
             'beta': rmc.beta(), 
             'sharpe': rmc.sharpe(), 
             'volatility': rmc.volatility(), 
-            'returns': rmc.total_returns(self.balance,self.initial_balance)
+            'intra_session_returns': rmc.total_returns(self.balance,self.initial_balance)
             }
 
 
