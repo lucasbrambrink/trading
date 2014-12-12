@@ -26,7 +26,7 @@ class BacktestingEnvironment:
         self.num_holdings = backtest['num_holdings']
     
         self.blocks = []
-        self.conditions = []
+        self.conditions = {}
         for key in algorithm:
             if re.search('_block', key):
                 self.blocks.append(algorithm[key])
@@ -195,6 +195,9 @@ if __name__ == '__main__':
                 'percent_difference_to_buy': 0.1,
                 'appetite': 5
                 },
+            'thresholds':{
+                'price' : {'above': 50, 'below': 100}
+                }
             }
         }
     base = BaseAlgorithm(json['algorithm'])

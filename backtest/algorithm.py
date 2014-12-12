@@ -64,8 +64,8 @@ class BaseAlgorithm:
         if 'diversity' in algorithm:
             self.diversity_condition = self.diversity
     
-        if 'threshold' in algorithm:
-            self.threshold_condition = self.thresholds
+        if 'thresholds' in algorithm:
+            self.thresholds_condition = self.thresholds
             
         if 'crisis' in algorithm:
             self.crisis_condition = self.crisis

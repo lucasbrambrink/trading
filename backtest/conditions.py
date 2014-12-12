@@ -11,25 +11,28 @@ class Conditions:
 
 	def __init__(self,conditions,stocks_to_buy):
 		self.conditions = conditions
-		self.stocks_to_buy = stocks_to_buy
+		self.stocks_to_buy = stocks_to_buy[0]
 
 	def threshold_purge(self):
 		for stock in self.stocks_to_buy:
-			for key,value in self.conditions['threshold']['price']:
-				if [(key == 'below' and value > stock['price']) or
-				 (key == 'above' and value < stock['price'])]:
-					self.stocks_to_buy.remove(stock)
-					break
+			if 'price' in self.conditions['thresholds']:
+				for key in self.conditions['thresholds']['price']:
+					value = self.conditions['thresholds']['price'][key]
+					if [(key == 'below' and value > stock['price']) or
+					 (key == 'above' and value < stock['price'])]:
+						self.stocks_to_buy.remove(stock)
+						break
 
-			if ((stock['object'].sector in self.conditions['threshold']['sector']['exclude']) or
-            	(stock['object'].sector not in self.conditions['threshold']['sector']['include'])):
-					self.stocks_to_buy.remove(stock)
-					break
-
-			if ((stock['object'].industry in self.conditions['threshold']['industry']['exclude']) or
-                (stock['object'].industry not in self.conditions['threshold']['industry']['include'])):
-					self.stocks_to_buy.remove(stock)
-					break
+			if 'sector' in self.conditions['thresholds']:
+				if ((stock['object'].sector in self.conditions['thresholds']['sector']['exclude']) or
+	            	(stock['object'].sector not in self.conditions['thresholds']['sector']['include'])):
+						self.stocks_to_buy.remove(stock)
+						break
+			if 'industry' in self.conditions['thresholds']:
+				if ((stock['object'].industry in self.conditions['thresholds']['industry']['exclude']) or
+	                (stock['object'].industry not in self.conditions['thresholds']['industry']['include'])):
+						self.stocks_to_buy.remove(stock)
+						break
 		return True
 
 	def diversity_purge(self):
@@ -46,11 +49,11 @@ class Conditions:
 
 	def aggregate_survivors(self):
 		for condition in self.conditions:
-			if condition == 'threshold':
+			if condition == 'thresholds':
 				self.threshold_purge()
 			if condition == 'diversity':
 				self.diversity_purge()
-			if conditions == 'crisis':
+			if condition == 'crisis':
 				self.test_crisis_event()
 		return self.stocks_to_buy
 
