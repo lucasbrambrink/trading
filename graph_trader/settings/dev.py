@@ -9,6 +9,7 @@ INSTALLED_APPS = DEFAULT_APPS + (
     'backtest',
     'home',
     'algo_builder',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = DEFAULT_MIDDLEWARE_CLASSES + ()
