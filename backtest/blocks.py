@@ -69,8 +69,7 @@ class Volatility_Block:
     def __init__(self,**kwargs):
         for key in kwargs:
             setattr(self,key,kwargs[key])
-        self.stocks_in_market = Stocks.objects.all()
-
+        
     def get_volatility_per_stock(self,stock_object,date):
         prices_in_range = DB_Helper.prices_in_range(self.period,0,stock_object,date)
         price_objects = [{'price' : float(x.close)} for x in prices_in_range]
@@ -92,8 +91,7 @@ class Covariance_Block:
         for key in kwargs:
             setattr(self,key,kwargs[key])
         self.parse_benchmark()
-        self.stocks_in_market = Stocks.objects.all()
-
+    
     def get_covariance_per_stock(self,stock_object,date):
         prices_in_range = DB_Helper.prices_in_range(self.period,0,stock_object,date)
         price_objects = [{'price' : float(x.close)} for x in prices_in_range]

@@ -35,11 +35,17 @@ class BacktestingEnvironment:
         self.algorithm = algorithm['algorithm']
         
         ## relevant dates ##
-        self.dates_in_range = set(self.dates_in_range())
+        self.dates_in_range = sorted(set(self.dates_in_range()))
         self.stocks_in_market = Stocks.objects.all()
         self.c = Calculator()
+        self.rc = RiskCalculator()
         self.portfolio = []
         self.balance = self.initial_balance
+
+        ## risk calc
+        self.market_index = [x.close for x in Prices.objects.filter(id=387).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
+        self.risk_free_rates = ## add to DB
+        self.rc = RiskCalculator()
 
     def dates_in_range(self):
         robust_stock = Stocks.objects.get(symbol='ACE')
@@ -49,10 +55,10 @@ class BacktestingEnvironment:
     def run_period_with_algorithm(self):
         for index,date in enumerate(self.dates_in_range):
             if index % math.floor(252/self.frequency) == 0:
-                print(index)
-                # self.execute_trading_session(date)
-                ## send portfolio to front end
-                # self.print_information(date)
+                self.execute_trading_session(date)
+                # calculate risk metrics
+                # send portfolio to front end
+                self.print_information(date)
         return True
 
     ## helper method ##
@@ -164,7 +170,7 @@ if __name__ == '__main__':
             'end_date': "2014-01-01",
             'initial_balance': 1000000,
             'frequency': 12,
-            'num_holdings': 3,
+            'num_holdings': 1,
             }, 
         'algorithm': {
             'name' : 'Test',
