@@ -9,15 +9,6 @@ class BaseAlgorithm:
 
         #### SET DEFAULTS ####
 
-        ## Testing Environment ##
-        self.testing_environment = {
-            'start_date': "2013-01-01",
-            'end_date': "2014-01-01",
-            'initial_balance': 1000000,
-            'frequency': 12,
-            'num_holdings': 3,
-        }
-
         ## Sample Blocks Attributes ##
 
         self.sma = {
