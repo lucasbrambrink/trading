@@ -35,6 +35,7 @@ class BacktestingEnvironment:
         self.algorithm = algorithm['algorithm']
         
         ## relevant dates ##
+        self.most_recent_trade = self.start_date
         self.dates_in_range = sorted(set(self.dates_in_range()))
         self.stocks_in_market = Stocks.objects.all()
         self.c = Calculator()
@@ -43,7 +44,7 @@ class BacktestingEnvironment:
         self.balance = self.initial_balance
 
         ## risk calc
-        self.market_index = [x.close for x in Prices.objects.filter(id=387).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
+        self.market_index = [{'price': x.close, 'date': x.date} for x in Prices.objects.filter(id=387).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
         self.risk_free_rates = ## add to DB
         self.rc = RiskCalculator()
         self.returns = []
@@ -58,8 +59,10 @@ class BacktestingEnvironment:
             if index % math.floor(252/self.frequency) == 0:
                 self.execute_trading_session(date)
                 # calculate risk metrics
+                self.calculate_risk_metrics(self.most_recent_trade,date)
                 # send portfolio to front end
                 self.print_information(date)
+                self.most_recent_trade = date
         return True
 
     ## helper method ##
@@ -101,7 +104,8 @@ class BacktestingEnvironment:
             self.portfolio.append({
                 'symbol' : stock.symbol,
                 'price_purchased' : float(price[0].close),
-                'quantity' : quantity
+                'quantity' : quantity,
+                'object' : stock
                 })
             print(dollar_amount,': ',quantity," of ",stock.symbol," for ",price[0].close)
             return True
@@ -143,10 +147,18 @@ class BacktestingEnvironment:
         return sorted(scored_survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
 
 
-    def calculate_risk_metrics(self,date):
+    def calculate_risk_metrics(self,previous_trade,date):
         value = round(PortfolioCalculator(self.portfolio).value,2)
-        returns = round(float(((self.balance + value) - self.initial_balance) / self.initial_balance),2)
-        pass
+        rmc = RiskMetricsCalculator(self.portfolio,self.market_index,previous_trade,date)
+        return {
+            'alpha': rmc.alpha(), 
+            'beta': rmc.beta(), 
+            'sharpe': rmc.sharpe(), 
+            'volatility': rmc.volatility(), 
+            'returns': rmc.total_returns(self.balance,self.initial_balance)
+            }
+
+
 
 
     ## Views ##
@@ -190,48 +202,4 @@ if __name__ == '__main__':
         }
     base = BaseAlgorithm(json['algorithm'])
     BacktestingEnvironment(json['backtest'], base.__dict__).__run__()
-
-class RiskMetricsCalculator:
-
-    def __init__(self,portfolio,market_index,risk_free,date):
-        self.portfolio = portfolio
-        self.market_index = market_index
-        self.risk_free = risk_free
-        self.date = date
-        self.value = self.value()
-        ## update
-        self.update_values()
-
-
-    def value(self):
-        """
-        :return: float
-        """
-        value_portfolio = 0
-        for asset in self.portfolio:
-            value_portfolio += (asset['price_purchased']*asset['quantity'])
-        return value_portfolio
-
-    def update_values(self):
-        for asset in self.portfolio:
-            stock = Stocks.objects.get(symbol=asset['symbol'])
-            current_price = Prices.objects.filter(stock=stock).filter(date=self.date)
-            if len(current_price) > 0:
-                returns = round(float((current_price[0] - asset['price_purchased']) / asset['price_purchased']),3)
-                asset['current_price'] = current_price[0]
-                asset['returns'] = returns
-        return True
-
-    def total_returns(self,balance,initial_balance):
-        return round(float(((balance + self.value) - initial_balance) / initial_balance),4)
-        
-
-
-
-
-
-
-
-
-
 
