@@ -46,8 +46,10 @@ class PortfolioReturns:
 
 class RiskMetricsCalculator:
 
-    def __init__(self,portfolio,market_index,start_date,end_date):
+    def __init__(self,portfolio,balance,initial_balance,market_index,start_date,end_date):
         self.portfolio = portfolio
+        self.balance = balance
+        self.initial_balance = initial_balance
         self.market_index = market_index
         self.start_date = start_date
         self.end_date = end_date
@@ -80,9 +82,14 @@ class RiskMetricsCalculator:
                 asset['returns'] = returns
         return True
 
-    def total_returns(self,balance,initial_balance):
-        return round(float(((balance + self.value) - initial_balance) / initial_balance),4)
+    def total_returns(self):
+        return round(float(((self.balance + self.value) - self.initial_balance) / self.initial_balance),4)
         
+    def total_market_returns(self):
+        last = [x['price'] for x in self.market_index if x['date']==self.end_date][0]
+        first = [x['price'] for x in self.market_index if x['date']==self.start_date][0]
+        return round(float((last - first) / first),4)
+    
     def latest_returns(self,balance):
         value = 0
         for asset in self.portfolio:
@@ -104,7 +111,7 @@ class RiskMetricsCalculator:
         :returns: float
         """
         beta = self.beta()
-        alpha = self.c_portfolio_returns[-1]['returns'] - (self.risk_free[len(self.risk_free)-1].low + beta*(self.c_market_returns[-1]['returns'] - self.risk_free[len(self.risk_free)-1].low))
+        alpha = self.total_returns() - (self.risk_free[len(self.risk_free)-1].low + beta*(self.total_market_returns() - self.risk_free[len(self.risk_free)-1].low))
         return round(alpha,5)
     
     def beta(self):
@@ -119,7 +126,7 @@ class RiskMetricsCalculator:
         :returns: float
         """
         portfolio_stdev = Calculator.stdev(self.c_portfolio_returns,'returns')
-        sharpe = round(float((self.c_portfolio_returns[-1]['returns'] - self.risk_free[len(self.risk_free)-1].low) / portfolio_stdev),5)
+        sharpe = round(float((self.total_returns() - self.risk_free[len(self.risk_free)-1].low) / portfolio_stdev),5)
         return sharpe
 
     def volatility(self):

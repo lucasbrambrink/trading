@@ -42,6 +42,7 @@ class BacktestingEnvironment:
         self.c = Calculator()
         self.portfolio = []
         self.balance = self.initial_balance
+        self.latest_value = self.initial_balance
 
         ## risk calc
         self.market_index = [{'price': x.close, 'date': x.date} for x in Prices.objects.filter(stock_id=387).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
@@ -56,10 +57,10 @@ class BacktestingEnvironment:
             if index % math.floor(252/self.frequency) == 0:
                 self.execute_trading_session(date)
                 # calculate risk metrics
+                self.print_information(date)
                 if index > 0:
                     print(self.calculate_risk_metrics(self.most_recent_trade,date))
                 # send portfolio to front end
-                self.print_information(date)
                 self.most_recent_trade = date
         return True
 
@@ -147,13 +148,13 @@ class BacktestingEnvironment:
 
     def calculate_risk_metrics(self,previous_trade,date):
         value = round(PortfolioCalculator(self.portfolio).value,2)
-        rmc = RiskMetricsCalculator(self.portfolio,self.market_index,previous_trade,date)
+        rmc = RiskMetricsCalculator(self.portfolio,self.balance,self.initial_balance,   self.market_index,previous_trade,date)
         return {
             'alpha': rmc.alpha(), 
             'beta': rmc.beta(), 
             'sharpe': rmc.sharpe(), 
             'volatility': rmc.volatility(), 
-            'intra_session_returns': rmc.total_returns(self.balance,self.initial_balance)
+            'returns': rmc.total_returns()
             }
 
 
@@ -169,8 +170,6 @@ class BacktestingEnvironment:
         print("Balance : ",round(self.balance,2))
         value = round(PortfolioCalculator(self.portfolio).value,2)
         print("Portfolio Value : ",value)
-        returns = round(float(((self.balance + value) - self.initial_balance) / self.initial_balance),2)
-        print("Returns : ",returns)
         return True
 
     def __run__(self):
