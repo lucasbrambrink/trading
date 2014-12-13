@@ -51,6 +51,12 @@ class BaseQueue:
         :param num: Number of messages to get
         :return:
         """
+        if self.data_structure is None:
+            data = []
+        else:
+            data = self.data_structure
+        err = ''
+        count = num
         # Consume queue
         try:
             connection = pika.BlockingConnection(
@@ -58,13 +64,7 @@ class BaseQueue:
             )
             channel = connection.channel()
 
-            if self.data_structure is None:
-                data = []
-            else:
-                data = self.data_structure
-            count = 0
-
-            while count < num:
+            while count > 0:
                 method_frame, properties, body = channel.basic_get(queue=self.name)
                 if method_frame.NAME == 'Basic.GetEmpty':
                     connection.close()
@@ -83,7 +83,7 @@ class BaseQueue:
 
                 # Acknowledge the message
                 channel.basic_ack(method_frame.delivery_tag)
-                count += 1
+                count -= 1
 
                 # Cancel the consumer and return any pending messages
                 requeued_messages = channel.cancel()
@@ -92,12 +92,16 @@ class BaseQueue:
                 # Close the channel and the connection
                 channel.close()
                 connection.close()
-
-            return data
         except ChannelError as e:
             print(e)
+            err = 'Error'
         except ConnectionClosed as e:
             print(e)
+            err = 'Error'
+            if count != num:
+                err = 'Insufficient data'
+        finally:
+            return data, err
 
 
 if __name__ == '__main__':
