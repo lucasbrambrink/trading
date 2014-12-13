@@ -5,18 +5,14 @@ django.setup()
 from calculator import *
 from models import Stocks,Prices
 import math
+from datetime import date,timedelta
 
 class DB_Helper:
 
     @staticmethod
     def prices_in_range(period1_identifier,period2_identifier,stock_object,date):
-        start_id = Prices.objects.filter(stock=stock_object).filter(date=date).order_by('date')
-        if len(start_id) > 0:
-            start_id = start_id[0].id
-            end_id = start_id + (period1_identifier + period2_identifier) ## pair
-            return Prices.objects.filter(id__range=(start_id,end_id))
-        else:
-            return []
+        start_date = date - timedelta(days=(period1_identifier + period2_identifier))
+        return Prices.objects.filter(stock=stock_object).filter(date__range=(start_date,date)).order_by('date')
         
 
 class SMA_Block:
@@ -43,7 +39,8 @@ class SMA_Block:
             'symbol' : stock_object.symbol,
             'sma_pair' : (sma1,sma2,),
             'date' : date,
-            'close' : prices_in_range[0].close,
+            'todays_price' : prices_in_range[-1].close,
+            'todays_volume': prices_in_range[-1].volume
             'object' : stock_object
             }
         return sma_pair
@@ -58,8 +55,9 @@ class SMA_Block:
                     stocks_to_buy.append({
                         'symbol': pair['symbol'],
                         'sma_score': self.appetite*pd,
-                        'price': pair['close'],
-                        'object': pair['object']
+                        'price': pair['todays_price'],
+                        'volume': pair['todays_volume'],
+                        'object': pair['object'],
                         })
         return stocks_to_buy
 
@@ -72,13 +70,14 @@ class Volatility_Block:
         
     def get_volatility_per_stock(self,stock_object,date):
         prices_in_range = DB_Helper.prices_in_range(self.period,0,stock_object,date)
-        price_objects = [{'price' : float(x.close)} for x in prices_in_range]
+        price_objects = [{'price' : x.close} for x in prices_in_range]
         volatility = Calculator.stdev(price_objects,'price')
         return {
             'object': stock_object,
             'volatility_score': self.appetite*volatility,
-            'price': price_objects[-1]['price'],
-            'symbol': stock_object.symbol
+            'symbol': stock_object.symbol,
+            'todays_price' : prices_in_range[-1].close,
+            'todays_volume': prices_in_range[-1].volume,
         }
 
     def aggregate_stocks(self,stocks,date):
@@ -94,13 +93,14 @@ class Covariance_Block:
     
     def get_covariance_per_stock(self,stock_object,date):
         prices_in_range = DB_Helper.prices_in_range(self.period,0,stock_object,date)
-        price_objects = [{'price' : float(x.close)} for x in prices_in_range]
+        price_objects = [{'price' : x.close} for x in prices_in_range]
         covariance = Calculator.covariance(price_objects,self.benchmark,'price')
         return {
             'object': stock_object,
             'covariance_score': self.appetite*covariance,
-            'price': price_objects[-1]['price'],
-            'symbol': stock_object.symbol
+            'symbol': stock_object.symbol,
+            'todays_price' : prices_in_range[-1].close,
+            'todays_volume': prices_in_range[-1].volume
         }
 
     def parse_benchmark(self):

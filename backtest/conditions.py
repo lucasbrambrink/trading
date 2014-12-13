@@ -45,10 +45,10 @@ class Conditions:
 
 	def diversity_purge(self):
 		survivors = []
-		for stock in self.stocks_to_buy:
+		for stock in sorted(self.stocks_to_buy,key=lambda x: x['agg_score'],reverse=True):
 			for key in self.conditions['diversity']:
-				div_count = len([1 for comparison in self.stocks_to_buy if stock.key == comparison.key]) 
-				if div_count > self.conditions['diversity'][key]:
+				current_count = len([1 for comparison in survivors if stock['object'].key == comparison[key]])
+				if current_count > self.conditions['diversity'][key]:
 					continue
 			survivors.append(stock)
 		return survivors
@@ -61,7 +61,6 @@ class Conditions:
 				self.stocks_to_buy = self.diversity_purge()
 			if condition == 'crisis':
 				self.stocks_to_buy = self.test_crisis_event()
-		# print([x['object'].sector for x in self.stocks_to_buy])
 		return self.stocks_to_buy
 
 

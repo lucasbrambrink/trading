@@ -13,7 +13,7 @@ from algorithm import BaseAlgorithm
 from models import *
 import math
 import re
-
+from datetime import date,timedelta
 
 
 class BacktestingEnvironment:
@@ -99,6 +99,7 @@ class BacktestingEnvironment:
         price = Prices.objects.filter(stock=stock).filter(date=date)
         if len(price) > 0:
             quantity = math.floor(dollar_amount / float(price[0].close))
+            if quantity > 
             self.balance -= dollar_amount
             self.portfolio.append({
                 'symbol' : stock.symbol,
@@ -112,9 +113,10 @@ class BacktestingEnvironment:
             return False # unable to buy for this date
 
     def sell_stock(self,stock,date):
-        price = Prices.objects.filter(stock=stock).filter(date=date)
+        yesterday = date - timedelta(days=1)
+        price = Prices.objects.filter(stock=stock).filter(date__range=(yesterday, date))
         if len(price) > 0:
-            asset = [x for x in self.portfolio if x['symbol'] == stock.symbol][0]
+            asset = [x for x in self.portfolio if x['symbol'] == stock.symbol][-1]
             sale = round((asset['quantity']*float(price[0].close)),2)
             self.balance += sale
             self.portfolio.remove(asset)
@@ -126,12 +128,15 @@ class BacktestingEnvironment:
 
     def find_stocks_to_buy(self,date):
         stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks]  
+        combined_stocks = []
+        for block_return in stocks_to_buy:
+            combined_stocks += block_return ## concatenate lists
         
         ## rank stocks based on performance ## 
         scored_stocks = []
-        for stock in stocks_to_buy:
+        for stock in combined_stocks:
             scores = []
-            for point in [x for x in stocks_to_buy if x['symbol'] == stock['symbol']]:
+            for point in [x for x in combined_stocks if x['symbol'] == stock['symbol']]:
                 scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
             aggregate_score = 0
             for score in scores:
@@ -199,7 +204,7 @@ if __name__ == '__main__':
                 'price' : {'above': 50, 'below': 100},
                 'sector' : {'include': ['Healthcare']},
                 'industry': {'exclude': ['Asset Management']}
-                }
+                },
             'diversity':{
                 'num_sector': 2,
                 'num_industry': 1,
