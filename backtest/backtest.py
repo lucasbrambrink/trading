@@ -76,7 +76,7 @@ class BacktestingEnvironment:
         if len(holdings) > 0:
             investment_per_stock = math.floor(self.balance / len(holdings))
             for stock in holdings:
-                self.buy_stock(investment_per_stock, stock['symbol'], date)
+                self.buy_stock(investment_per_stock, stock)
             
         ## Save State in DB ##
         # user_id = request.sessions['user_id']
@@ -94,33 +94,28 @@ class BacktestingEnvironment:
         return True
 
     ## support methods ##
-    def buy_stock(self,dollar_amount,symbol,date):
-        stock = Stocks.objects.get(symbol=symbol)
-        price = Prices.objects.filter(stock=stock).filter(date=date)
-        if len(price) > 0:
-            quantity = math.floor(dollar_amount / float(price[0].close))
-            if quantity > 
-            self.balance -= dollar_amount
-            self.portfolio.append({
-                'symbol' : stock.symbol,
-                'price_purchased' : float(price[0].close),
-                'quantity' : quantity,
-                'object' : stock
-                })
-            print(dollar_amount,': ',quantity," of ",stock.symbol," for ",price[0].close)
-            return True
-        else:
-            return False # unable to buy for this date
+    def buy_stock(self,dollar_amount,stock):
+        quantity = math.floor(dollar_amount / stock['todays_price'])
+        if quantity > stock['todays_volume']*0.20:  ## can't exceed 20% of daily trading volume
+            quantity = stock['todays_volume']*0.20
+            dollar_amount = quantity*stock['todays_price']
+        self.balance -= dollar_amount
+        self.portfolio.append({
+            'symbol' : stock['symbol'],
+            'price_purchased' : stock['todays_price'],
+            'quantity' : quantity,
+            'object' : stock['object'],
+            })
+        return True
 
     def sell_stock(self,stock,date):
         yesterday = date - timedelta(days=1)
         price = Prices.objects.filter(stock=stock).filter(date__range=(yesterday, date))
         if len(price) > 0:
-            asset = [x for x in self.portfolio if x['symbol'] == stock.symbol][-1]
-            sale = round((asset['quantity']*float(price[0].close)),2)
+            asset = [x for x in self.portfolio if x['symbol'] == stock.symbol][0]
+            sale = round((asset['quantity']*price[-1].close)),2)
             self.balance += sale
             self.portfolio.remove(asset)
-            print(sale,": ",asset['symbol']," for ",price[0].close)
             return True
         else:
             return False
@@ -133,7 +128,6 @@ class BacktestingEnvironment:
             combined_stocks += block_return ## concatenate lists
         
         ## rank stocks based on performance ## 
-        scored_stocks = []
         for stock in combined_stocks:
             scores = []
             for point in [x for x in combined_stocks if x['symbol'] == stock['symbol']]:
@@ -143,10 +137,9 @@ class BacktestingEnvironment:
                 if len(score) > 0:
                     aggregate_score += score[0]
             stock['agg_score'] = aggregate_score
-            scored_stocks.append(stock)
         
         ## purge stocks that don't meet conditions
-        survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()
+        survivors = Conditions(self.conditions,combined_stocks).aggregate_survivors()
         
         return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
 

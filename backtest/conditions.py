@@ -11,7 +11,7 @@ class Conditions:
 
 	def __init__(self,conditions,stocks_to_buy):
 		self.conditions = conditions
-		self.stocks_to_buy = stocks_to_buy[0]
+		self.stocks_to_buy = stocks_to_buy
 
 	def threshold_purge(self):
 		survivors = []
