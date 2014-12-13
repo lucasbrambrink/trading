@@ -14,47 +14,54 @@ class Conditions:
 		self.stocks_to_buy = stocks_to_buy[0]
 
 	def threshold_purge(self):
+		survivors = []
 		for stock in self.stocks_to_buy:
 			if 'price' in self.conditions['thresholds']:
-				for key in self.conditions['thresholds']['price']:
-					value = self.conditions['thresholds']['price'][key]
-					if [(key == 'below' and value > stock['price']) or
-					 (key == 'above' and value < stock['price'])]:
-						self.stocks_to_buy.remove(stock)
-						break
+				if 'above' in self.conditions['thresholds']['price']:
+					if stock['price'] < self.conditions['thresholds']['price']['above']:
+						continue
+				if 'below' in self.conditions['thresholds']['price']:
+					if stock['price'] > self.conditions['thresholds']['price']['below']:
+						continue
 
 			if 'sector' in self.conditions['thresholds']:
-				if ((stock['object'].sector in self.conditions['thresholds']['sector']['exclude']) or
-	            	(stock['object'].sector not in self.conditions['thresholds']['sector']['include'])):
-						self.stocks_to_buy.remove(stock)
-						break
+				if 'exclude' in self.conditions['thresholds']['sector']:
+					if stock['object'].sector in self.conditions['thresholds']['sector']['exclude']:
+						continue
+				if 'include' in self.conditions['thresholds']['sector']:
+					if stock['object'].sector not in self.conditions['thresholds']['sector']['include']:
+						continue
+
 			if 'industry' in self.conditions['thresholds']:
-				if ((stock['object'].industry in self.conditions['thresholds']['industry']['exclude']) or
-	                (stock['object'].industry not in self.conditions['thresholds']['industry']['include'])):
-						self.stocks_to_buy.remove(stock)
-						break
-		return True
+				if 'exclude' in self.conditions['thresholds']['industry']:
+					if stock['object'].industry in self.conditions['thresholds']['industry']['exclude']:
+						continue
+				if 'include' in self.conditions['thresholds']['industry']:
+					if stock['object'].industry not in self.conditions['thresholds']['industry']['include']:
+						continue
+
+			survivors.append(stock)
+		return survivors
 
 	def diversity_purge(self):
+		survivors = []
 		for stock in self.stocks_to_buy:
-			sector_count = len([1 for comparison in self.stocks_to_buy if stock.sector == comparison.sector]) 
-			if sector_count > self.conditions['diversity']['num_sector']:
-				self.stocks_to_buy.remove(stock)
-				break
-			industry_count = len([1 for comparison in self.stocks_to_buy if stock.industry == comparison.industry])
-			if industry_count > self.conditions['diversity']['num_industry']:
-				self.stocks_to_buy.remove(stock)
-				break
-		return True
+			for key in self.conditions['diversity']:
+				div_count = len([1 for comparison in self.stocks_to_buy if stock.key == comparison.key]) 
+				if div_count > self.conditions['diversity'][key]:
+					continue
+			survivors.append(stock)
+		return survivors
 
 	def aggregate_survivors(self):
 		for condition in self.conditions:
 			if condition == 'thresholds':
-				self.threshold_purge()
+				self.stocks_to_buy = self.threshold_purge()
 			if condition == 'diversity':
-				self.diversity_purge()
+				self.stocks_to_buy = self.diversity_purge()
 			if condition == 'crisis':
-				self.test_crisis_event()
+				self.stocks_to_buy = self.test_crisis_event()
+		# print([x['object'].sector for x in self.stocks_to_buy])
 		return self.stocks_to_buy
 
 

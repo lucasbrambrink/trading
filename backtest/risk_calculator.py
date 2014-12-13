@@ -59,7 +59,7 @@ class RiskMetricsCalculator:
         self.risk_free = Prices.objects.filter(stock_id=388).filter(date__range=(self.start_date,self.end_date)).order_by('date')
         self.market_returns = Calculator.percent_change_array(self.market_index, 'price')
         ## contains all information
-        self.date_master_list = PortfolioReturns(self.portfolio, self.value, self.start_date, self.end_date, self.market_returns).update()
+        self.date_master_list = PortfolioReturns(self.portfolio, (self.balance + self.value), self.start_date, self.end_date, self.market_returns).update()
         # print(self.date_master_list)
         self.c_portfolio_returns,self.c_market_returns = self.complementary_arrays()
 
@@ -126,6 +126,8 @@ class RiskMetricsCalculator:
         :returns: float
         """
         portfolio_stdev = Calculator.stdev(self.c_portfolio_returns,'returns')
+        if portfolio_stdev == 0:
+            return 'N/A'
         sharpe = round(float((self.total_returns() - self.risk_free[len(self.risk_free)-1].low) / portfolio_stdev),5)
         return sharpe
 

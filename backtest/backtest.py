@@ -125,30 +125,30 @@ class BacktestingEnvironment:
 
 
     def find_stocks_to_buy(self,date):
-        stocks_to_buy = []  
-        for block in self.blocks:
-            stocks_to_buy.append(block.aggregate_stocks(self.stocks_in_market,date))
+        stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks]  
         
-        survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()[0]
-        ## now rank survivors 
-        scored_survivors = []
-        for survivor in survivors:
-            mult = [x for x in survivors if x['symbol'] == survivor['symbol']]
+        ## rank stocks based on performance ## 
+        scored_stocks = []
+        for stock in stocks_to_buy:
             scores = []
-            for point in mult:
+            for point in [x for x in stocks_to_buy if x['symbol'] == stock['symbol']]:
                 scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
             aggregate_score = 0
             for score in scores:
                 if len(score) > 0:
                     aggregate_score += score[0]
-            survivor['agg_score'] = aggregate_score
-            scored_survivors.append(survivor)
-        return sorted(scored_survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
+            stock['agg_score'] = aggregate_score
+            scored_stocks.append(stock)
+        
+        ## purge stocks that don't meet conditions
+        survivors = Conditions(self.conditions,stocks_to_buy).aggregate_survivors()
+        
+        return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
 
 
     def calculate_risk_metrics(self,previous_trade,date):
         value = round(PortfolioCalculator(self.portfolio).value,2)
-        rmc = RiskMetricsCalculator(self.portfolio,self.balance,self.initial_balance,   self.market_index,previous_trade,date)
+        rmc = RiskMetricsCalculator(self.portfolio,self.balance,self.initial_balance,self.market_index,previous_trade,date)
         return {
             'alpha': rmc.alpha(), 
             'beta': rmc.beta(), 
@@ -185,7 +185,7 @@ if __name__ == '__main__':
             'end_date': "2014-01-01",
             'initial_balance': 1000000,
             'frequency': 12,
-            'num_holdings': 1,
+            'num_holdings': 2,
             }, 
         'algorithm': {
             'name' : 'Test',
@@ -196,7 +196,13 @@ if __name__ == '__main__':
                 'appetite': 5
                 },
             'thresholds':{
-                'price' : {'above': 50, 'below': 100}
+                'price' : {'above': 50, 'below': 100},
+                'sector' : {'include': ['Healthcare']},
+                'industry': {'exclude': ['Asset Management']}
+                }
+            'diversity':{
+                'num_sector': 2,
+                'num_industry': 1,
                 }
             }
         }
