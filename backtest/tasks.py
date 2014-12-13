@@ -37,3 +37,21 @@ def run_backtest(algorithm_json):
     backtest.set_queue(returns_queue)
 
     backtest.run()
+
+@shared_task
+def test_backtest(algorithm_json):
+    import math
+    from random import random
+    from .queues import ReturnsQueue
+
+    base = BaseAlgorithm(algorithm_json['algorithm'])
+    backtest = BacktestingEnvironment(algorithm_json['backtest'], base.__dict__)
+    returns_queue = ReturnsQueue(backtest.id)
+
+    for index, date in enumerate(backtest.dates_in_range):
+        if index % math.floor(252/backtest.frequency) == 0:
+            returns = random()
+            print(date, returns)
+            returns_queue.enqueue(
+                [{'key': 'returns', 'values': returns}, {'key': 'date', 'values': date.isoformat()}]
+            )
