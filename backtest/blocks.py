@@ -12,7 +12,7 @@ class DB_Helper:
     @staticmethod
     def prices_in_range(period1_identifier,period2_identifier,stock_object,date):
         start_date = date - timedelta(days=(period1_identifier + period2_identifier))
-        return Prices.objects.filter(stock=stock_object).filter(date__range=(start_date,date)).order_by('date')
+        return list(Prices.objects.filter(stock=stock_object).filter(date__range=(start_date,date)).order_by('date'))
         
 
 class SMA_Block:
@@ -40,7 +40,7 @@ class SMA_Block:
             'sma_pair' : (sma1,sma2,),
             'date' : date,
             'todays_price' : prices_in_range[-1].close,
-            'todays_volume': prices_in_range[-1].volume
+            'todays_volume': prices_in_range[-1].volume,
             'object' : stock_object
             }
         return sma_pair
@@ -55,8 +55,8 @@ class SMA_Block:
                     stocks_to_buy.append({
                         'symbol': pair['symbol'],
                         'sma_score': self.appetite*pd,
-                        'price': pair['todays_price'],
-                        'volume': pair['todays_volume'],
+                        'todays_price': pair['todays_price'],
+                        'todays_volume': pair['todays_volume'],
                         'object': pair['object'],
                         })
         return stocks_to_buy
@@ -71,9 +71,13 @@ class Volatility_Block:
     def get_volatility_per_stock(self,stock_object,date):
         prices_in_range = DB_Helper.prices_in_range(self.period,0,stock_object,date)
         price_objects = [{'price' : x.close} for x in prices_in_range]
+        if len(price_objects) == 0:
+            return None
         volatility = Calculator.stdev(price_objects,'price')
+        vol_percentage = round((volatility/prices_in_range[-1].close),4)
         return {
             'object': stock_object,
+            'vol_percentage': vol_percentage,
             'volatility_score': self.appetite*volatility,
             'symbol': stock_object.symbol,
             'todays_price' : prices_in_range[-1].close,
@@ -81,8 +85,8 @@ class Volatility_Block:
         }
 
     def aggregate_stocks(self,stocks,date):
-        all_volatilities = [get_volatility_per_stock(stock_object,date) for stock_object in stocks]
-        return [volatility for volatility in all_volatilities if volatility['volatility'] > self.threshold_to_buy]
+        all_volatilities = [self.get_volatility_per_stock(stock_object,date) for stock_object in stocks]
+        return [x for x in all_volatilities if x is not None and self.range[0] < x['vol_percentage'] < self.range[1]]
 
 class Covariance_Block:
 

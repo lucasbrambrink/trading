@@ -18,10 +18,10 @@ class Conditions:
 		for stock in self.stocks_to_buy:
 			if 'price' in self.conditions['thresholds']:
 				if 'above' in self.conditions['thresholds']['price']:
-					if stock['price'] < self.conditions['thresholds']['price']['above']:
+					if stock['todays_price'] < self.conditions['thresholds']['price']['above']:
 						continue
 				if 'below' in self.conditions['thresholds']['price']:
-					if stock['price'] > self.conditions['thresholds']['price']['below']:
+					if stock['todays_price'] > self.conditions['thresholds']['price']['below']:
 						continue
 
 			if 'sector' in self.conditions['thresholds']:
@@ -47,7 +47,7 @@ class Conditions:
 		survivors = []
 		for stock in sorted(self.stocks_to_buy,key=lambda x: x['agg_score'],reverse=True):
 			for key in self.conditions['diversity']:
-				current_count = len([1 for comparison in survivors if stock['object'].key == comparison[key]])
+				current_count = len([1 for comparison in survivors if getattr(stock['object'],key[4:]) == getattr(comparison['object'],key[4:])])
 				if current_count > self.conditions['diversity'][key]:
 					continue
 			survivors.append(stock)

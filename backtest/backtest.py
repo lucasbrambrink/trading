@@ -67,10 +67,9 @@ class BacktestingEnvironment:
     ## helper method ##
     def execute_trading_session(self, date):
         ## sell first ##
-        for asset in self.portfolio:
-            stock = Stocks.objects.get(symbol=asset['symbol'])
-            self.sell_stock(stock, date)
-
+        for asset in self.portfolio[:]:
+            self.sell_stock(asset, date)
+        self.portfolio = []
         ## buy stocks based on portfolio customization ##
         holdings = self.find_stocks_to_buy(date)
         if len(holdings) > 0:
@@ -108,17 +107,15 @@ class BacktestingEnvironment:
             })
         return True
 
-    def sell_stock(self,stock,date):
+    def sell_stock(self,asset,date):
         yesterday = date - timedelta(days=1)
-        price = Prices.objects.filter(stock=stock).filter(date__range=(yesterday, date))
+        price = list(Prices.objects.filter(stock=asset['object']).filter(date__range=(yesterday, date)))
         if len(price) > 0:
-            asset = [x for x in self.portfolio if x['symbol'] == stock.symbol][0]
-            sale = round((asset['quantity']*price[-1].close)),2)
+            sale = round((asset['quantity']*price[-1].close),2)
             self.balance += sale
             self.portfolio.remove(asset)
             return True
-        else:
-            return False
+        return False
 
 
     def find_stocks_to_buy(self,date):
@@ -193,10 +190,15 @@ if __name__ == '__main__':
                 'percent_difference_to_buy': 0.1,
                 'appetite': 5
                 },
-            'thresholds':{
+            'volatility': {
+                'period': 15,
+                'appetite': 100,
+                'range': (0.1,0.2,),
+                },
+            'thresholds': {
                 'price' : {'above': 50, 'below': 100},
-                'sector' : {'include': ['Healthcare']},
-                'industry': {'exclude': ['Asset Management']}
+                # 'sector' : {'include': ['Healthcare']},
+                # 'industry': {'exclude': ['Asset Management']}
                 },
             'diversity':{
                 'num_sector': 2,
