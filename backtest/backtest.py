@@ -136,6 +136,10 @@ class BacktestingEnvironment:
             combined_stock_list += stock
         if len(self.blocks_sell) == 0:
             combined_stock_list =  self.portfolio
+        for stock in combined_stock_list[:]:
+            if stock is None:
+                combined_stock_list.remove(stock)
+
 
         ranked_stocks = self.rank_stocks(combined_stock_list)
         survivors = Conditions(self.conditions_sell,ranked_stocks).aggregate_survivors()
@@ -144,11 +148,14 @@ class BacktestingEnvironment:
 
     def buy_conditions(self,date):
         stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks_buy]  
-        combined_stocks = []
+        combined_stock_list = []
         for block_return in stocks_to_buy:
-            combined_stocks += block_return ## concatenate lists
-        
-        ranked_stocks = self.rank_stocks(combined_stocks)
+            combined_stock_list += block_return ## concatenate lists
+        for stock in combined_stock_list[:]:
+            if stock is None:
+                combined_stock_list.remove(stock)
+
+        ranked_stocks = self.rank_stocks(combined_stock_list)
         
         ## purge stocks that don't meet conditions
         survivors = Conditions(self.conditions_buy,ranked_stocks).aggregate_survivors()
@@ -158,7 +165,10 @@ class BacktestingEnvironment:
     def rank_stocks(self,stock_array):
         ## rank stocks based on performance ## 
         for stock in stock_array:
+            if stock is None:
+                continue
             scores = []
+            print([x for x in stock_array if x['symbol'] == stock['symbol']])
             for point in [x for x in stock_array if x['symbol'] == stock['symbol']]:
                 scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
             aggregate_score = 0
@@ -245,6 +255,13 @@ if __name__ == '__main__':
                 'behavior' : 'sell',
                 'num_sector': 2,
                 'num_industry': 1,
+                },
+            'event_01': {
+                'behavior' : 'buy',
+                'stock': 'GOOG',
+                'attribute': 'close',
+                'range': (600,650,),
+                'appetite': 300
                 }
             }
         }

@@ -46,6 +46,12 @@ class BaseAlgorithm:
             'behavior': 'Null' ## Hold, Sell All, diversify..
         }
 
+        self.event = {
+            'stock': 'GOOG',
+            'attribute': 'close',
+            'range': (600,650,)
+        }
+
         ## Overwrite Defaults ##
         for key in algorithm:
             setattr(self,key,algorithm[key])
@@ -59,7 +65,10 @@ class BaseAlgorithm:
         
         self.covariance_blocks_buy = [Covariance_Block(**getattr(self,condition)) for condition in [key for key in algorithm if re.search('covariance',key)] if algorithm[condition]['behavior'] == 'buy']
         self.covariance_blocks_sell = [Covariance_Block(**getattr(self,condition)) for condition in [key for key in algorithm if re.search('covariance',key)] if algorithm[condition]['behavior'] == 'buy']
-            
+        
+        self.event_blocks_buy = [Event_Block(**getattr(self,condition)) for condition in [key for key in algorithm if re.search('event',key)] if algorithm[condition]['behavior'] == 'buy']
+        self.event_blocks_sell = [Event_Block(**getattr(self,condition)) for condition in [key for key in algorithm if re.search('event',key)] if algorithm[condition]['behavior'] == 'buy']
+        
         self.diversity_conditions_buy = [getattr(self,condition) for condition in [key for key in algorithm if re.search('diversity',key)] if algorithm[condition]['behavior'] == 'buy']
         self.diversity_conditions_sell = [getattr(self,condition) for condition in [key for key in algorithm if re.search('diversity',key)] if algorithm[condition]['behavior'] == 'sell']
         
