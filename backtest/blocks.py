@@ -102,6 +102,7 @@ class Covariance_Block:
         covariance = Calculator.covariance(price_objects,self.benchmark_prices,'price')
         return {
             'object': stock_object,
+            'covariance' : covariance,
             'covariance_score': self.appetite*covariance,
             'symbol': stock_object.symbol,
             'todays_price' : prices_in_range[-1].close,
@@ -116,7 +117,7 @@ class Covariance_Block:
     def aggregate_stocks(self,stocks,date):
         self.benchmark_prices = self.parse_benchmark(date)
         all_covariances = [self.get_covariance_per_stock(stock_object,date) for stock_object in stocks]
-        return [c for c in all_covariances if c is not None and self.range[0] < c < self.range[1]]
+        return [c for c in all_covariances if c is not None and self.range[0] < c['covariance'] < self.range[1]]
 
 
 

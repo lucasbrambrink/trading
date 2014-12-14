@@ -76,8 +76,9 @@ class BacktestingEnvironment:
     def execute_trading_session(self, date):
         ## sell based on conditions ##
         to_sell = self.sell_conditions(date)
-        for asset in to_sell[:]:
-            self.sell_stock(asset, date)
+        for asset in self.portfolio[:]:
+            if len([1 for x in to_sell if x['symbol'] == asset['symbol']]) > 0:
+                self.sell_stock(asset, date)
         
         ## buy based on conditions ##
         holdings = self.buy_conditions(date)
@@ -128,7 +129,8 @@ class BacktestingEnvironment:
 
     ## Conditions ##
     def sell_conditions(self,date):
-        stocks_to_sell = [block.aggregate_stocks(self.portfolio,date) for block in self.blocks_sell]
+        portfolio = [x['object'] for x in self.portfolio]
+        stocks_to_sell = [block.aggregate_stocks(portfolio,date) for block in self.blocks_sell]
         combined_stock_list = []
         for stock in stocks_to_sell:
             combined_stock_list += stock
