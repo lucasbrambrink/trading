@@ -1,24 +1,20 @@
-## set up django
-import os, django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "graph_trader.settings.dev")
-django.setup()
-
-
 ## get contingencies
-from calculator import *
-from risk_calculator import *
-from blocks import *
-from conditions import *
-from algorithm import BaseAlgorithm
-from models import *
+from .calculator import *
+from .risk_calculator import *
+from .blocks import *
+from .conditions import *
+from .algorithm import BaseAlgorithm
+from .models import *
+
 import math
 import re
 from datetime import date,timedelta
 
-
 class BacktestingEnvironment:
 
     def __init__(self,backtest,algorithm):
+        # TODO: move id generation login into backend
+        self.id = backtest['id']
         self.start_date = backtest['start_date']
         self.end_date = backtest['end_date']
         self.initial_balance = backtest['initial_balance']
@@ -47,8 +43,13 @@ class BacktestingEnvironment:
         ## risk calc
         self.market_index = [{'price': x.close, 'date': x.date} for x in Prices.objects.filter(stock_id=387).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
 
+        self.queue = None
+
+    def set_queue(self, queue):
+        self.queue = queue
+
     def dates_in_range(self):
-        robust_stock = Stocks.objects.get(symbol='ACE')
+        robust_stock = Stocks.objects.get(symbol='A')
         return [x.date for x in Prices.objects.filter(stock=robust_stock).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
 
     ## main backtesting method ##
@@ -56,7 +57,15 @@ class BacktestingEnvironment:
         for index,date in enumerate(self.dates_in_range):
             if index % math.floor(252/self.frequency) == 0:
                 self.execute_trading_session(date)
+
                 # calculate risk metrics
+
+                value = round(PortfolioCalculator(self.portfolio).value,2)
+                returns = round(float(((self.balance + value) - self.initial_balance) / self.initial_balance),2)
+
+                ## Save returns
+                self.queue.enqueue({'key': 'returns', 'values': returns})
+
                 self.print_information(date)
                 if index > 0:
                     print(self.calculate_risk_metrics(self.most_recent_trade,date))
@@ -167,7 +176,7 @@ class BacktestingEnvironment:
         print("Portfolio Value : ",value)
         return True
 
-    def __run__(self):
+    def run(self):
         self.run_period_with_algorithm()
 
 
@@ -213,5 +222,5 @@ if __name__ == '__main__':
             }
         }
     base = BaseAlgorithm(json['algorithm'])
-    BacktestingEnvironment(json['backtest'], base.__dict__).__run__()
+    BacktestingEnvironment(json['backtest'], base.__dict__).run()
 

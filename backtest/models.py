@@ -1,11 +1,17 @@
 from django.db import models
+from .managers import *
 
 
 class Stocks(models.Model):
+    objects = StockManager()
+
     name = models.CharField(max_length=100)
     sector = models.CharField(max_length=100)
     industry = models.CharField(max_length=100)
     symbol = models.CharField(max_length=6, unique=True, db_index=True)
+
+    def natural_key(self):
+        return self.symbol
 
     class Meta:
         app_label = 'backtest'
@@ -22,6 +28,8 @@ class Prices(models.Model):
 
     class Meta:
         app_label = 'backtest'
+        unique_together = (('stock', 'date'), )
+
 
 class Algorithms(models.Model):
     # user = models.ForeignKey(Users)
