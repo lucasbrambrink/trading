@@ -2,6 +2,7 @@
 ## Algorithms built from Blocks ##
 from blocks import *
 from models import Algorithms
+import re
 
 class BaseAlgorithm:
 
@@ -50,23 +51,22 @@ class BaseAlgorithm:
             setattr(self,key,algorithm[key])
 
         ## Encapsulate Blocks for Processing ##
-        if 'sma' in algorithm:
-            self.sma_block = SMA_Block(**self.sma)
-
-        if 'volatility' in algorithm:
-            self.volatility_block = Volatility_Block(**self.volatility)
-    
-        if 'covariance' in algorithm:
-            self.covariance_block = Covariance_Block(**self.covariance)
-        
-        if 'diversity' in algorithm:
-            self.diversity_condition = self.diversity
-    
-        if 'thresholds' in algorithm:
-            self.thresholds_condition = self.thresholds
+        self.sma_blocks_buy = [SMA_Block(getattr(self,condition)) for condition in [key for key in algorithm if re.search('sma',key)] if condition['behavior'] == 'buy']
+        self.sma_blocks_sell = [SMA_Block(getattr(self,condition)) for condition in [key for key in algorithm if re.search('sma',key)] if condition['behavior'] == 'buy']
             
-        if 'crisis' in algorithm:
-            self.crisis_condition = self.crisis
+        self.volatility_blocks_buy = [Volatility_Block(getattr(self,condition)) for condition in [key for key in algorithm if re.search('volatility',key)] if condition['behavior'] == 'buy']
+        self.volatility_blocks_sell = [Volatility_Block(getattr(self,condition)) for condition in [key for key in algorithm if re.search('volatility',key)] if condition['behavior'] == 'sell']
+        
+        self.covariance_blocks_buy = [Covariance_Block(getattr(self,condition)) for condition in [key for key in algorithm if re.search('covariance',key)] if condition['behavior'] == 'buy']
+        self.covariance_blocks_sell = [Covariance_Block(getattr(self,condition)) for condition in [key for key in algorithm if re.search('covariance',key)] if condition['behavior'] == 'buy']
+            
+        self.diversity_conditions_buy = [getattr(self,condition) for condition in [key for key in algorithm if re.search('diversity',key)] if condition['behavior'] == 'buy']
+        self.diversity_conditions_sell = [getattr(self,condition) for condition in [key for key in algorithm if re.search('diversity',key)] if condition['behavior'] == 'sell']
+        
+        self.thresholds_conditions_buy = [getattr(self,condition) for condition in [key for key in algorithm if re.search('sma',key)] if condition['behavior'] == 'buy']
+        self.thresholds_conditions_sell = [getattr(self,condition) for condition in [key for key in algorithm if re.search('sma',key)] if condition['behavior'] == 'buy']
+            
+        self.crisis_conditions = [getattr(self,condition) for condition in [key for key in algorithm if re.search('crisis',key)]]
 
         self.algorithm = self.save_db()
 

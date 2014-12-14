@@ -25,14 +25,17 @@ class BacktestingEnvironment:
         self.frequency = backtest['frequency']
         self.num_holdings = backtest['num_holdings']
     
-        self.blocks = []
-        self.conditions = {}
+        self.blocks_buy = [algorithm[key] for key in algorithm if re.search('_blocks_buy', key)]
+        self.blocks_sell = [algorithm[key] for key in algorithm if re.search('_blocks_sell', key)]
+        self.conditions_buy = {}
+        self.conditions_sell = {}
         for key in algorithm:
-            if re.search('_block', key):
-                self.blocks.append(algorithm[key])
-            if re.search('_condition', key):
+            if re.search('_conditions_buy', key):
                 short_key = key.split('_')[0]
-                self.conditions[short_key] = algorithm[key]
+                self.conditions_buy[short_key] = algorithm[key]
+            if re.search('_conditions_sell', key):
+                short_key = key.split('_')[0]
+                self.conditions_sell[short_key] = algorithm[key]
         self.algorithm = algorithm['algorithm']
         
         ## relevant dates ##
@@ -66,12 +69,13 @@ class BacktestingEnvironment:
 
     ## helper method ##
     def execute_trading_session(self, date):
-        ## sell first ##
-        for asset in self.portfolio[:]:
+        ## sell based on conditions ##
+        to_sell = self.sell_conditions(date)
+        for asset in to_sell[:]:
             self.sell_stock(asset, date)
-        self.portfolio = []
-        ## buy stocks based on portfolio customization ##
-        holdings = self.find_stocks_to_buy(date)
+        
+        ## buy based on conditions ##
+        holdings = self.buy_conditions(date)
         if len(holdings) > 0:
             investment_per_stock = math.floor(self.balance / len(holdings))
             for stock in holdings:
@@ -118,28 +122,45 @@ class BacktestingEnvironment:
         return False
 
 
-    def find_stocks_to_buy(self,date):
+    ## Conditions ##
+    def sell_conditions(self,date):
+        if len(self.blocks_sell) == 0:
+            return self.portfolio
+        stocks_to_sell = [block.aggregate_stocks(self.portfolio,date) for block in self.blocks_sell]
+        combined_stock_list = []
+        for stock in stocks_to_sell:
+            combined_stock_list += stocks
+
+        ranked_stocks = self.rank_stocks(combined_stock_list)
+        survivors = Conditions(self.conditions_sell,rank_stocks).aggregate_survivors()
+
+        return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)
+
+    def buy_conditions(self,date):
         stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks]  
         combined_stocks = []
         for block_return in stocks_to_buy:
             combined_stocks += block_return ## concatenate lists
         
+        ranked_stocks = self.rank_stocks(combined_stocks)
+        
+        ## purge stocks that don't meet conditions
+        survivors = Conditions(self.conditions,ranked_stocks).aggregate_survivors()
+        
+        return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
+
+    def rank_stocks(self,stock_array):
         ## rank stocks based on performance ## 
-        for stock in combined_stocks:
+        for stock in stock_array:
             scores = []
-            for point in [x for x in combined_stocks if x['symbol'] == stock['symbol']]:
+            for point in [x for x in stock_array if x['symbol'] == stock['symbol']]:
                 scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
             aggregate_score = 0
             for score in scores:
                 if len(score) > 0:
                     aggregate_score += score[0]
             stock['agg_score'] = aggregate_score
-        
-        ## purge stocks that don't meet conditions
-        survivors = Conditions(self.conditions,combined_stocks).aggregate_survivors()
-        
-        return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
-
+        return stock_array
 
     def calculate_risk_metrics(self,previous_trade,date):
         value = round(PortfolioCalculator(self.portfolio).value,2)
@@ -184,29 +205,34 @@ if __name__ == '__main__':
             }, 
         'algorithm': {
             'name' : 'Test',
-            'sma': {
+            'sma_01': {
+                'behavior': 'buy', # or sell
                 'period1': 15, 
                 'period2': 10,
                 'percent_difference_to_buy': 0.1,
                 'appetite': 5
                 },
-            'volatility': {
+            'volatility_01': {
+                'behavior': 'buy', # or sell
                 'period': 15,
                 'appetite': 100,
                 'range': (0.1,0.2,),
                 },
-            'covariance': {
+            'covariance_01': {
+                'behavior': 'buy',
                 'benchmark': 'ACE',
                 'period': 15,
                 'appetite': 200,
                 'range': (0.1,0.2,),
             },
-            'thresholds': {
+            'thresholds_01': {
+                'behavior' : 'buy',
                 'price' : {'above': 50, 'below': 100},
                 # 'sector' : {'include': ['Healthcare']},
                 # 'industry': {'exclude': ['Asset Management']}
                 },
-            'diversity':{
+            'diversity_01': {
+                'behavior' : 'sell',
                 'num_sector': 2,
                 'num_industry': 1,
                 }
