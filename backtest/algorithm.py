@@ -20,15 +20,13 @@ class BaseAlgorithm:
         }
         self.volatility = {
             'period': 0,
-            'threshold_to_buy': 'Null',
-            'threshold_to_sell': 'Null', 
+            'range': (0,0,),
             'appetite': 0,
         }
         self.covariance = {
-            'benchmark': 'GOOG',
+            'benchmark': 'ACE',
             'period': 0,
-            'desired': {'above' : 'Null', 'below' : 'Null'},
-            'threshold_to_sell': 'Null',
+            'range': (0,0,),
             'appetite': 0,
         }
         ## Conditions ## 

@@ -93,12 +93,13 @@ class Covariance_Block:
     def __init__(self,**kwargs):
         for key in kwargs:
             setattr(self,key,kwargs[key])
-        self.parse_benchmark()
     
     def get_covariance_per_stock(self,stock_object,date):
         prices_in_range = DB_Helper.prices_in_range(self.period,0,stock_object,date)
         price_objects = [{'price' : x.close} for x in prices_in_range]
-        covariance = Calculator.covariance(price_objects,self.benchmark,'price')
+        if len(price_objects) == 0:
+            return None
+        covariance = Calculator.covariance(price_objects,self.benchmark_prices,'price')
         return {
             'object': stock_object,
             'covariance_score': self.appetite*covariance,
@@ -107,15 +108,15 @@ class Covariance_Block:
             'todays_volume': prices_in_range[-1].volume
         }
 
-    def parse_benchmark(self):
+    def parse_benchmark(self,date):
         benchmark = Stocks.objects.get(symbol=self.benchmark)
-        prices = Prices.objects.filter(stock=benchmark).filter(id__range=(benchmark.id,(benchmark.id + self.period)))
-        self.benchmark = [{'price' : float(x.close)} for x in prices]
-        return True
+        prices = DB_Helper.prices_in_range(self.period,0,benchmark,date)
+        return [{'price' : x.close} for x in prices]
 
     def aggregate_stocks(self,stocks,date):
-        all_covariances = [get_covariance_per_stock(stock_object,date) for stock_object in stocks]
-        return [c for c in all_covariances if c > self.threshold_to_buy]
+        self.benchmark_prices = self.parse_benchmark(date)
+        all_covariances = [self.get_covariance_per_stock(stock_object,date) for stock_object in stocks]
+        return [c for c in all_covariances if c is not None and self.range[0] < c < self.range[1]]
 
 
 

@@ -195,6 +195,12 @@ if __name__ == '__main__':
                 'appetite': 100,
                 'range': (0.1,0.2,),
                 },
+            'covariance': {
+                'benchmark': 'ACE',
+                'period': 15,
+                'appetite': 200,
+                'range': (0.1,0.2,),
+            },
             'thresholds': {
                 'price' : {'above': 50, 'below': 100},
                 # 'sector' : {'include': ['Healthcare']},
