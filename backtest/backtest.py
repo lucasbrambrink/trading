@@ -25,8 +25,13 @@ class BacktestingEnvironment:
         self.frequency = backtest['frequency']
         self.num_holdings = backtest['num_holdings']
     
-        self.blocks_buy = [algorithm[key] for key in algorithm if re.search('_blocks_buy', key)]
-        self.blocks_sell = [algorithm[key] for key in algorithm if re.search('_blocks_sell', key)]
+        self.blocks_buy = []
+        for block in list([algorithm[key] for key in algorithm if re.search('_blocks_buy', key)]):
+            self.blocks_buy += block
+        self.blocks_sell = []
+        for block in list([algorithm[key] for key in algorithm if re.search('_blocks_sell', key)]):
+            self.blocks_sell += block
+
         self.conditions_buy = {}
         self.conditions_sell = {}
         for key in algorithm:
@@ -121,23 +126,22 @@ class BacktestingEnvironment:
             return True
         return False
 
-
     ## Conditions ##
     def sell_conditions(self,date):
-        if len(self.blocks_sell) == 0:
-            return self.portfolio
         stocks_to_sell = [block.aggregate_stocks(self.portfolio,date) for block in self.blocks_sell]
         combined_stock_list = []
         for stock in stocks_to_sell:
-            combined_stock_list += stocks
+            combined_stock_list += stock
+        if len(self.blocks_sell) == 0:
+            combined_stock_list =  self.portfolio
 
         ranked_stocks = self.rank_stocks(combined_stock_list)
-        survivors = Conditions(self.conditions_sell,rank_stocks).aggregate_survivors()
+        survivors = Conditions(self.conditions_sell,ranked_stocks).aggregate_survivors()
 
         return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)
 
     def buy_conditions(self,date):
-        stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks]  
+        stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks_buy]  
         combined_stocks = []
         for block_return in stocks_to_buy:
             combined_stocks += block_return ## concatenate lists
@@ -145,7 +149,7 @@ class BacktestingEnvironment:
         ranked_stocks = self.rank_stocks(combined_stocks)
         
         ## purge stocks that don't meet conditions
-        survivors = Conditions(self.conditions,ranked_stocks).aggregate_survivors()
+        survivors = Conditions(self.conditions_buy,ranked_stocks).aggregate_survivors()
         
         return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
 
@@ -172,9 +176,6 @@ class BacktestingEnvironment:
             'volatility': rmc.volatility(), 
             'returns': rmc.total_returns()
             }
-
-
-
 
     ## Views ##
     def print_information(self,date):
@@ -212,8 +213,15 @@ if __name__ == '__main__':
                 'percent_difference_to_buy': 0.1,
                 'appetite': 5
                 },
-            'volatility_01': {
+            'sma_02': {
                 'behavior': 'buy', # or sell
+                'period1': 2, 
+                'period2': 50,
+                'percent_difference_to_buy': 0.8,
+                'appetite': 50
+                },
+            'volatility_01': {
+                'behavior': 'sell', # or sell
                 'period': 15,
                 'appetite': 100,
                 'range': (0.1,0.2,),
