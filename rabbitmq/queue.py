@@ -9,13 +9,17 @@ from pika.exceptions import ConnectionClosed, ChannelError
 host = settings.RABBITMQ_HOST
 
 
-class BaseQueue:
-    prefix = 'queue'
-    data_structure = None
+class QueueEmptyError(Exception):
+    """
+    Raise when the queue is empty
+    """
+    pass
 
-    def __init__(self, id):
-        self.name = self.prefix + '_' + id
-        self.data_structure = self.data_structure
+
+class BaseQueue:
+    def __init__(self, id, prefix='queue', data_structure=None):
+        self.name =  prefix + '_' + id
+        self.data_structure = data_structure
 
     def enqueue(self, data):
         """
@@ -43,6 +47,8 @@ class BaseQueue:
             print(e)
         except ConnectionClosed as e:
             print(e)
+        except Exception as e:
+            print(e)
 
     def dequeue(self, num):
         """
@@ -66,8 +72,10 @@ class BaseQueue:
 
             while count > 0:
                 method_frame, properties, body = channel.basic_get(queue=self.name)
-                if method_frame.NAME == 'Basic.GetEmpty':
+                if method_frame is None:
+                    channel.close()
                     connection.close()
+                    raise QueueEmptyError
                 # Display the message parts
                 print(method_frame)
                 print(properties)
@@ -77,9 +85,8 @@ class BaseQueue:
                 if self.data_structure is None:
                     data.append(res)
                 else:
-                    for index in data:
-                        key = data[index]['key']
-                        data[index]['values'].append(res[key])
+                    for key in data:
+                        data[key].append(res[key])
 
                 # Acknowledge the message
                 channel.basic_ack(method_frame.delivery_tag)
@@ -89,17 +96,17 @@ class BaseQueue:
                 requeued_messages = channel.cancel()
                 print('Requeued {} messages'.format(requeued_messages))
 
-                # Close the channel and the connection
-                channel.close()
-                connection.close()
-        except ChannelError as e:
-            print(e)
-            err = 'Error'
+            # Close the channel and the connection
+            channel.close()
+            connection.close()
         except ConnectionClosed as e:
             print(e)
             err = 'Error'
-            if count != num:
-                err = 'Insufficient data'
+        except QueueEmptyError:
+            err = 'Insufficient data'
+        except Exception as e:
+            print(e)
+            err = 'Error'
         finally:
             return data, err
 
