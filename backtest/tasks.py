@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+from time import mktime
+
 from celery import shared_task
 
 from .algorithm import BaseAlgorithm
@@ -53,5 +55,8 @@ def test_backtest(algorithm_json):
             returns = random()
             print(date, returns)
             returns_queue.enqueue(
-                [{'key': 'returns', 'values': returns}, {'key': 'date', 'values': date.isoformat()}]
+                {
+                    'returns': returns,
+                    'date': 1000 * mktime(date.timetuple())
+                }
             )
