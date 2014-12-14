@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Stocks',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
                 ('name', models.CharField(max_length=100)),
                 ('sector', models.CharField(max_length=100)),
                 ('industry', models.CharField(max_length=100)),
@@ -43,5 +43,9 @@ class Migration(migrations.Migration):
             name='stock',
             field=models.ForeignKey(to='backtest.Stocks'),
             preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='prices',
+            unique_together=set([('stock', 'date')]),
         ),
     ]

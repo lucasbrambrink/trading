@@ -1,9 +1,5 @@
-import os, django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "graph_trader.settings.dev")
-django.setup()
-
-from calculator import *
-from models import Stocks,Prices
+from .calculator import *
+from .models import Stocks,Prices
 import math
 import re
 

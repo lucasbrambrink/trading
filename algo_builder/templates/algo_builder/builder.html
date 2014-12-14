@@ -37,8 +37,47 @@
 <div class='draggable'><span class='asset'>Stock ID</span></div>
 
 <hr>
-<a href='/backtest/run/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
-<a href='/backtest/run/' class='btn btn-primary' style='margin-left:1.7em;'>Run Algorithm</a>
+<a href='/backtest/add/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
+<a href="{% url 'backtest:result' id=id %}"><button id="run-btn" class='btn btn-primary' style='margin-left:1.7em;'>Run Algorithm</button></a>
+    <script>
+        var testResponse = {
+            backtest: {
+                id: "{{ id }}",
+                start_date: "2013-01-01",
+                end_date: "2014-01-01",
+                initial_balance: 1000000,
+                frequency: 12,
+                num_holdings: 1
+            },
+            algorithm: {
+                name : "Test",
+                sma: {
+                    "period1": 15,
+                    "period2": 10,
+                    "percent_difference_to_buy": 0.1,
+                    "appetite": 5
+                    }
+            }
+        };
+
+        $("#run-btn").on('click', function(e) {
+            $.ajax({
+                url: "{% url 'backtest:run' %}",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken:"{{ csrf_token }}",
+                    data: JSON.stringify(testResponse)
+                },
+                success: function (data) {
+                    console.log(data);
+                    console.log("start backtest");
+                },
+                error: function (xhr, errmsg, err) {
+                    alert("error");
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block scripts %}
