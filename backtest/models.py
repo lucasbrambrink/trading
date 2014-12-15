@@ -35,7 +35,7 @@ class Prices(models.Model):
 
 class Algorithms(models.Model):
     user = models.ForeignKey(User)
-    uuid = models.CharField(max_length=32, unique=True, db_index=True)
+    uuid = models.CharField(max_length=32, null=False, db_index=True)
     name = models.CharField(max_length=30)
     up_votes = models.IntegerField(default=0)
 
