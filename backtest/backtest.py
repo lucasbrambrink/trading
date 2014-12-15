@@ -1,20 +1,21 @@
 ## get contingencies
-from .calculator import *
-from .risk_calculator import *
-from .blocks import *
-from .conditions import *
-from .algorithm import BaseAlgorithm
-from .models import *
+from calculator import *
+from risk_calculator import *
+from blocks import *
+from conditions import *
+from algorithm import BaseAlgorithm
+from models import *
 
 import math
 import re
 from datetime import date,timedelta
 
+
 class BacktestingEnvironment:
 
     def __init__(self,backtest,algorithm):
         # TODO: move id generation login into backend
-        self.id = backtest['id']
+        # self.id = backtest['id']
         self.start_date = backtest['start_date']
         self.end_date = backtest['end_date']
         self.initial_balance = backtest['initial_balance']
@@ -72,7 +73,7 @@ class BacktestingEnvironment:
                 returns = round(float(((self.balance + value) - self.initial_balance) / self.initial_balance),2)
 
                 ## Save returns
-                self.queue.enqueue({'key': 'returns', 'values': returns})
+                # self.queue.enqueue({'key': 'returns', 'values': returns})
 
                 self.print_information(date)
                 if index > 0:
@@ -165,7 +166,6 @@ class BacktestingEnvironment:
                 combined_stock_list.remove(stock)
 
         ranked_stocks = self.rank_stocks(combined_stock_list)
-        
         ## purge stocks that don't meet conditions
         survivors = Conditions(self.conditions_buy,ranked_stocks).aggregate_survivors()
         
@@ -177,7 +177,6 @@ class BacktestingEnvironment:
             if stock is None:
                 continue
             scores = []
-            print([x for x in stock_array if x['symbol'] == stock['symbol']])
             for point in [x for x in stock_array if x['symbol'] == stock['symbol']]:
                 scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
             aggregate_score = 0
@@ -227,51 +226,51 @@ if __name__ == '__main__':
             }, 
         'algorithm': {
             'name' : 'Test',
-            'sma_01': {
+            'sma': [{
                 'behavior': 'buy', # or sell
                 'period1': 15, 
                 'period2': 10,
-                'percent_difference_to_buy': 0.1,
+                'range': (0.2,10),
                 'appetite': 5
-                },
-            'sma_02': {
+                },{
                 'behavior': 'buy', # or sell
                 'period1': 2, 
                 'period2': 50,
-                'percent_difference_to_buy': 0.8,
+                'range': (0.8,10),
                 'appetite': 50
-                },
-            'volatility_01': {
+                }],
+            'volatility': [
+            {
                 'behavior': 'sell', # or sell
                 'period': 15,
                 'appetite': 100,
                 'range': (0.1,0.2,),
-                },
-            'covariance_01': {
+                }],
+            'covariance': [{
                 'behavior': 'buy',
                 'benchmark': 'ACE',
                 'period': 15,
                 'appetite': 200,
                 'range': (0.1,0.2,),
-            },
-            'thresholds_01': {
+            }],
+            'thresholds': [{
                 'behavior' : 'buy',
                 'price' : {'above': 50, 'below': 100},
                 # 'sector' : {'include': ['Healthcare']},
                 # 'industry': {'exclude': ['Asset Management']}
-                },
-            'diversity_01': {
+                }],
+            'diversity': [{
                 'behavior' : 'sell',
                 'num_sector': 2,
                 'num_industry': 1,
-                },
-            'event_01': {
+                }],
+            'event': [{
                 'behavior' : 'buy',
                 'stock': 'GOOG',
                 'attribute': 'close',
                 'range': (600,650,),
                 'appetite': 300
-                }
+                }]
             }
         }
     base = BaseAlgorithm(json['algorithm'])

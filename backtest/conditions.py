@@ -1,5 +1,5 @@
-from .calculator import *
-from .models import Stocks,Prices
+from calculator import *
+from models import Stocks,Prices
 import math
 import re
 

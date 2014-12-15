@@ -1,9 +1,9 @@
 from django.db import models
-from .managers import *
+# from .managers import *
 
 
 class Stocks(models.Model):
-    objects = StockManager()
+    # objects = StockManager()
 
     name = models.CharField(max_length=100)
     sector = models.CharField(max_length=100)
