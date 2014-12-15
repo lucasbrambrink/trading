@@ -14,30 +14,23 @@ from datetime import date,timedelta
 class BacktestingEnvironment:
 
     def __init__(self,backtest,algorithm):
-        # TODO: move id generation login into backend
-        # self.id = backtest['id']
+        self.id = backtest['id']
         self.start_date = backtest['start_date']
         self.end_date = backtest['end_date']
         self.initial_balance = backtest['initial_balance']
         self.frequency = backtest['frequency']
         self.num_holdings = backtest['num_holdings']
     
-        self.blocks_buy = []
-        for block in list([algorithm[key] for key in algorithm if re.search('_blocks_buy', key)]):
-            self.blocks_buy += block
-        self.blocks_sell = []
-        for block in list([algorithm[key] for key in algorithm if re.search('_blocks_sell', key)]):
-            self.blocks_sell += block
-
+        ## set up algorithm ##
+        self.blocks_buy = algorithm['blocks_buy']
+        self.blocks_sell = algorithm['blocks_sell']
+        
         self.conditions_buy = {}
         self.conditions_sell = {}
-        for key in algorithm:
-            if re.search('_conditions_buy', key):
-                short_key = key.split('_')[0]
-                self.conditions_buy[short_key] = algorithm[key]
-            if re.search('_conditions_sell', key):
-                short_key = key.split('_')[0]
-                self.conditions_sell[short_key] = algorithm[key]
+        for condition in algorithm['conditions_buy']:
+            self.conditions_buy[list(condition)[0]] = condition[list(condition)[0]]
+        for condition in algorithm['conditions_sell']:
+            self.conditions_sell[list(condition)[0]] = condition[list(condition)[0]]
         self.algorithm = algorithm['algorithm']
         
         ## relevant dates ##
@@ -218,6 +211,7 @@ if __name__ == '__main__':
     ## at this point, back end expects a JSON
     json = {
         'backtest': {
+            'id' : 'asjdlfakjdfl;akjdl;fajkd;fadfa',
             'start_date': "2013-01-01",
             'end_date': "2014-01-01",
             'initial_balance': 1000000,
@@ -226,53 +220,67 @@ if __name__ == '__main__':
             }, 
         'algorithm': {
             'name' : 'Test',
-            'sma': [{
-                'behavior': 'buy', # or sell
-                'period1': 15, 
-                'period2': 10,
-                'range': (0.2,10),
-                'appetite': 5
-                },{
-                'behavior': 'buy', # or sell
-                'period1': 2, 
-                'period2': 50,
-                'range': (0.8,10),
-                'appetite': 50
-                }],
-            'volatility': [
-            {
-                'behavior': 'sell', # or sell
-                'period': 15,
-                'appetite': 100,
-                'range': (0.1,0.2,),
-                }],
-            'covariance': [{
-                'behavior': 'buy',
-                'benchmark': 'ACE',
-                'period': 15,
-                'appetite': 200,
-                'range': (0.1,0.2,),
-            }],
-            'thresholds': [{
-                'behavior' : 'buy',
-                'price' : {'above': 50, 'below': 100},
-                # 'sector' : {'include': ['Healthcare']},
-                # 'industry': {'exclude': ['Asset Management']}
-                }],
-            'diversity': [{
-                'behavior' : 'sell',
-                'num_sector': 2,
-                'num_industry': 1,
-                }],
-            'event': [{
-                'behavior' : 'buy',
-                'stock': 'GOOG',
-                'attribute': 'close',
-                'range': (600,650,),
-                'appetite': 300
-                }]
+            'block': {
+                'sma': {
+                    'buy': [{
+                        'period1': 15, 
+                        'period2': 10,
+                        'range': (0.2,10),
+                        'appetite': 5
+                        },{
+                        'period1': 2, 
+                        'period2': 50,
+                        'range': (0.8,10),
+                        'appetite': 50
+                        }],
+                    'sell' : []
+                },
+                'volatility' : {
+                    'buy' : [],
+                    'sell' : [{
+                        'behavior': 'sell', # or sell
+                        'period': 15,
+                        'appetite': 100,
+                        'range': (0.1,0.2),
+                        }] 
+                },
+                'covariance': {
+                    'buy' :[{
+                        'benchmark': 'ACE',
+                        'period': 15,
+                        'appetite': 200,
+                        'range': (0.1,0.2,),
+                    }],
+                    'sell' : []
+                },
+                'thresholds': {
+                    'buy' :[{
+                        'price' : {'above': 50, 'below': 100},
+                        # 'sector' : {'include': ['Healthcare']},
+                        # 'industry': {'exclude': ['Asset Management']}
+                        }],
+                    'sell' : []
+                },
+                'diversity': {
+                    'buy' : [],
+                    'sell' : [{
+                        'num_sector': 2,
+                        'num_industry': 1
+                        }]
+                },
+                'event': {
+                    'buy': [{
+                        'stock': 'GOOG',
+                        'attribute': 'close',
+                        'range': (600,650,),
+                        'appetite': 300
+                        }],
+                    'sell': []
+                },
             }
         }
+    }
+
     base = BaseAlgorithm(json['algorithm'])
     BacktestingEnvironment(json['backtest'], base.__dict__).run()
 
