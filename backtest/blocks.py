@@ -51,7 +51,7 @@ class SMA_Block:
         for pair in all_stock_sma_pairs:
             if pair is not None:
                 pd = self.c.percent_change_simple(pair['sma_pair'][1],pair['sma_pair'][0])
-                if pd > self.percent_difference_to_buy:
+                if self.range[0] < pd < self.range[1]:
                     stocks_to_buy.append({
                         'symbol': pair['symbol'],
                         'sma_score': self.appetite*pd,
@@ -102,6 +102,7 @@ class Covariance_Block:
         covariance = Calculator.covariance(price_objects,self.benchmark_prices,'price')
         return {
             'object': stock_object,
+            'covariance' : covariance,
             'covariance_score': self.appetite*covariance,
             'symbol': stock_object.symbol,
             'todays_price' : prices_in_range[-1].close,
@@ -116,9 +117,47 @@ class Covariance_Block:
     def aggregate_stocks(self,stocks,date):
         self.benchmark_prices = self.parse_benchmark(date)
         all_covariances = [self.get_covariance_per_stock(stock_object,date) for stock_object in stocks]
-        return [c for c in all_covariances if c is not None and self.range[0] < c < self.range[1]]
+        return [c for c in all_covariances if c is not None and self.range[0] < c['covariance'] < self.range[1]]
 
 
+class Event_Block:
 
+    def __init__(self,**kwargs):
+        for key in kwargs:
+            setattr(self,key,kwargs[key])
+        self.stock_object = Stocks.objects.get(symbol=self.stock)
 
+    def test_event(self,date):
+        price = DB_Helper.prices_in_range(1,0,self.stock_object,date)
+        if len(price) > 0 and self.range[0] <= getattr(price[-1],self.attribute) <= self.range[1]:
+            return {
+                'object': self.stock_object,
+                'event_score' : self.appetite,
+                'symbol': stock_object.symbol,
+                'todays_price' : price[-1].close,
+                'todays_volume': price[-1].volume
+            }
+
+    def aggregate_stocks(self,stocks,date):
+        return (self.test_event(date),)
+
+class PE_Block:
+
+    def __init__(self,**kwargs):
+        for key in kwargs:
+            setattr(self,key,kwargs[key])
+        
+    def test_event(self,date):
+        price = DB_Helper.prices_in_range(1,0,self.stock_object,date)
+        if len(price) > 0 and self.range[0] <= getattr(price[-1],self.attribute) <= self.range[1]:
+            return {
+                'object': self.stock_object,
+                'event_score' : self.appetite,
+                'symbol': stock_object.symbol,
+                'todays_price' : price[-1].close,
+                'todays_volume': price[-1].volume
+            }
+
+    def aggregate_stocks(self,stocks,date):
+        return (self.test_event(date),)
 

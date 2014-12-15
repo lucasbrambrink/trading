@@ -1,34 +1,43 @@
 ## get contingencies
-from .calculator import *
-from .risk_calculator import *
-from .blocks import *
-from .conditions import *
-from .algorithm import BaseAlgorithm
-from .models import *
+from calculator import *
+from risk_calculator import *
+from blocks import *
+from conditions import *
+from algorithm import BaseAlgorithm
+from models import *
 
 import math
 import re
 from datetime import date,timedelta
 
+
 class BacktestingEnvironment:
 
     def __init__(self,backtest,algorithm):
         # TODO: move id generation login into backend
-        self.id = backtest['id']
+        # self.id = backtest['id']
         self.start_date = backtest['start_date']
         self.end_date = backtest['end_date']
         self.initial_balance = backtest['initial_balance']
         self.frequency = backtest['frequency']
         self.num_holdings = backtest['num_holdings']
     
-        self.blocks = []
-        self.conditions = {}
+        self.blocks_buy = []
+        for block in list([algorithm[key] for key in algorithm if re.search('_blocks_buy', key)]):
+            self.blocks_buy += block
+        self.blocks_sell = []
+        for block in list([algorithm[key] for key in algorithm if re.search('_blocks_sell', key)]):
+            self.blocks_sell += block
+
+        self.conditions_buy = {}
+        self.conditions_sell = {}
         for key in algorithm:
-            if re.search('_block', key):
-                self.blocks.append(algorithm[key])
-            if re.search('_condition', key):
+            if re.search('_conditions_buy', key):
                 short_key = key.split('_')[0]
-                self.conditions[short_key] = algorithm[key]
+                self.conditions_buy[short_key] = algorithm[key]
+            if re.search('_conditions_sell', key):
+                short_key = key.split('_')[0]
+                self.conditions_sell[short_key] = algorithm[key]
         self.algorithm = algorithm['algorithm']
         
         ## relevant dates ##
@@ -64,7 +73,7 @@ class BacktestingEnvironment:
                 returns = round(float(((self.balance + value) - self.initial_balance) / self.initial_balance),2)
 
                 ## Save returns
-                self.queue.enqueue({'key': 'returns', 'values': returns})
+                # self.queue.enqueue({'key': 'returns', 'values': returns})
 
                 self.print_information(date)
                 if index > 0:
@@ -75,12 +84,14 @@ class BacktestingEnvironment:
 
     ## helper method ##
     def execute_trading_session(self, date):
-        ## sell first ##
+        ## sell based on conditions ##
+        to_sell = self.sell_conditions(date)
         for asset in self.portfolio[:]:
-            self.sell_stock(asset, date)
-        self.portfolio = []
-        ## buy stocks based on portfolio customization ##
-        holdings = self.find_stocks_to_buy(date)
+            if len([1 for x in to_sell if x['symbol'] == asset['symbol']]) > 0:
+                self.sell_stock(asset, date)
+        
+        ## buy based on conditions ##
+        holdings = self.buy_conditions(date)
         if len(holdings) > 0:
             investment_per_stock = math.floor(self.balance / len(holdings))
             for stock in holdings:
@@ -126,29 +137,54 @@ class BacktestingEnvironment:
             return True
         return False
 
+    ## Conditions ##
+    def sell_conditions(self,date):
+        portfolio = [x['object'] for x in self.portfolio]
+        stocks_to_sell = [block.aggregate_stocks(portfolio,date) for block in self.blocks_sell]
+        combined_stock_list = []
+        for stock in stocks_to_sell:
+            combined_stock_list += stock
+        if len(self.blocks_sell) == 0:
+            combined_stock_list =  self.portfolio
+        for stock in combined_stock_list[:]:
+            if stock is None:
+                combined_stock_list.remove(stock)
 
-    def find_stocks_to_buy(self,date):
-        stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks]  
-        combined_stocks = []
+
+        ranked_stocks = self.rank_stocks(combined_stock_list)
+        survivors = Conditions(self.conditions_sell,ranked_stocks).aggregate_survivors()
+
+        return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)
+
+    def buy_conditions(self,date):
+        stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks_buy]  
+        combined_stock_list = []
         for block_return in stocks_to_buy:
-            combined_stocks += block_return ## concatenate lists
+            combined_stock_list += block_return ## concatenate lists
+        for stock in combined_stock_list[:]:
+            if stock is None:
+                combined_stock_list.remove(stock)
+
+        ranked_stocks = self.rank_stocks(combined_stock_list)
+        ## purge stocks that don't meet conditions
+        survivors = Conditions(self.conditions_buy,ranked_stocks).aggregate_survivors()
         
+        return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
+
+    def rank_stocks(self,stock_array):
         ## rank stocks based on performance ## 
-        for stock in combined_stocks:
+        for stock in stock_array:
+            if stock is None:
+                continue
             scores = []
-            for point in [x for x in combined_stocks if x['symbol'] == stock['symbol']]:
+            for point in [x for x in stock_array if x['symbol'] == stock['symbol']]:
                 scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
             aggregate_score = 0
             for score in scores:
                 if len(score) > 0:
                     aggregate_score += score[0]
             stock['agg_score'] = aggregate_score
-        
-        ## purge stocks that don't meet conditions
-        survivors = Conditions(self.conditions,combined_stocks).aggregate_survivors()
-        
-        return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
-
+        return stock_array
 
     def calculate_risk_metrics(self,previous_trade,date):
         value = round(PortfolioCalculator(self.portfolio).value,2)
@@ -160,9 +196,6 @@ class BacktestingEnvironment:
             'volatility': rmc.volatility(), 
             'returns': rmc.total_returns()
             }
-
-
-
 
     ## Views ##
     def print_information(self,date):
@@ -193,32 +226,51 @@ if __name__ == '__main__':
             }, 
         'algorithm': {
             'name' : 'Test',
-            'sma': {
+            'sma': [{
+                'behavior': 'buy', # or sell
                 'period1': 15, 
                 'period2': 10,
-                'percent_difference_to_buy': 0.1,
+                'range': (0.2,10),
                 'appetite': 5
-                },
-            'volatility': {
+                },{
+                'behavior': 'buy', # or sell
+                'period1': 2, 
+                'period2': 50,
+                'range': (0.8,10),
+                'appetite': 50
+                }],
+            'volatility': [
+            {
+                'behavior': 'sell', # or sell
                 'period': 15,
                 'appetite': 100,
                 'range': (0.1,0.2,),
-                },
-            'covariance': {
+                }],
+            'covariance': [{
+                'behavior': 'buy',
                 'benchmark': 'ACE',
                 'period': 15,
                 'appetite': 200,
                 'range': (0.1,0.2,),
-            },
-            'thresholds': {
+            }],
+            'thresholds': [{
+                'behavior' : 'buy',
                 'price' : {'above': 50, 'below': 100},
                 # 'sector' : {'include': ['Healthcare']},
                 # 'industry': {'exclude': ['Asset Management']}
-                },
-            'diversity':{
+                }],
+            'diversity': [{
+                'behavior' : 'sell',
                 'num_sector': 2,
                 'num_industry': 1,
-                }
+                }],
+            'event': [{
+                'behavior' : 'buy',
+                'stock': 'GOOG',
+                'attribute': 'close',
+                'range': (600,650,),
+                'appetite': 300
+                }]
             }
         }
     base = BaseAlgorithm(json['algorithm'])

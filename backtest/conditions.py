@@ -1,63 +1,67 @@
-from .calculator import *
-from .models import Stocks,Prices
+from calculator import *
+from models import Stocks,Prices
 import math
 import re
 
 class Conditions:
 
-	def __init__(self,conditions,stocks_to_buy):
+	def __init__(self,conditions,stocks):
 		self.conditions = conditions
-		self.stocks_to_buy = stocks_to_buy
+		self.stocks = stocks
 
 	def threshold_purge(self):
-		survivors = []
-		for stock in self.stocks_to_buy:
+		for stock in self.stocks[:]:
 			if 'price' in self.conditions['thresholds']:
 				if 'above' in self.conditions['thresholds']['price']:
 					if stock['todays_price'] < self.conditions['thresholds']['price']['above']:
+						self.stocks.remove(stock)
 						continue
 				if 'below' in self.conditions['thresholds']['price']:
 					if stock['todays_price'] > self.conditions['thresholds']['price']['below']:
+						self.stocks.remove(stock)
 						continue
 
 			if 'sector' in self.conditions['thresholds']:
 				if 'exclude' in self.conditions['thresholds']['sector']:
 					if stock['object'].sector in self.conditions['thresholds']['sector']['exclude']:
+						self.stocks.remove(stock)
 						continue
 				if 'include' in self.conditions['thresholds']['sector']:
 					if stock['object'].sector not in self.conditions['thresholds']['sector']['include']:
+						self.stocks.remove(stock)
 						continue
 
 			if 'industry' in self.conditions['thresholds']:
 				if 'exclude' in self.conditions['thresholds']['industry']:
 					if stock['object'].industry in self.conditions['thresholds']['industry']['exclude']:
+						self.stocks.remove(stock)
 						continue
 				if 'include' in self.conditions['thresholds']['industry']:
 					if stock['object'].industry not in self.conditions['thresholds']['industry']['include']:
+						self.stocks.remove(stock)
 						continue
 
-			survivors.append(stock)
-		return survivors
+		return True
 
 	def diversity_purge(self):
-		survivors = []
-		for stock in sorted(self.stocks_to_buy,key=lambda x: x['agg_score'],reverse=True):
-			for key in self.conditions['diversity']:
-				current_count = len([1 for comparison in survivors if getattr(stock['object'],key[4:]) == getattr(comparison['object'],key[4:])])
-				if current_count > self.conditions['diversity'][key]:
-					continue
-			survivors.append(stock)
-		return survivors
+		for stock in sorted(self.stocks,key=lambda x: x['agg_score'],reverse=True)[:]:
+			for condition in self.conditions['diversity']:
+				for key in condition:
+					if key != 'behavior':
+						current_count = len([1 for comparison in self.stocks if getattr(stock['object'],key[4:]) == getattr(comparison['object'],key[4:])])
+						if current_count > condition[key]:
+							self.stocks.remove(stock)
+		return True
 
 	def aggregate_survivors(self):
 		for condition in self.conditions:
 			if condition == 'thresholds':
-				self.stocks_to_buy = self.threshold_purge()
+				self.threshold_purge()
 			if condition == 'diversity':
-				self.stocks_to_buy = self.diversity_purge()
+				self.diversity_purge()
 			if condition == 'crisis':
-				self.stocks_to_buy = self.test_crisis_event()
-		return self.stocks_to_buy
+				self.test_crisis_event()
+		return self.stocks
 
 
 	def test_crisis_event(self):
