@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-# from .managers import *
+
+from backtest.managers import StockManager
 
 
 class Stocks(models.Model):
-    # objects = StockManager()
+    objects = StockManager()
 
     name = models.CharField(max_length=100)
     sector = models.CharField(max_length=100)
@@ -34,7 +35,7 @@ class Prices(models.Model):
 
 class Algorithms(models.Model):
     user = models.ForeignKey(User)
-    uuid = models.CharField(max_length=32)
+    uuid = models.CharField(max_length=32, unique=True, db_index=True)
     name = models.CharField(max_length=30)
     up_votes = models.IntegerField(default=0)
 
@@ -46,7 +47,7 @@ class Assets(models.Model):
     algorithm = models.ForeignKey(Algorithms)
     stock = models.ForeignKey(Stocks)
     quantity = models.IntegerField()
-    price_purchased = models.CharField(max_length=10)
+    price_purchased = models.FloatField()
     date = models.DateField()
 
     class Meta:
