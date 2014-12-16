@@ -157,28 +157,23 @@ class Ratio_Block:
         
     def get_ratio_per_stock(self,stock_object,ratio_name,date):
         start_date = date - timedelta(days=365)
-        ratio = Ratios.objects.filter(stock=stock_object).filter(date__range(start_date,date)).order_by('date')
+        ratio = list(Ratios.objects.filter(stock=stock_object).filter(date__range=(start_date,date)).order_by('date'))
         if len(ratio) > 0:
-            if self.range[0] < ratio[-1].ratio_name < self.range[1]:
-                price = DB_Helper.prices_in_range(1,0,stock_object,date)
-                if price > 0:
-                    todays_price = price[-1].close
-                    todays_volume = price[-1].volume
-                else:
-                    todays_price = 'N/A'
-                    todays_volume = 'N/A'
-                return {
-                    'object': self.stock_object,
-                    'ratio_score' : self.appetite*ratio[-1].ratio_name,
-                    'symbol': stock_object.symbol,
-                    'todays_price' : todays_price,
-                    'todays_volume': todays_volume
-                }
+            ratio_of_interest = getattr(ratio[-1],ratio_name)
+            if ratio_of_interest is not None and self.range[0] < ratio_of_interest < self.range[1]:
+                price = DB_Helper.prices_in_range(3,0,stock_object,date)
+                if len(price) > 0:
+                    return {
+                        'object': stock_object,
+                        'ratio_score' : self.appetite*getattr(ratio[-1],ratio_name),
+                        'symbol': stock_object.symbol,
+                        'todays_price' : price[-1].close,
+                        'todays_volume': price[-1].volume
+                    }
         return {}
 
     def aggregate_stocks(self,stocks,date):
-        self.benchmark_prices = self.parse_benchmark(date)
-        all_favorable_ratios = [self.get_ratio_per_stock(stock_object,date) for stock_object in stocks]
-        return [c for c in all_covariances if c is not None and self.range[0] < c['covariance'] < self.range[1]]
+        all_favorable_ratios = [self.get_ratio_per_stock(stock_object,self.name,date) for stock_object in stocks]
+        return [r for r in all_favorable_ratios if r is not None and len(r) > 0]
 
 

@@ -261,7 +261,7 @@ if __name__ == '__main__':
                     'sell' : [{
                         'period1': 15, 
                         'period2': 10,
-                        'range': (0.0,10),
+                        'range': (-10.0,10),
                         'appetite': 5
                         }]
                 },
@@ -307,6 +307,14 @@ if __name__ == '__main__':
                         }],
                     'sell': []
                 },
+                'ratio': {
+                    'buy' : [{
+                        'name': 'pe_current',
+                        'range': (1,20),
+                        'appetite' : 10,
+                    }],
+                    'sell' : []
+                }
             }
         }
     }

@@ -37,6 +37,11 @@ class BaseAlgorithm:
                     self.blocks_buy.append(Event_Block(**event))
                 for event in algorithm['block'][key]['sell']:
                     self.blocks_sell.append(Event_Block(**event))
+            if key == 'ratio':
+                for ratio in algorithm['block'][key]['buy']:
+                    self.blocks_buy.append(Ratio_Block(**ratio))
+                for ratio in algorithm['block'][key]['sell']:
+                    self.blocks_sell.append(Ratio_Block(**ratio))
             ## passive conditions ##
             if key == 'thresholds' or key == 'diversity' or key == 'crisis':
                 for condition in algorithm['block'][key]['buy']:

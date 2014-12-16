@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from backtest.managers import StockManager
+from managers import StockManager
 
 
 class Stocks(models.Model):
