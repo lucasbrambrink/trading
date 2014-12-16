@@ -47,6 +47,16 @@ class BacktestingEnvironment:
 
         self.queue = None
 
+        ## save in DB
+        Backtests.objects.create(
+            algorithm=self.algorithm,
+            start_date=self.start_date,
+            end_date=self.end_date,
+            initial_balance=self.initial_balance,
+            frequency=self.frequency,
+            num_holdings=self.num_holdings
+            )
+
     def set_queue(self, queue):
         self.queue = queue
 

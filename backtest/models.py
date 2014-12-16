@@ -43,8 +43,21 @@ class Algorithms(models.Model):
         app_label = 'backtest'
 
 
-class Assets(models.Model):
+class Backtests(models.Model):
     algorithm = models.ForeignKey(Algorithms)
+    uuid = models.CharField(max_length=32, null=False, db_index=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    initial_balance = models.FloatField()
+    frequency = models.IntegerField()
+    num_holdings = models.IntegerField()
+
+    class Meta:
+        app_label = 'backtest'
+
+
+class Assets(models.Model):
+    backtest = models.ForeignKey(Backtests)
     stock = models.ForeignKey(Stocks)
     quantity = models.IntegerField()
     price_purchased = models.FloatField()
@@ -52,3 +65,30 @@ class Assets(models.Model):
 
     class Meta:
         app_label = 'backtest'
+
+
+class TreasuryBill(models.Model):
+    date = models.DateField()
+    three_month = models.FloatField()
+    six_month = models.FloatField()
+    one_year = models.FloatField()
+    five_year = models.FloatField()
+    ten_year = models.FloatField()
+    thirty_year = models.FloatField()
+
+    class Meta:
+        app_label = 'backtest'
+
+
+class ValuationRatios(models.Model):
+    date = models.DateField()
+    cash_revenue = models.FloatField()
+    ev_ebitda = models.FloatField()
+    market_cap = models.FloatField()
+    pe_current = models.FloatField()
+    return_equity = models.FloatField()
+
+    class Meta:
+        app_label = 'backtest'
+
+        
