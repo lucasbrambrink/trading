@@ -8,6 +8,7 @@ INSTALLED_APPS = DEFAULT_APPS + (
     'rest_framework',
     'account',
     'social.apps.django_app.default',
+    'bootstrap3',
 
     #'project_core',
     'home',
