@@ -93,6 +93,7 @@ class Ratios(models.Model):
     class Meta:
         app_label = 'backtest'
 
+
 class RiskMetrics(models.Model):
     backtest = models.ForeignKey(Backtests)
     date = models.DateField()

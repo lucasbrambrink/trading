@@ -258,7 +258,12 @@ if __name__ == '__main__':
                         'range': (0.8,10),
                         'appetite': 50
                         }],
-                    'sell' : []
+                    'sell' : [{
+                        'period1': 15, 
+                        'period2': 10,
+                        'range': (0.0,10),
+                        'appetite': 5
+                        }]
                 },
                 'volatility' : {
                     'buy' : [],
