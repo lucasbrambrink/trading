@@ -38,6 +38,7 @@ class Algorithms(models.Model):
     uuid = models.CharField(max_length=32, null=False, db_index=True)
     name = models.CharField(max_length=30)
     up_votes = models.IntegerField(default=0)
+    json_string = models.CharField(max_length=500)
 
     class Meta:
         app_label = 'backtest'
@@ -80,15 +81,15 @@ class TreasuryBill(models.Model):
         app_label = 'backtest'
 
 
-class ValuationRatios(models.Model):
+class Ratios(models.Model):
+    stock = models.ForeignKey(Stocks)
     date = models.DateField()
-    cash_revenue = models.FloatField()
-    ev_ebitda = models.FloatField()
-    market_cap = models.FloatField()
-    pe_current = models.FloatField()
-    return_equity = models.FloatField()
+    cash_revenue = models.FloatField(null=True)
+    ev_ebitda = models.FloatField(null=True)
+    market_cap = models.FloatField(null=True)
+    pe_current = models.FloatField(null=True)
+    return_equity = models.FloatField(null=True)
 
     class Meta:
         app_label = 'backtest'
 
-        

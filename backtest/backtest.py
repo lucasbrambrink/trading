@@ -10,7 +10,6 @@ import math
 import re
 from datetime import date,timedelta
 
-
 class BacktestingEnvironment:
 
     def __init__(self,backtest,algorithm):
@@ -176,18 +175,26 @@ class BacktestingEnvironment:
 
     def rank_stocks(self,stock_array):
         ## rank stocks based on performance ## 
+        ranked_stocks = []
         for stock in stock_array:
-            if stock is None:
+            if stock is None or len([x for x in ranked_stocks if x['symbol'] == stock['symbol']]) > 0:
                 continue
             scores = []
             for point in [x for x in stock_array if x['symbol'] == stock['symbol']]:
-                scores.append([point[key] for key in point if (key=='sma_score' or key == 'volatility_score' or key == 'covariance_score')])
+                scores.append([point[key] for key in point if (
+                    key == 'sma_score' or 
+                    key == 'volatility_score' or 
+                    key == 'covariance_score' or 
+                    key == 'event_score' or 
+                    key == 'ratio_score'
+                    )])
             aggregate_score = 0
             for score in scores:
                 if len(score) > 0:
                     aggregate_score += score[0]
             stock['agg_score'] = aggregate_score
-        return stock_array
+            ranked_stocks.append(stock)
+        return ranked_stocks
 
     def calculate_risk_metrics(self,previous_trade,date):
         value = round(PortfolioCalculator(self.portfolio).value,2)
@@ -230,6 +237,7 @@ if __name__ == '__main__':
             }, 
         'algorithm': {
             'name' : 'Test',
+            'id' : 'asdjfalsdjfl;akdjflakjdf;',
             'block': {
                 'sma': {
                     'buy': [{

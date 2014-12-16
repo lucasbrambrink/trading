@@ -3,6 +3,7 @@
 from blocks import *
 from models import Algorithms
 import re
+import json
 
 class BaseAlgorithm:
 
@@ -12,6 +13,7 @@ class BaseAlgorithm:
         self.conditions_buy = []
         self.conditions_sell = []
         setattr(self,'name',algorithm['name'])
+        setattr(self,'uuid',algorithm['uuid'])
         for key in algorithm['block']:
             ## active conditions ##
             if key == 'sma':
@@ -41,9 +43,14 @@ class BaseAlgorithm:
                 for condition in algorithm['block'][key]['buy']:
                     self.conditions_sell.append({key: condition})
 
+        self.json_string = json.dumps(algorithm)
+
         self.algorithm = self.save_db()
 
     def save_db(self):
-        a = Algorithms.objects.create(name=self.name)
+        a = Algorithms.objects.create(
+            name=self.name,
+            uuid=self.uuid
+            json_string=self.json_string)
         return a
            
