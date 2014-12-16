@@ -201,13 +201,18 @@ class BacktestingEnvironment:
     def calculate_risk_metrics(self,previous_trade,date):
         value = round(PortfolioCalculator(self.portfolio).value,2)
         rmc = RiskMetricsCalculator(self.portfolio,self.balance,self.initial_balance,self.market_index,previous_trade,date)
-        return {
+        risk_metrics = {
+            'backtest': self.backtest,
+            'date': date,
             'alpha': rmc.alpha(), 
             'beta': rmc.beta(), 
             'sharpe': rmc.sharpe(), 
             'volatility': rmc.volatility(), 
             'returns': rmc.total_returns()
-            }
+        }
+        ## Save in DB
+        RiskMetrics.objects.create(**risk_metrics)
+        return risk_metrics
 
     ## Views ##
     def print_information(self,date):

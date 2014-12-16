@@ -70,12 +70,12 @@ class Assets(models.Model):
 
 class TreasuryBill(models.Model):
     date = models.DateField()
-    three_month = models.FloatField()
-    six_month = models.FloatField()
-    one_year = models.FloatField()
-    five_year = models.FloatField()
-    ten_year = models.FloatField()
-    thirty_year = models.FloatField()
+    three_month = models.FloatField(null=True)
+    six_month = models.FloatField(null=True)
+    one_year = models.FloatField(null=True)
+    five_year = models.FloatField(null=True)
+    ten_year = models.FloatField(null=True)
+    thirty_year = models.FloatField(null=True)
 
     class Meta:
         app_label = 'backtest'
@@ -92,4 +92,17 @@ class Ratios(models.Model):
 
     class Meta:
         app_label = 'backtest'
+
+class RiskMetrics(models.Model):
+    backtest = models.ForeignKey(Backtests)
+    date = models.DateField()
+    alpha = models.FloatField(null=True)
+    beta = models.FloatField(null=True) 
+    sharpe = models.FloatField(null=True) 
+    volatility = models.FloatField(null=True)  
+    returns = models.FloatField(null=True)
+
+    class Meta:
+        app_label = 'backtest'
+
 

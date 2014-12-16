@@ -115,6 +115,22 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.CreateModel(
+            name='RiskMetrics',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
+                ('date', models.DateField()),
+                ('alpha', models.FloatField()),
+                ('beta', models.FloatField()), 
+                ('sharpe', models.FloatField()), 
+                ('volatility', models.FloatField()),  
+                ('returns', models.FloatField()),
+                ('backtest', models.ForeignKey(to='backtest.Backtests')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
         migrations.AddField(
             model_name='prices',
             name='stock',
