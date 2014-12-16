@@ -84,7 +84,7 @@ body {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0; }
-  .login-box form button {
+  .login-box form .login-btn {
     position: relative;
     float: left;
     display: inline-block;
@@ -96,7 +96,12 @@ body {
     margin-bottom: 30px;
     background-color: orangered;
     border: 0; }
-    .login-box form button:hover {
+    .login-box form .login-btn:hover {
       opacity: .75; }
+  .login-box form .alert {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    background-image: None; }
 
 /*# sourceMappingURL=login.css.map */
