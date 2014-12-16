@@ -1,6 +1,3 @@
-body {
-  overflow: hidden; }
-
 .bg {
   position: absolute;
   width: 100%;
@@ -12,79 +9,21 @@ body {
     -webkit-filter: sepia(1) brightness(0.2);
     filter: sepia(1) brightness(0.2); }
 
-.login-box {
+.auth-box {
   max-width: 640px;
   margin: 0 auto;
   padding-top: 50px;
   padding-bottom: 20px;
   color: #ffffff; }
-  .login-box a {
+  .auth-box a {
     color: #ffffff; }
-  .login-box .social-login:after {
-    content: '';
-    display: block;
-    clear: both; }
-  .login-box .social-login a {
-    position: relative;
-    float: left;
-    display: inline-block;
-    width: 100%;
-    height: 3em;
-    line-height: 3em;
-    font-size: 17px;
-    text-align: left;
-    margin-bottom: 30px;
-    text-decoration: none;
-    padding-left: 6em; }
-    .login-box .social-login a:hover {
-      opacity: .75; }
-    .login-box .social-login a.facebook {
-      background-color: #3b5998;
-      text-align: left; }
-      .login-box .social-login a.facebook:before {
-        content: "\f082";
-        position: absolute;
-        display: block;
-        top: 0;
-        left: 0;
-        width: 1.5em;
-        height: 3em;
-        font-size: 32px;
-        font-family: 'FontAwesome', sans-serif;
-        text-align: center; }
-      .login-box .social-login a.facebook:after {
-        content: '';
-        float: left;
-        width: 3em;
-        height: 3em;
-        margin-right: 15px; }
-    .login-box .social-login a.twitter {
-      background-color: #55ACEE;
-      text-align: left; }
-      .login-box .social-login a.twitter:before {
-        content: "\f099";
-        position: absolute;
-        display: block;
-        top: 0;
-        left: 0;
-        width: 1.5em;
-        height: 3em;
-        font-size: 32px;
-        font-family: 'FontAwesome', sans-serif;
-        text-align: center; }
-    .login-box .social-login a:after {
-      content: '';
-      float: left;
-      width: 3em;
-      height: 3em;
-      margin-right: 15px; }
-  .login-box form .control-label {
+  .auth-box form .control-label {
     display: none; }
-  .login-box form .form-control {
+  .auth-box form .form-control {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0; }
-  .login-box form .login-btn {
+  .auth-box form .auth-btn {
     position: relative;
     float: left;
     display: inline-block;
@@ -96,12 +35,74 @@ body {
     margin-bottom: 30px;
     background-color: orangered;
     border: 0; }
-    .login-box form .login-btn:hover {
+    .auth-box form .auth-btn:hover {
       opacity: .75; }
-  .login-box form .alert {
+  .auth-box form .alert {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
     background-image: None; }
+
+body {
+  overflow: hidden; }
+
+.box .social-login:after {
+  content: '';
+  display: block;
+  clear: both; }
+.box .social-login a {
+  position: relative;
+  float: left;
+  display: inline-block;
+  width: 100%;
+  height: 3em;
+  line-height: 3em;
+  font-size: 17px;
+  text-align: left;
+  margin-bottom: 30px;
+  text-decoration: none;
+  padding-left: 6em; }
+  .box .social-login a:hover {
+    opacity: .75; }
+  .box .social-login a.facebook {
+    background-color: #3b5998;
+    text-align: left; }
+    .box .social-login a.facebook:before {
+      content: "\f082";
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      width: 1.5em;
+      height: 3em;
+      font-size: 32px;
+      font-family: 'FontAwesome', sans-serif;
+      text-align: center; }
+    .box .social-login a.facebook:after {
+      content: '';
+      float: left;
+      width: 3em;
+      height: 3em;
+      margin-right: 15px; }
+  .box .social-login a.twitter {
+    background-color: #55ACEE;
+    text-align: left; }
+    .box .social-login a.twitter:before {
+      content: "\f099";
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      width: 1.5em;
+      height: 3em;
+      font-size: 32px;
+      font-family: 'FontAwesome', sans-serif;
+      text-align: center; }
+  .box .social-login a:after {
+    content: '';
+    float: left;
+    width: 3em;
+    height: 3em;
+    margin-right: 15px; }
 
 /*# sourceMappingURL=login.css.map */
