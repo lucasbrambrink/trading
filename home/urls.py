@@ -3,5 +3,6 @@ from django.contrib import admin
 from home.views import *
 
 urlpatterns = patterns('',
-    url(r'^$', RootView.as_view(), name='root'),
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^account/myalgorithm/', MyAlgorithmView.as_view(), name='myalgorithm')
 )
