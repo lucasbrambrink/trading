@@ -6,19 +6,11 @@ DEBUG = True
 
 INSTALLED_APPS = DEFAULT_APPS + (
     'django.contrib.sites',
-
     'rest_framework',
-<<<<<<< HEAD
-    'project_core',
-    'home',
-    'algo_builder',
-    'backtest',
-=======
     'account',
     'social.apps.django_app.default',
     'bootstrap3',
-
-    #'project_core',
+    'project_core',
     'home',
     'algo_builder',
     'backtest',
