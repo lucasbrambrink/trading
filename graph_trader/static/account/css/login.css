@@ -46,11 +46,11 @@
 body {
   overflow: hidden; }
 
-.box .social-login:after {
+.auth-box .social-login:after {
   content: '';
   display: block;
   clear: both; }
-.box .social-login a {
+.auth-box .social-login a {
   position: relative;
   float: left;
   display: inline-block;
@@ -62,12 +62,12 @@ body {
   margin-bottom: 30px;
   text-decoration: none;
   padding-left: 6em; }
-  .box .social-login a:hover {
+  .auth-box .social-login a:hover {
     opacity: .75; }
-  .box .social-login a.facebook {
+  .auth-box .social-login a.facebook {
     background-color: #3b5998;
     text-align: left; }
-    .box .social-login a.facebook:before {
+    .auth-box .social-login a.facebook:before {
       content: "\f082";
       position: absolute;
       display: block;
@@ -78,16 +78,16 @@ body {
       font-size: 32px;
       font-family: 'FontAwesome', sans-serif;
       text-align: center; }
-    .box .social-login a.facebook:after {
+    .auth-box .social-login a.facebook:after {
       content: '';
       float: left;
       width: 3em;
       height: 3em;
       margin-right: 15px; }
-  .box .social-login a.twitter {
+  .auth-box .social-login a.twitter {
     background-color: #55ACEE;
     text-align: left; }
-    .box .social-login a.twitter:before {
+    .auth-box .social-login a.twitter:before {
       content: "\f099";
       position: absolute;
       display: block;
@@ -98,7 +98,7 @@ body {
       font-size: 32px;
       font-family: 'FontAwesome', sans-serif;
       text-align: center; }
-  .box .social-login a:after {
+  .auth-box .social-login a:after {
     content: '';
     float: left;
     width: 3em;
