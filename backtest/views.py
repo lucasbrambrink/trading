@@ -5,8 +5,8 @@ from django.views.generic.base import TemplateView
 from django.http import Http404
 from django.http import QueryDict
 
-from .tasks import test_backtest
-from .queues import ReturnsQueue
+#from backtest.tasks import test_backtest
+from backtest.queues import ReturnsQueue
 
 
 class JSONResponse(JsonResponse):
@@ -32,7 +32,7 @@ def run(request):
         try:
             data = QueryDict(request.body).get('data', None)
             data = json.loads(data)
-            test_backtest.delay(data)
+            #test_backtest.delay(data)
             print('Celery: start backtest!!!')
         except Exception as e:
             err = e

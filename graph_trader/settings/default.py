@@ -128,7 +128,7 @@ STATICFILES_FINDERS = (
 
 #### TEMPLATE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
-TEMPLATE_CONTEXT_PROCESSORS = (
+DEFAULT_TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
@@ -152,11 +152,3 @@ TEMPLATE_DIRS = (
 #### END TEMPLATE CONFIGURATION
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-
-try:
-    from .local_settings import *
-except ImportError:
-    import sys, traceback
-    sys.stderr.write("Warning: Can't find the file 'local_settings.py' in the directory containing {}. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n(If the file settings.py does indeed exist, it's causing an ImportError somehow.)\n".format(__file__))
-    sys.stderr.write("\nFor debugging purposes, the exception was:\n\n")
-    traceback.print_exc()

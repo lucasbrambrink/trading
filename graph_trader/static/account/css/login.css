@@ -1,0 +1,108 @@
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1; }
+  .bg img {
+    -webkit-filter: sepia(1) brightness(0.2);
+    filter: sepia(1) brightness(0.2); }
+
+.auth-box {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  color: #ffffff; }
+  .auth-box a {
+    color: #ffffff; }
+  .auth-box form .control-label {
+    display: none; }
+  .auth-box form .form-control {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0; }
+  .auth-box form .auth-btn {
+    position: relative;
+    float: left;
+    display: inline-block;
+    width: 100%;
+    height: 3em;
+    line-height: 3em;
+    font-size: 17px;
+    text-align: text;
+    margin-bottom: 30px;
+    background-color: orangered;
+    border: 0; }
+    .auth-box form .auth-btn:hover {
+      opacity: .75; }
+  .auth-box form .alert {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    background-image: None; }
+
+body {
+  overflow: hidden; }
+
+.auth-box .social-login:after {
+  content: '';
+  display: block;
+  clear: both; }
+.auth-box .social-login a {
+  position: relative;
+  float: left;
+  display: inline-block;
+  width: 100%;
+  height: 3em;
+  line-height: 3em;
+  font-size: 17px;
+  text-align: left;
+  margin-bottom: 30px;
+  text-decoration: none;
+  padding-left: 6em; }
+  .auth-box .social-login a:hover {
+    opacity: .75; }
+  .auth-box .social-login a.facebook {
+    background-color: #3b5998;
+    text-align: left; }
+    .auth-box .social-login a.facebook:before {
+      content: "\f082";
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      width: 1.5em;
+      height: 3em;
+      font-size: 32px;
+      font-family: 'FontAwesome', sans-serif;
+      text-align: center; }
+    .auth-box .social-login a.facebook:after {
+      content: '';
+      float: left;
+      width: 3em;
+      height: 3em;
+      margin-right: 15px; }
+  .auth-box .social-login a.twitter {
+    background-color: #55ACEE;
+    text-align: left; }
+    .auth-box .social-login a.twitter:before {
+      content: "\f099";
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      width: 1.5em;
+      height: 3em;
+      font-size: 32px;
+      font-family: 'FontAwesome', sans-serif;
+      text-align: center; }
+  .auth-box .social-login a:after {
+    content: '';
+    float: left;
+    width: 3em;
+    height: 3em;
+    margin-right: 15px; }
+
+/*# sourceMappingURL=login.css.map */
