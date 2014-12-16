@@ -3,9 +3,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "graph_trader.settings.dev")
 django.setup()
 
 from calculator import *
-from models import Stocks,Prices
+from models import Stocks, Prices, Ratios
+
 import math
-from datetime import date,timedelta
+from datetime import date, timedelta
 
 class DB_Helper:
 

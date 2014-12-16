@@ -228,7 +228,7 @@ if __name__ == '__main__':
     ## at this point, back end expects a JSON
     json = {
         'backtest': {
-            'id' : 'asjdlfakjdfl;akjdl;fajkd;fadfa',
+            'uuid' : 'asjdlfakjdfl;akjdl;fajkd;fadfa',
             'start_date': "2013-01-01",
             'end_date': "2014-01-01",
             'initial_balance': 1000000,
@@ -237,7 +237,7 @@ if __name__ == '__main__':
             }, 
         'algorithm': {
             'name' : 'Test',
-            'id' : 'asdjfalsdjfl;akdjflakjdf;',
+            'uuid' : 'asdjfalsdjfl;akdjflakjdf;',
             'block': {
                 'sma': {
                     'buy': [{

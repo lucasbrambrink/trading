@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, verbose_name='ID', serialize=False)),
                 ('uuid', models.CharField(db_index=True, max_length=32)),
                 ('name', models.CharField(max_length=30)),
-                ('json_string', models.CharField(default='None', max_length=500)),
+                ('json_string', models.TextField(default='None')),
                 ('up_votes', models.IntegerField(default=0)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],

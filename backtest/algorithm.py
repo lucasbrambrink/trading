@@ -50,7 +50,7 @@ class BaseAlgorithm:
     def save_db(self):
         a = Algorithms.objects.create(
             name=self.name,
-            uuid=self.uuid
+            uuid=self.uuid,
             json_string=self.json_string)
         return a
            
