@@ -36,7 +36,7 @@ class SMA_Block:
                 sma2_prices.append(price)
         sma1 = self.c.average(sma1_prices,'price')
         sma2 = self.c.average(sma2_prices,'price')
-        sma_pair = {
+        return {
             'symbol' : stock_object.symbol,
             'sma_pair' : (sma1,sma2,),
             'date' : date,
@@ -44,7 +44,6 @@ class SMA_Block:
             'todays_volume': prices_in_range[-1].volume,
             'object' : stock_object
             }
-        return sma_pair
 
     def aggregate_stocks(self,stocks,date):
         stocks_to_buy = []

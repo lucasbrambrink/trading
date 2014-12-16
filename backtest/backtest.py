@@ -13,7 +13,7 @@ from datetime import date,timedelta
 class BacktestingEnvironment:
 
     def __init__(self,backtest,algorithm):
-        self.id = backtest['id']
+        self.uuid = backtest['uuid']
         self.start_date = backtest['start_date']
         self.end_date = backtest['end_date']
         self.initial_balance = backtest['initial_balance']
@@ -43,11 +43,11 @@ class BacktestingEnvironment:
 
         ## risk calc
         self.market_index = [{'price': x.close, 'date': x.date} for x in Prices.objects.filter(stock_id=387).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
-
+        
         self.queue = None
 
         ## save in DB
-        Backtests.objects.create(
+        self.backtest = Backtests.objects.create(
             algorithm=self.algorithm,
             start_date=self.start_date,
             end_date=self.end_date,
@@ -98,13 +98,18 @@ class BacktestingEnvironment:
             investment_per_stock = math.floor(self.balance / len(holdings))
             for stock in holdings:
                 self.buy_stock(investment_per_stock, stock)
-            
+        
+        ## clean up portfolio
+        for asset in self.portfolio[:]:
+            if asset['quantity'] == 0:
+                self.portfolio.remove(asset)    
+        
         ## Save State in DB ##
         # user_id = request.sessions['user_id']
         for asset in self.portfolio:
             stock = Stocks.objects.get(symbol=asset['symbol'])
             asset_db = {
-                'algorithm' : self.algorithm,
+                'backtest' : self.backtest,
                 'stock' : stock,
                 'quantity' : asset['quantity'],
                 'price_purchased' : asset['price_purchased'],
@@ -142,45 +147,42 @@ class BacktestingEnvironment:
     ## Conditions ##
     def sell_conditions(self,date):
         portfolio = [x['object'] for x in self.portfolio]
-        stocks_to_sell = [block.aggregate_stocks(portfolio,date) for block in self.blocks_sell]
-        combined_stock_list = []
-        for stock in stocks_to_sell:
-            combined_stock_list += stock
+        stocks_to_sell = self.format_list([block.aggregate_stocks(portfolio,date) for block in self.blocks_sell])
         if len(self.blocks_sell) == 0:
-            combined_stock_list =  self.portfolio
-        for stock in combined_stock_list[:]:
-            if stock is None:
-                combined_stock_list.remove(stock)
+            survivors = Conditions(self.conditions_sell,self.portfolio).aggregate_survivors()
+            return survivors
 
-
-        ranked_stocks = self.rank_stocks(combined_stock_list)
+        ranked_stocks = self.rank_stocks(stocks_to_sell)
         survivors = Conditions(self.conditions_sell,ranked_stocks).aggregate_survivors()
 
         return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)
 
     def buy_conditions(self,date):
-        stocks_to_buy = [block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks_buy]  
-        combined_stock_list = []
-        for block_return in stocks_to_buy:
-            combined_stock_list += block_return ## concatenate lists
-        for stock in combined_stock_list[:]:
-            if stock is None:
-                combined_stock_list.remove(stock)
-
-        ranked_stocks = self.rank_stocks(combined_stock_list)
+        stocks_to_buy = self.format_list([block.aggregate_stocks(self.stocks_in_market,date) for block in self.blocks_buy])  
+    
+        ranked_stocks = self.rank_stocks(stocks_to_buy)
         ## purge stocks that don't meet conditions
         survivors = Conditions(self.conditions_buy,ranked_stocks).aggregate_survivors()
         
         return sorted(survivors,key=(lambda x: x['agg_score']),reverse=True)[:self.num_holdings]
 
+    def format_list(self,array):
+        combined_stock_list = []
+        for stock in array:
+            combined_stock_list += stock
+        for stock in combined_stock_list[:]:
+            if stock is None or len(stock) == 0:
+                combined_stock_list.remove(stock)
+        return combined_stock_list
+
     def rank_stocks(self,stock_array):
         ## rank stocks based on performance ## 
         ranked_stocks = []
         for stock in stock_array:
-            if stock is None or len([x for x in ranked_stocks if x['symbol'] == stock['symbol']]) > 0:
+            if len([x for x in ranked_stocks if x['symbol'] == stock['object'].symbol]) > 0:
                 continue
             scores = []
-            for point in [x for x in stock_array if x['symbol'] == stock['symbol']]:
+            for point in [x for x in stock_array if x['object'].symbol == stock['object'].symbol]:
                 scores.append([point[key] for key in point if (
                     key == 'sma_score' or 
                     key == 'volatility_score' or 
@@ -255,12 +257,12 @@ if __name__ == '__main__':
                 },
                 'volatility' : {
                     'buy' : [],
-                    'sell' : [{
-                        'behavior': 'sell', # or sell
-                        'period': 15,
-                        'appetite': 100,
-                        'range': (0.1,0.2),
-                        }] 
+                    'sell' : []#{
+                        # 'behavior': 'sell', # or sell
+                        # 'period': 15,
+                        # 'appetite': 100,
+                        # 'range': (0.1,0.2),
+                        # }] 
                 },
                 'covariance': {
                     'buy' :[{
@@ -281,10 +283,10 @@ if __name__ == '__main__':
                 },
                 'diversity': {
                     'buy' : [],
-                    'sell' : [{
-                        'num_sector': 2,
-                        'num_industry': 1
-                        }]
+                    'sell' : [] #{
+                        # 'num_sector': 2,
+                        # 'num_industry': 1
+                        # }]
                 },
                 'event': {
                     'buy': [{
