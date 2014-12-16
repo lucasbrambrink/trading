@@ -6,10 +6,10 @@ DEBUG = True
 
 INSTALLED_APPS = DEFAULT_APPS + (
     'rest_framework',
-    #'project_core',
+    'project_core',
     'home',
     'algo_builder',
-    # 'backtest',
+    'backtest',
 )
 
 MIDDLEWARE_CLASSES = DEFAULT_MIDDLEWARE_CLASSES + ()

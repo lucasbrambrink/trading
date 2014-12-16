@@ -152,3 +152,5 @@ TEMPLATE_DIRS = (
 #### END TEMPLATE CONFIGURATION
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+from graph_trader.settings.local_settings import *

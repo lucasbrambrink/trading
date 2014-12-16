@@ -128,7 +128,7 @@ class Migration(migrations.Migration):
                 ('backtest', models.ForeignKey(to='backtest.Backtests')),
             ],
             options={
-            },
+            },  
             bases=(models.Model,),
         ),
         migrations.AddField(
