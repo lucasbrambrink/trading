@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block head_title %}{% trans "Register" %}{% endblock %}
+
+{% block stylesheets %}
+  <link href="{% static 'account/css/signup.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="bg glass">
+    <img src="{% static 'images/background.jpg' %}">
+  </div>
+
+  <div class="block">
+    <div class="inner">
+      <div class="auth-box pad-3">
+        <form id="signup_form" method="post" action="{% url "account_signup" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+          <legend>{% trans "Register" %}</legend>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            <button type="submit" class="auth-btn">{% trans "CREATE ACCOUNT" %}</button>
+              </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+      $(document).ready(function() {
+          $('#id_username').focus();
+      });
+  </script>
+{% endblock %}
