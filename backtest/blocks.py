@@ -100,10 +100,17 @@ class Covariance_Block:
         if len(price_objects) == 0:
             return None
         covariance = Calculator.covariance(price_objects,self.benchmark_prices,'price')
+        stdev_price = Calculator.stdev(price_objects,'price')
+        stdev_benchmark = Calculator.stdev(self.benchmark_prices,'price')
+        if stdev_price == 0 or stdev_benchmark == 0:
+            pearson = 0
+        else:
+            ## Pearson product-moment correlation coefficient
+            pearson = covariance / (stdev_price * stdev_benchmark)
         return {
             'object': stock_object,
             'covariance' : covariance,
-            'covariance_score': self.appetite*covariance,
+            'covariance_score': self.appetite*pearson,
             'symbol': stock_object.symbol,
             'todays_price' : prices_in_range[-1].close,
             'todays_volume': prices_in_range[-1].volume
