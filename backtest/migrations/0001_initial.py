@@ -18,8 +18,25 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, verbose_name='ID', serialize=False)),
                 ('uuid', models.CharField(db_index=True, max_length=32)),
                 ('name', models.CharField(max_length=30)),
+                ('json_string', models.CharField(default='None', max_length=500)),
                 ('up_votes', models.IntegerField(default=0)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Backtests',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
+                ('uuid', models.CharField(max_length=32, db_index=True)),
+                ('start_date', models.DateField()),
+                ('end_date', models.DateField()),
+                ('initial_balance', models.FloatField()),
+                ('frequency', models.IntegerField()),
+                ('num_holdings', models.IntegerField()),
+                ('algorithm', models.ForeignKey(to='backtest.Algorithms')),
             ],
             options={
             },
@@ -32,7 +49,7 @@ class Migration(migrations.Migration):
                 ('quantity', models.IntegerField()),
                 ('price_purchased', models.FloatField()),
                 ('date', models.DateField()),
-                ('algorithm', models.ForeignKey(to='backtest.Algorithms')),
+                ('backtest', models.ForeignKey(to='backtest.Backtests')),
             ],
             options={
             },
@@ -61,6 +78,38 @@ class Migration(migrations.Migration):
                 ('sector', models.CharField(max_length=100)),
                 ('industry', models.CharField(max_length=100)),
                 ('symbol', models.CharField(db_index=True, max_length=6, unique=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Ratios',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
+                ('date', models.DateField()),
+                ('cash_revenue', models.FloatField(null=True)),
+                ('ev_ebitda', models.FloatField(null=True)),
+                ('market_cap', models.FloatField(null=True)),
+                ('pe_current', models.FloatField(null=True)),
+                ('return_equity', models.FloatField(null=True)),
+                ('stock', models.ForeignKey(to='backtest.Stocks')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='TreasuryBill',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
+                ('date', models.DateField()),
+                ('three_month', models.FloatField(null=True)),
+                ('six_month', models.FloatField(null=True)),
+                ('one_year', models.FloatField(null=True)),
+                ('five_year', models.FloatField(null=True)),
+                ('ten_year', models.FloatField(null=True)),
+                ('thirty_year', models.FloatField(null=True)),
             ],
             options={
             },

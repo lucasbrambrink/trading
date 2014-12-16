@@ -38,7 +38,7 @@ class Algorithms(models.Model):
     uuid = models.CharField(max_length=32, null=False, db_index=True)
     name = models.CharField(max_length=30)
     up_votes = models.IntegerField(default=0)
-    json_string = models.CharField(max_length=500)
+    json_string = models.CharField(max_length=500,default='None')
 
     class Meta:
         app_label = 'backtest'
