@@ -1,0 +1,86 @@
+body {
+  overflow: hidden; }
+
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1; }
+  .bg img {
+    -webkit-filter: sepia(1) brightness(0.2);
+    filter: sepia(1) brightness(0.2); }
+
+.login-box {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-top: 100px;
+  padding-bottom: 20px;
+  color: #ffffff; }
+  .login-box a {
+    color: #ffffff; }
+  .login-box .social-login:after {
+    content: '';
+    display: block;
+    clear: both; }
+  .login-box .social-login a {
+    position: relative;
+    display: inline-block;
+    width: 15em;
+    height: 3em;
+    line-height: 3em;
+    font-size: 17px;
+    text-align: left;
+    margin-bottom: 30px;
+    text-decoration: none; }
+    .login-box .social-login a:hover {
+      opacity: .75; }
+    .login-box .social-login a.facebook {
+      float: left;
+      background-color: #3b5998;
+      text-align: center; }
+      .login-box .social-login a.facebook:before {
+        content: "\f082";
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        width: 1.5em;
+        height: 3em;
+        font-size: 38px;
+        font-family: 'FontAwesome', sans-serif;
+        text-align: center; }
+      .login-box .social-login a.facebook:after {
+        content: '';
+        float: left;
+        width: 3em;
+        height: 3em;
+        margin-right: 15px; }
+    .login-box .social-login a.twitter {
+      float: right;
+      background-color: #55ACEE;
+      text-align: center; }
+      .login-box .social-login a.twitter:before {
+        content: "\f099";
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        width: 1.5em;
+        height: 3em;
+        font-size: 38px;
+        font-family: 'FontAwesome', sans-serif;
+        text-align: center; }
+    .login-box .social-login a:after {
+      content: '';
+      float: left;
+      width: 3em;
+      height: 3em;
+      margin-right: 15px; }
+  .login-box form .control-label {
+    display: none; }
+  .login-box form button {
+    width: 100%; }
+
+/*# sourceMappingURL=login.css.map */
