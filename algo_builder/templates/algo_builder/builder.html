@@ -6,22 +6,14 @@
 {% endblock %}
 
 {% block content %}
-<div class='fixed_logic'><span><h1>IF</h1></span></div>
-<div class='droppable'><span class='item'>ITEM</span></div>
-<div class='droppable'><span class='logic' id='block1'>LOGIC</span></div>
-<div class='number'>
-    <form role="number">
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="Number">
-        </div>
-        <button type="submit" class="btn btn-default">Enter</button>
-    </form>
+<div class='builder_container'>
+    <div class='fixed_logic'>IF</div>
+    <div class='fixed_logic'><div class='droppable'>THIS</div></div>
+    <div class='fixed_logic'>THEN</div>
+    <div class='fixed_logic'><div class='droppable'>THAT</div></div>
 </div>
-<div class='fixed_logic'><span><h1>THEN</h1></span></div>
-<div class='droppable'><span class='behavior' id='block2'>BEHAVIOR</span></div>
-<div class='droppable'><span class='asset' id='block2'>ASSET</span></div>
-<hr><span id='page_break'></span><hr>
 
+<hr><span id='page_break'></span><hr>
 <div class='draggable'><span class='logic'>greater than</span></div>
 <div class='draggable'><span class='logic'>less than</span></div>
 <div class='draggable'><span class='logic'>equal to</span></div>
@@ -36,6 +28,14 @@
 <div class='draggable'><span class='behavior'>All in</span></div>
 <div class='draggable'><span class='asset'>Stock ID</span></div>
 
+<!-- <div class='number'>
+    <form role="number">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Number">
+        </div>
+        <button type="submit" class="btn btn-default">Enter</button>
+    </form>
+</div> -->
 <hr>
 <a href='/backtest/add/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
 <a href="{% url 'backtest:result' id=id %}"><button id="run-btn" class='btn btn-primary' style='margin-left:1.7em;'>Run Algorithm</button></a>

@@ -1,61 +1,47 @@
-body {
-	background-color: black;
+.builder_container {
+	margin: 3em;
+	padding: 2em;
+	width: auto;
+	height: 30%;
+	border: 2px solid black;
 }
 
-span {
-	color: white;
+
+.fixed_logic {
+	float: center;
+	padding-top: 0.5em;
+	text-align: center;
+	border: 1px solid black;
+	font-size: 650%;
+	display: inline-block;
+	width: 24%;
+	height: 250px;
+}
+
+
+.condition_container {
+	border: 1px solid black;
+	display: inline-block;
+	width: 250px;
+	height: 250px;
+}
+
+.behavior_container {
+	border: 1px solid black;
+	display: inline-block;
+	width: 250px;
+	height: 250px;
+}
+
+.droppable {
+
 }
 
 .draggable {
 	display: inline-block;
-	width: 8em; 
-	height: 5em; 
-	border: 1px solid white;
-	padding: 1em;
+	border: 2px solid black;
+	background-color: yellow;
+	width: 5em;
+	height: 5em;
 }
 
-.droppable {
-	display: inline-block;
-	width: 12em; 
-	height: 10em; 
-	border:1px solid white;
-	padding: 1em;
-	margin: 1em;
-}
-
-.fixed_logic {
-	display: inline-block;
-	background-color: black;
-	height: 10em;
-	padding: 1em;
-	margin: 1em;
-}
-
-.number {
-	display: inline-block;
-	background-color: black;
-	height: 10em;
-	padding: 1em;
-	margin: 1em;
-}
-
-
-.item {
-	background-color: gray;
-}
-
-.logic {
-	background-color: blue;
-}
-
-.behavior {
-	background-color: red;
-}
-
-.asset {
-	background-color: purple;
-}
-
-.page_break {
-	height: 10em;
-}
