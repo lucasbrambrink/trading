@@ -45,3 +45,42 @@
 	height: 5em;
 }
 
+.block_container {
+	border: 2px solid black;
+	margin-top: 0;
+	padding: 2em;
+	display: inline-block;
+	width: 44%;
+	height: 250px;
+}
+
+.description_container {
+	display: inline-block;
+	width: 44%;
+	height: 40%;
+}
+
+.description {
+	border: 2px solid black;
+	margin: 2em;
+	padding: 2em;
+
+}
+
+.button_container {
+	float: center;
+	padding-left: 40%;
+	width: 100%;
+}
+
+#sma_conditions {
+	text-align: center;
+	margin: 100px;
+	padding: 3px;
+	position: absolute;
+	background: rgba(255, 255, 255, 1);
+	border: 0px solid black;
+	width: 1px;
+	height: 1px;
+}
+

@@ -6,28 +6,52 @@
 {% endblock %}
 
 {% block content %}
+<div id='sma_conditions'>
+    <h1>SMA</h1>
+    <div style='margin:1em;'>
+        <form role="range">
+            <div class="form-group">
+                <label><h5>Range</h5></label>
+                <input type="text" class="form-control" placeholder="lower bound">
+                <input type="text" class="form-control" placeholder="upper bound">
+                <label><h5>Appetite</h5></label>
+                <input type="text" class="form-control" placeholder="lower bound">
+            </div>
+            <button type="submit" class="btn btn-primary">Ok!</button>
+        </form>
+    </div>
+</div>
 <div class='builder_container'>
     <div class='fixed_logic'>IF</div>
-    <div class='fixed_logic'><div class='droppable'>THIS</div></div>
+    <div class='fixed_logic'><div class='droppable'>this</div></div>
     <div class='fixed_logic'>THEN</div>
-    <div class='fixed_logic'><div class='droppable'>THAT</div></div>
+    <div class='fixed_logic'><div class='droppable'>that</div></div>
 </div>
-
-<hr><span id='page_break'></span><hr>
-<div class='draggable'><span class='logic'>greater than</span></div>
-<div class='draggable'><span class='logic'>less than</span></div>
-<div class='draggable'><span class='logic'>equal to</span></div>
-<div class='draggable' class='item'><span class='item'>SMA</span></div>
-<div class='draggable'><span class='item'>Volatility</span></div>
-<div class='draggable'><span class='item'>P/E</span></div>
-<div class='draggable'><span class='item'>Previous Day</span></div>
-<div class='draggable'><span class='behavior'>Buy</span></div>
-<div class='draggable'><span class='behavior'>Sell</span></div>
-<div class='draggable'><span class='behavior'>Hold</span></div>
-<div class='draggable'><span class='behavior'>Diversify</span></div>
-<div class='draggable'><span class='behavior'>All in</span></div>
-<div class='draggable'><span class='asset'>Stock ID</span></div>
-
+<div class='button_container'>
+    <a href='/backtest/add/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
+</div><hr>
+<div class='lower_portion'>
+    <div class='block_container'>
+        <div class='row_specific'>
+            <div class='draggable' id='sma'>SMA</div>
+            <div class='draggable' id='volatility'>Volatility</div>
+            <div class='draggable' id='covariance'>Covariance</div>
+            <div class='draggable' id='ratio'>Ratio</div>
+        </div>
+        <div class='row_specific'>
+            <div class='draggable' id='event'>Event</div>
+            <div class='draggable' id='thresholds'>Thresholds</div>
+            <div class='draggable' id='diversity'>Diversity</div>
+            <div class='draggable' id='crisis'>Crisis</div>
+        </div>
+    </div>
+    <div class='description_container'>
+        <div class='description'>
+            <h1 class='description_header'>Description</h1>
+            <p class='description_text'>This is a description about stuff where if you read long enough there are words that will come across your eyes and maybe you are processing them although I would advise you don't do that because it doesn't seem to be conjured from a proper cortex source</p>
+        </div>
+    </div>
+</div>
 <!-- <div class='number'>
     <form role="number">
         <div class="form-group">
@@ -37,7 +61,6 @@
     </form>
 </div> -->
 <hr>
-<a href='/backtest/add/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
 <a href="{% url 'backtest:result' id=id %}"><button id="run-btn" class='btn btn-primary' style='margin-left:1.7em;'>Run Algorithm</button></a>
     <script>
         var testResponse = {
