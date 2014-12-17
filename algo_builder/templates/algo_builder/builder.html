@@ -221,28 +221,97 @@
     <a style='float:right; margin:3em;' href="{% url 'backtest:result' id=id %}"><button id="run-btn" class='btn btn-primary' style='margin-left:1.7em;'>Run Algorithm</button></a>
         <script>
         var testResponse = {
-            backtest: {
-                id: "{{ id }}",
-                start_date: "2013-01-01",
-                end_date: "2014-01-01",
-                initial_balance: 1000000,
-                frequency: 12,
-                num_holdings: 1
-            },
-            algorithm: {
-                name : "Test",
-                sma: {
-                    "period1": 15,
-                    "period2": 10,
-                    "percent_difference_to_buy": 0.1,
-                    "appetite": 5
+{#            backtest: {#}
+{#                id: "{{ id }}",#}
+{#                start_date: "2013-01-01",#}
+{#                end_date: "2014-01-01",#}
+{#                initial_balance: 1000000,#}
+{#                frequency: 12,#}
+{#                num_holdings: 1#}
+{#            },#}
+            'algorithm': {
+                'name': 'Test',
+                'uuid': algo_id,
+                'block': {
+                    'sma': {
+                        'buy': [
+                            {
+                                'period1': 15,
+                                'period2': 10,
+                                'range': [0.2, 10],
+                                'appetite': 5
+                            },
+                          {
+                                'period1': 2,
+                                'period2': 50,
+                                'range': [0.8, 10],
+                                'appetite': 50
+                            }
+                        ],
+                        'sell': [
+                          {
+                            'period1': 15,
+                            'period2': 10,
+                            'range': [-10.0, 10],
+                            'appetite': 5
+                          }
+                        ]
+                    },
+                    'volatility': {
+                        'buy': [],
+                        'sell': []
+                    },
+                    'covariance': {
+                        'buy': [
+                          {
+                            'benchmark': 'ACE',
+                            'period': 15,
+                            'appetite': 200,
+                            'range': [0.1, 0.2]
+                          }
+                        ],
+                        'sell': []
+                    },
+                    'thresholds': {
+                        'buy': [
+                          {
+                            'price': {'above': 50, 'below': 100}
+                          }
+                        ],
+                        'sell': []
+                    },
+                    'diversity': {
+                        'buy': [],
+                        'sell': []
+                    },
+                    'event': {
+                        'buy': [
+                          {
+                            'stock': 'GOOG',
+                            'attribute': 'close',
+                            'range': [600, 650],
+                            'appetite': 300
+                            }
+                        ],
+                        'sell': []
+                    },
+                    'ratio': {
+                        'buy': [
+                          {
+                            'name': 'pe_current',
+                            'range': [1, 20],
+                            'appetite': 10
+                          }
+                        ],
+                        'sell': []
                     }
+                }
             }
         };
 
-        $("#run-btn").on('click', function(e) {
+        $("#save-btn").on('click', function(e) {
             $.ajax({
-                url: "{% url 'backtest:run' %}",
+                url: "{% url 'builder:save' %}",
                 type: "POST",
                 data: {
                     csrfmiddlewaretoken:"{{ csrf_token }}",
