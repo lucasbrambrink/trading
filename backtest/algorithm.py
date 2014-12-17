@@ -1,7 +1,7 @@
 
 ## Algorithms built from Blocks ##
-from blocks import *
-from models import Algorithms
+from backtest.blocks import *
+from backtest.models import Algorithms
 import re
 import json
 
@@ -12,6 +12,7 @@ class BaseAlgorithm:
         self.blocks_sell = []
         self.conditions_buy = []
         self.conditions_sell = []
+        setattr(self,'user_id',algorithm['user_id'])
         setattr(self,'name',algorithm['name'])
         setattr(self,'uuid',algorithm['uuid'])
         setattr(self,'json_string',json.dumps(algorithm))
@@ -53,7 +54,7 @@ class BaseAlgorithm:
 
     def save_db(self):
         a = Algorithms.objects.create(
-            user_id=1,
+            user_id=self.user_id,
             name=self.name,
             uuid=self.uuid,
             json_string=self.json_string)

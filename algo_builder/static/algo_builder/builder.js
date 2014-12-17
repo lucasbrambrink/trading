@@ -10,6 +10,10 @@ description_text = {
 $(document).ready(function(){	
 	$('.popup_conditions').hide();
 	$('.draggable').draggable();
+	$('#SMA').data({
+		'origionalLeft': $("#SMA").css('left'),
+    	'origionalTop': $("#SMA").css('top')
+	})
 
 
 
@@ -24,7 +28,11 @@ $(document).ready(function(){
 			borderWidth: '0px'
 		}, 300);
 		find_block_id = "#" + block_id
-		$(find_block_id).show() // ('display','block');
+		$(find_block_id).show()
+			.css({
+				'top': $("#SMA").data('origionalTop'),
+				'left': $("#SMA").data('origionalLeft'),
+			}) // ('display','block');
     });
 
 

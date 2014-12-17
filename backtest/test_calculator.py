@@ -1,4 +1,4 @@
-from calculator import * 
+from backtest.calculator import * 
 
 class Calc_Test:
 
