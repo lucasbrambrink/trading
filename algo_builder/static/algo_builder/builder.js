@@ -134,9 +134,9 @@ $(document).ready(function(){
 	                final_json_object = $.cookie('final_json_object')
 	                final_json_object[key] = data.block
 	                $.cookie('final_json_object',final_json_object)
-	                console.log(final_json_object)
-	                console.log(data);
-
+	                algorithm_text = $.cookie('algorithm_text')
+	                algorithm_text.push(condition)
+	                $.cookie('algorithm_text',algorithm_text)
 	            },
 	            error: function (xhr, errmsg, err) {
 	                alert("error");
