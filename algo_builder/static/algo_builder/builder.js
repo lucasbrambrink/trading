@@ -11,17 +11,26 @@ $(document).ready(function(){
 	$('.popup_conditions').hide();
 	$('.draggable').draggable();
 
+	$('.conditionals').submit(function(e){
+		e.preventDefault();
+		$('#behavior_conditions').show()
+				.animate({
+					width: "22%",
+				    height: "250px",
+				    opacity: 1,
+				    borderWidth: "4px"
+				  }, 300 );
+			});
+
 	$('.droppable').droppable({	
  		drop: function(event, ui) {
- 			var matcher = $(this).attr('id') + '_condition';
- 			$('#SMA_condition').show()
+ 			$('#Sma_conditions').show()
  				.animate({
-				    width: "450px",
-				    height: "450px",
+				    width: "22%",
+				    height: "250px",
 				    opacity: 1,
-				    fontSize: "3em",
 				    borderWidth: "4px"
-				  }, 500 );
+				  }, 300 );
  			// possible to run AJAX post/get request if we want
  			$(ui.draggable).hide()
  			$(ui.draggable).css('color','white');

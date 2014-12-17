@@ -6,24 +6,6 @@
 {% endblock %}
 
 {% block content %}
-<div class='popup_conditions' id='Sma_conditions'>
-    <h1>SMA</h1>
-    <div style='margin:1em;'>
-        <form role="range">
-            <div class="form-group">
-                <label><h5>Periods</h5></label>
-                <input type="text" class="form-control" placeholder="period 1">
-                <input type="text" class="form-control" placeholder="period 2">
-                <label><h5>Range</h5></label>
-                <input type="text" class="form-control" placeholder="lower bound">
-                <input type="text" class="form-control" placeholder="upper bound">
-                <label><h5>Appetite</h5></label>
-                <input type="text" class="form-control" placeholder="lower bound">
-            </div>
-            <button type="submit" class="btn btn-primary">Ok!</button>
-        </form>
-    </div>
-</div>
 <div class='popup_conditions' id='Volatility_conditions'>
     <h1>Volatility</h1>
     <div style='margin:1em;'>
@@ -73,10 +55,46 @@
 </div>
 <div class='builder_container'>
     <div class='fixed_logic'>IF</div>
-    <div class='fixed_logic'><div class='droppable'>this</div></div>
+    <div class='fixed_logic'>
+        <div class='popup_conditions' id='Sma_conditions'>
+            <h1>SMA</h1>
+                <form class="form-inline conditionals"  role="form">
+                    <div class="form-group" style='display:inline;'>
+                        <label><h6>Time Period :</h6></label>
+                            <input type="text" class="form-control" style='margin-left:1em; width:6em' placeholder="period 1">
+                            <input type="text" class="form-control" placeholder="period 2" style='width:6em;%;'>
+                        <label><h6>%d Range :</h6></label>
+                            <input type="text" class="form-control" placeholder="lowest" style='margin-left:1.5em; width:6em;'>
+                            <input type="text" class="form-control" placeholder="highest" style='width:6em;'>
+                        <label style='margin-left:1em;'><h6>Appetite : </h6></label>
+                            <input style='margin-left:1.5em; width:12em;' type="text" class="form-control" placeholder="lower bound">
+                    </div>
+                    <button style='margin-left:5em;' id='goto_behavior' type="submit" class="btn btn-primary">Ok!</button>
+                </form>
+    </div><div class='droppable'>this</div></div>
     <div class='fixed_logic'>THEN</div>
-    <div class='fixed_logic'><div class='droppable'>that</div></div>
-</div>
+    <div class='fixed_logic'>
+        <div class='popup_conditions' id='behavior_conditions'>
+            <h1>Behavior</h1>
+            <form class="form behavior_form"  role="form">
+                <div class="form-group">
+                    <div class="radio">
+                      <label>
+                        <input style='margin-right:1em;' type="radio" name="buy" id="buy" value="Buy" checked><h3>Buy</h3>
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="sell" id="sell" value="Sell"><h3>
+                        Sell</h3>
+                      </label>
+                    </div>
+                </div>
+                <button style='margin-left:5em;' id='goto_behavior' type="submit" class="btn btn-primary">Set
+            </form>
+        </div>
+        that
+    </div>
 <div class='button_container'>
     <a href='/backtest/add/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
 </div><hr>
