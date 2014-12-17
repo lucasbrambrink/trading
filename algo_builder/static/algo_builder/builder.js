@@ -19,8 +19,8 @@ $(document).ready(function(){
 
 	$(".cancel_button").click(function() {
 
-		var block_id = $(this).attr('id').split("_")[0]
-			form_id = "#" + block_id + "_conditions"
+		var block_id = $(this).attr('id').split("_")[0];
+		form_id = "#" + block_id + "_conditions"
 		$(form_id).animate({
 			width: '0px',
 			height: '0px',
@@ -38,6 +38,7 @@ $(document).ready(function(){
 
 	$('.conditionals').submit(function(e){
 		e.preventDefault();
+		post_data = $(this).serialize() + '&id=' + $(this).attr('id').split('_')[0]	
 		$('#behavior_conditions').show()
 				.animate({
 					width: "22%",
@@ -46,6 +47,47 @@ $(document).ready(function(){
 				    borderWidth: "4px"
 				  }, 300 );
 			});
+
+	$('#behavior_form').submit(function(e){
+		e.preventDefault();
+		var behavior = $(this).serialize().split("=")[0]
+		post_data += '&behavior=' + behavior
+		console.log(post_data)
+		$.ajax({
+	            url: "/builder/create_json/",
+	            type: "POST",
+	            data: {
+	                csrfmiddlewaretoken:$.cookie('csrftoken'),
+	                data: post_data
+	            },
+	            success: function (data) {
+	                console.log(data);
+	                console.log("submit form");
+	            },
+	            error: function (xhr, errmsg, err) {
+	                alert("error");
+	            }
+	        });
+	});
+
+	$("#behavior_cancel").click(function() {
+		$('.popup_conditions').hide();
+		// $('.conditionals').hide()
+		// 	.animate({
+		// 	width: '0px',
+		// 	height: '0px',
+		// 	opacity: 0,
+		// 	borderWidth: '0px'
+		// }, 300);
+		var splits = post_data.split('&')
+		var block_id_pair = splits[splits.length-1]
+		var block_id = "#" + block_id_pair.split('=')[1]
+		$(block_id).show()
+			.css({
+				'top': $("#SMA").data('origionalTop'),
+				'left': $("#SMA").data('origionalLeft'),
+			}) // ('display','block');
+    });
 
 	$('.droppable').droppable({	
  		drop: function(event, ui) {
@@ -79,5 +121,6 @@ $(document).ready(function(){
             		.text(description_text[id])
 
             })
+
 
 });

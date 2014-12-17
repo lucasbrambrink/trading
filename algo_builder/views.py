@@ -18,3 +18,44 @@ class BuilderView(TemplateView):
         content = super(BuilderView, self).get_context_data(**kwargs)
         content['id'] = self.kwargs.get('id', None)
         return content
+
+
+class JsonBuilder(TemplateView):
+	template_name = 'algo_builder/builder.html'
+	block_json = {}
+
+	def post(self,request):
+		"""
+
+		:return:
+		"""
+		if request.is_ajax() and request.method == "POST":
+			err = ''
+			try:
+				buy,sell = [],[]
+				data = request.POST['data'].split('&')
+				block = {}
+				for item in data:
+					key,value = item.split('=')
+					block[key] = value
+				formatted_block = {
+						'period1' : block['period1'],
+						'period2' : block['period2'],
+						'range': (block['range0'],block['range1']),
+						'appetite': block['appetite']
+						}
+				if block['behavior'] == 'buy':
+					buy.append(formatted_block)
+				if block['behavior'] == 'sell':
+					sell.append(formatted_block)
+				self.block_json[block['id'].lower()] = {
+					'buy' : buy,
+					'sell' : sell
+				}
+				return JsonResponse({'block' : self.block_json})
+			except Exception as e:
+				err = e
+				return JsonResponse({'error': err})
+
+		else:
+			return Http404
