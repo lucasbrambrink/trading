@@ -8,12 +8,13 @@ description_text = {
 }
 
 $(document).ready(function(){	
-	$('#sma_conditions').hide();
+	$('.popup_conditions').hide();
 	$('.draggable').draggable();
 
 	$('.droppable').droppable({	
  		drop: function(event, ui) {
- 			$('#sma_conditions').show()
+ 			var matcher = $(this).attr('id') + '_condition';
+ 			$('#SMA_condition').show()
  				.animate({
 				    width: "450px",
 				    height: "450px",

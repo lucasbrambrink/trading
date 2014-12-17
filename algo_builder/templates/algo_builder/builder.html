@@ -6,8 +6,58 @@
 {% endblock %}
 
 {% block content %}
-<div id='sma_conditions'>
+<div class='popup_conditions' id='Sma_conditions'>
     <h1>SMA</h1>
+    <div style='margin:1em;'>
+        <form role="range">
+            <div class="form-group">
+                <label><h5>Periods</h5></label>
+                <input type="text" class="form-control" placeholder="period 1">
+                <input type="text" class="form-control" placeholder="period 2">
+                <label><h5>Range</h5></label>
+                <input type="text" class="form-control" placeholder="lower bound">
+                <input type="text" class="form-control" placeholder="upper bound">
+                <label><h5>Appetite</h5></label>
+                <input type="text" class="form-control" placeholder="lower bound">
+            </div>
+            <button type="submit" class="btn btn-primary">Ok!</button>
+        </form>
+    </div>
+</div>
+<div class='popup_conditions' id='Volatility_conditions'>
+    <h1>Volatility</h1>
+    <div style='margin:1em;'>
+        <form role="range">
+            <div class="form-group">
+                <label><h5>Period</h5></label>
+                <input type="text" class="form-control" placeholder="length">
+                <label><h5>Range</h5></label>
+                <input type="text" class="form-control" placeholder="lower bound">
+                <input type="text" class="form-control" placeholder="upper bound">
+                <label><h5>Appetite</h5></label>
+                <input type="text" class="form-control" placeholder="lower bound">
+            </div>
+            <button type="submit" class="btn btn-primary">Ok!</button>
+        </form>
+    </div>
+</div>
+<div class='popup_conditions' id='Covariance_conditions'>
+    <h1>Covariance</h1>
+    <div style='margin:1em;'>
+        <form role="range">
+            <div class="form-group">
+                <label><h5>Range</h5></label>
+                <input type="text" class="form-control" placeholder="lower bound">
+                <input type="text" class="form-control" placeholder="upper bound">
+                <label><h5>Appetite</h5></label>
+                <input type="text" class="form-control" placeholder="lower bound">
+            </div>
+            <button type="submit" class="btn btn-primary">Ok!</button>
+        </form>
+    </div>
+</div>
+<div class='popup_conditions' id='Event_conditions'>
+    <h1>Event</h1>
     <div style='margin:1em;'>
         <form role="range">
             <div class="form-group">
