@@ -1,3 +1,12 @@
+description_text = {
+	'SMA': 'The simple moving average calculates the mean stock price for two consecutive periods and compares their percent difference.',
+	'Volatility': "The volatility of a given stock is defined by it's standard deviation, the average difference from the mean per data point.",
+	'Covariance': 'Hello',
+	'Event': "This is soemthing",
+	'Thresholds': "A passive condition, this places limits on how your portfolio may behave.",
+	'Diversity': "By diversifying your portfolio, you broaden your base."
+}
+
 $(document).ready(function(){	
 	$('#sma_conditions').hide();
 	$('.draggable').draggable();
@@ -6,8 +15,8 @@ $(document).ready(function(){
  		drop: function(event, ui) {
  			$('#sma_conditions').show()
  				.animate({
-				    width: "45%",
-				    height: "55%",
+				    width: "450px",
+				    height: "450px",
 				    opacity: 1,
 				    fontSize: "3em",
 				    borderWidth: "4px"
@@ -27,12 +36,10 @@ $(document).ready(function(){
 	    $('.draggable').hover(
 	    	function() {
             	var id = $(this).attr('id');
-            	console.log(id)
-            	console.log()
             	$('.description_header')
             		.text(id)
             	$('.description_text')
-            		.text("SMA is very interesting indeed")
+            		.text(description_text[id])
 
             })
 

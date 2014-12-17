@@ -43,6 +43,7 @@
 	background-color: yellow;
 	width: 5em;
 	height: 5em;
+	margin: 1em;
 }
 
 .block_container {
@@ -75,7 +76,8 @@
 
 #sma_conditions {
 	text-align: center;
-	margin: 100px;
+	margin-left: 250px;
+	margin-top: 100px;
 	padding: 3px;
 	position: absolute;
 	background: rgba(255, 255, 255, 1);
