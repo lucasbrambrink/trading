@@ -11,6 +11,23 @@ $(document).ready(function(){
 	$('.popup_conditions').hide();
 	$('.draggable').draggable();
 
+
+
+	$(".cancel_button").click(function() {
+
+		var block_id = $(this).attr('id').split("_")[0]
+			form_id = "#" + block_id + "_conditions"
+		$(form_id).animate({
+			width: '0px',
+			height: '0px',
+			opacity: 0,
+			borderWidth: '0px'
+		}, 300);
+		find_block_id = "#" + block_id
+		$(find_block_id).show() // ('display','block');
+    });
+
+
 	$('.conditionals').submit(function(e){
 		e.preventDefault();
 		$('#behavior_conditions').show()
@@ -24,7 +41,10 @@ $(document).ready(function(){
 
 	$('.droppable').droppable({	
  		drop: function(event, ui) {
- 			$('#Sma_conditions').show()
+ 			var match_to_block = $(ui.draggable).attr('id')
+			var match_to_form = "#" + $(ui.draggable).attr('id') + "_conditions";
+			console.log(match_to_form)
+ 			$(match_to_form).show()
  				.animate({
 				    width: "22%",
 				    height: "250px",
@@ -32,14 +52,13 @@ $(document).ready(function(){
 				    borderWidth: "4px"
 				  }, 300 );
  			// possible to run AJAX post/get request if we want
+ 			var position_left = match_to_block + "_original_left"
+ 				position_top = match_to_block + "_original_top"
  			$(ui.draggable).hide()
- 			$(ui.draggable).css('color','white');
-    		$( this )
-	          .css('background-color','green')
-	          // .css('color','white')
-	          .find( "p" )
-	            .html( "Dropped!" );
-            $(this.ui)
+ 			// $(ui.draggable).css({
+			 //        'left': $(ui.draggable).data(position_left),
+			 //        'top': $(ui.draggable).data(position_top)
+			 //    });
     		}
   		});
 
