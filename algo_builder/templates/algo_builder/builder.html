@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block content %}
-
+<div class='accepted_conditions'>
+    <ul id='conditions_list'>
+    </ul>
+    <span id='json_holder' style='display: none;'></span>
+</div>
 <div class='builder_container'>
     <div class='fixed_logic'>IF</div>
     <div class='fixed_logic'>
@@ -76,7 +80,7 @@
                     <div class="form-group" style='display:inline;'>
                         <label style='width:8em;'><h6>Stock :</h6></label>
                             <input type="text" class="form-control" style='margin-left:1em; width:12em' placeholder="period" name='stock'>
-                        <label style='width:8em;'><h6>%P Range :</h6></label>
+                        <label style='width:8em;'><h6>Price Range :</h6></label>
                             <input type="text" class="form-control" placeholder="lowest" style='margin-left:1.5em; width:6em;' name='range0'>
                             <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
                         <label style='margin-left:1em;'><h6>Appetite : </h6></label>
@@ -93,8 +97,14 @@
             <h1>Ratio</h1>
                 <form class="form-inline conditionals" id='Ratio_form' role="form">
                     <div class="form-group" style='display:inline;'>
-                        <label style='width:8em;'><h6>Time Period :</h6></label>
-                            <input type="text" class="form-control" style='margin-left:1em; width:12em' placeholder="period" name='period'>
+                        <label style='width:8em;'><h6>Type :</h6></label>
+                            <select class="form-control" style='margin-left:1em; width:12em;' name='name'>
+                              <option>Cash per Revenue</option>
+                              <option>EV / EBITDA</option>
+                              <option>PE (Current)</option>
+                              <option>Market Cap</option>
+                              <option>Return on Equity</option>
+                            </select>
                         <label style='width:8em;'><h6>Range :</h6></label>
                             <input type="text" class="form-control" placeholder="lowest" style='margin-left:1.5em; width:6em;' name='range0'>
                             <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
@@ -117,12 +127,13 @@
                             <input type="text" class="form-control" style='width:6em' placeholder="highest" name='price_range1'>
                         <label style='width:8em;'><h6>Sector :</h6></label>
                             <select class="form-control" style='margin-left:1em; width:12em;' name='inout'>
+                              <option>none</option>
                               <option>include</option>
                               <option>exclude</option>
-                              <option>none</option>
                             </select>
                         <label style='width:8em;'></label>
                             <select class="form-control" style='width:12em;' name='sector'>
+                              <option>none</option>
                               <option>Services</option>
                               <option>Technology</option>
                               <option>Financial</option>
@@ -148,13 +159,10 @@
             <h1>Diversity</h1>
                 <form class="form-inline conditionals" id='Diversity_form' role="form">
                     <div class="form-group" style='display:inline;'>
-                        <label style='width:8em;'><h6>Time Period :</h6></label>
-                            <input type="text" class="form-control" style='margin-left:1em; width:12em' placeholder="period" name='period'>
-                        <label style='width:8em;'><h6>Range :</h6></label>
-                            <input type="text" class="form-control" placeholder="lowest" style='margin-left:1.5em; width:6em;' name='range0'>
-                            <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
-                        <label style='width:8em;'><h6>Appetite : </h6></label>
-                            <input style='margin-left:1.5em; width:12em;' type="text" class="form-control" placeholder="appetite" name='appetite'>
+                        <label style='width:8em;'><h6>Max Same Sector :</h6></label>
+                            <input type="text" class="form-control" style='margin-left:1em; width:12em' placeholder="period" name='num_sector'>
+                        <label style='width:8em;'><h6>Max Same Industry :</h6></label>
+                            <input type="text" class="form-control" placeholder="lowest" style='margin-left:1.5em; width:6em;' name='num_industry'>
                     </div>
                     <button style='margin-left:4em;' id='goto_behavior' type="submit" class="btn btn-primary">Ok!</button>
 
@@ -186,9 +194,9 @@
         </div>
         that
     </div>
-<div class='button_container'>
+<!-- <div class='button_container'>
     <a href='/backtest/add/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
-</div>
+</div> -->
 <div class='lower_portion'>
     <div class='block_container'>
         <div class='row_specific'>
@@ -203,7 +211,7 @@
             <div class='draggable' id='Diversity'>Diversity</div>
         </div>
     </div>
-    <div class='description_container'>
+    <div class='description_container' style='float:right;'>
         <div class='description'>
             <h1 class='description_header'>Description</h1>
             <p class='description_text'>This is a description about stuff where if you read long enough there are words that will come across your eyes and maybe you are processing them although I would advise you don't do that because it doesn't seem to be conjured from a proper source in my frontal cortex.</p>
