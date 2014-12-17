@@ -1,7 +1,13 @@
+import json
+
 from django.shortcuts import render,redirect
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, HttpResponseNotFound, QueryDict
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
+
+from backtest.algorithm import BaseAlgorithm
+
+from account.mixins import LoginRequiredMixin
 
 
 class JsonBuilder(TemplateView):
@@ -38,7 +44,7 @@ class JsonBuilder(TemplateView):
                 return JsonResponse({'error': err})
 
         else:
-            return Http404
+            return HttpResponseNotFound('<h1>No Page Here</h1>')
 
 
     def parse_block(self,block):
@@ -99,7 +105,7 @@ def uuid_view(request):
     return redirect(reverse('builder:new', kwargs={'algo_id': algo_id}))
 
 
-class NewView(TemplateView):
+class NewView(LoginRequiredMixin, TemplateView):
     template_name = 'algo_builder/builder.html'
 
     def get_context_data(self, **kwargs):
@@ -110,7 +116,16 @@ class NewView(TemplateView):
 
 def save_view(request):
     if request.method == "POST":
-        # Save algorithm
-        pass
+        err = ''
+        try:
+            data = QueryDict(request.body).get('data', None)
+            data = json.loads(data)
+            data = data['algorithm']
+            data['user_id'] = request.user.id
+            # Save algorithm
+            BaseAlgorithm.save_db(data)
+        except Exception as e:
+            err = e
+        return JsonResponse({'error': err})
     else:
-        return Http404
+        return HttpResponseNotFound('<h1>No Page Here</h1>')
