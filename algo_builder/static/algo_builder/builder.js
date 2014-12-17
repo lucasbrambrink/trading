@@ -81,6 +81,15 @@ $(document).ready(function(){
 			opacity: 0,
 			borderWidth: '0px'
 		}, 300);
+		var splits = post_data.split('&')
+		var block_id_pair = splits[splits.length-1]
+		var block_id = "#" + block_id_pair.split('=')[1]
+		console.log(block_id)
+		$(block_id).show()
+			.css({
+				'top': $("#SMA").data('origionalTop'),
+				'left': $("#SMA").data('origionalLeft'),
+			})
 		var behavior = $(this).serialize().split("=")[0]
 		post_data += '&behavior=' + behavior
 		console.log(post_data)
@@ -128,11 +137,6 @@ $(document).ready(function(){
 	                console.log(final_json_object)
 	                console.log(data);
 
-    				$(find_block_id).show()
-						.css({
-							'top': $("#SMA").data('origionalTop'),
-							'left': $("#SMA").data('origionalLeft'),
-						})
 	            },
 	            error: function (xhr, errmsg, err) {
 	                alert("error");
