@@ -1,0 +1,57 @@
+{% extends 'nav_bar.html' %}
+
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/nvd3/nv.d3.css' %}">
+{% endblock %}
+
+{% block content %}
+    {{ user }}
+    <h1>algo_id: {{ algo_id }}</h1>
+
+    <div id="backtest-control">
+      <form method="POST" role="form">
+        {% csrf_token %}
+        <input type="hidden" value="{{ algo_id }}">
+        <div class="form-group">
+          <label for="start-date">Start Date:</label>
+          <input type="text" id="start-date" placeholder="start date">
+        </div>
+        <div class="form-group">
+          <label for="end-date">End Date:</label>
+          <input type="text" id="end-date" placeholder="end date">
+        </div>
+        <div class="form-group">
+          <label for="init-balance">Initial Balance:</label>
+          <input type="number" placeholder="initial_balance" value="1000000" id="init-balance">
+        </div>
+        <div class="form-group">
+          <label for="frequency">Frequency:</label>
+          <input type="number" value="12" placeholder="frequency" id="frequency">
+        </div>
+        <div class="form-group">
+          <label for="frequency">Num of holdings:</label>
+          <input type="number" value="2" placeholder="number of holdings">
+        </div>
+      </form>
+    </div>
+
+    <div id="chart_container">
+		<div id="chart"><svg></svg></div>
+	</div>
+
+    <button id="run-btn">Run!</button>
+    <button id="stop-btn">Stop!</button>
+    <button id="restart-btn">Restart!</button>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'bower_components/underscore/underscore.js' %}"></script>
+    <script src="{% static 'bower_components/jquery-cookie/jquery.cookie.js' %}"></script>
+    <script src="{% static 'bower_components/d3/d3.js' %}"></script>
+    <script src="{% static 'bower_components/nvd3/nv.d3.js' %}"></script>
+    <script src="{% static 'backtest/test.js' %}"></script>
+{% endblock %}
