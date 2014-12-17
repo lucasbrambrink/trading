@@ -1,4 +1,30 @@
 $(document).ready(function() {
+    // Setup datepicker
+    $( "#start-date" ).datepicker({
+      minDate: new Date(1999, 1 - 1, 1),
+      defaultDate: new Date(1999, 1 - 1, 1),
+      maxDate: new Date(2014, 1 - 1, 1),
+      changeMonth: true,
+      numberOfMonths: 1,
+      stepMonths: 12,
+      onClose: function( selectedDate ) {
+        $( "#end-date" ).datepicker( "option", "minDate", selectedDate );
+      }
+    });
+    $( "#end-date" ).datepicker({
+      minDate: new Date(1999, 1 - 1, 1),
+      defaultDate: new Date(2014, 1 - 1, 1),
+      maxDate: new Date(2014, 1 - 1, 1),
+      changeMonth: true,
+      numberOfMonths: 1,
+      stepMonths: 12,
+      onClose: function( selectedDate ) {
+        $( "#start-date" ).datepicker( "option", "maxDate", selectedDate );
+      }
+    });
+
+    //submit_backtest_settings
+
 
     // Get id
     var path = window.location.pathname.split('/');
