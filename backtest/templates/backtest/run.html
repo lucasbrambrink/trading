@@ -12,28 +12,35 @@
     <h1>algo_id: {{ algo_id }}</h1>
 
     <div id="backtest-control">
-      <form method="POST" role="form">
+      <form id="settings" method="POST" role="form">
         {% csrf_token %}
-        <input type="hidden" value="{{ algo_id }}">
+        <input type="hidden" name="algo_id" value="{{ algo_id }}">
         <div class="form-group">
           <label for="start-date">Start Date:</label>
-          <input type="text" id="start-date" placeholder="start date">
+          <input id="start-date" name="start_date" type="text"  placeholder="start date">
         </div>
         <div class="form-group">
           <label for="end-date">End Date:</label>
-          <input type="text" id="end-date" placeholder="end date">
+          <input id="end-date" name="end_date" type="text"  placeholder="end date">
         </div>
         <div class="form-group">
           <label for="init-balance">Initial Balance:</label>
-          <input type="number" placeholder="initial_balance" value="1000000" id="init-balance">
+          <input id="init-balance" name="initial_balance" type="number" placeholder="initial_balance" value="1000000">
         </div>
         <div class="form-group">
           <label for="frequency">Frequency:</label>
-          <input type="number" value="12" placeholder="frequency" id="frequency">
+          <input id="frequency" name="frequency" type="number" value="12" placeholder="frequency">
         </div>
         <div class="form-group">
-          <label for="frequency">Num of holdings:</label>
-          <input type="number" value="2" placeholder="number of holdings">
+          <label for="num_of_holdings">Num of holdings:</label>
+          <input id="num_of_holdings" name="num_of_holdings" type="number" value="2" placeholder="number of holdings">
+        </div>
+          <button type="submit" id="run-btn">Run!</button>
+          <div id="loading" style="display:none;">
+            <span id="load_text">loading...</span>
+          </div>
+          <div id="form_ajax" style="display:none;">
+            <span>Form submit successfully.</span>
         </div>
       </form>
     </div>
@@ -42,7 +49,6 @@
 		<div id="chart"><svg></svg></div>
 	</div>
 
-    <button id="run-btn">Run!</button>
     <button id="stop-btn">Stop!</button>
     <button id="restart-btn">Restart!</button>
 
@@ -51,6 +57,7 @@
 {% block scripts %}
     <script src="{% static 'bower_components/underscore/underscore.js' %}"></script>
     <script src="{% static 'bower_components/jquery-cookie/jquery.cookie.js' %}"></script>
+    <script src="{% static 'bower_components/jquery-form/jquery.form.js' %}"></script>
     <script src="{% static 'bower_components/d3/d3.js' %}"></script>
     <script src="{% static 'bower_components/nvd3/nv.d3.js' %}"></script>
     <script src="{% static 'backtest/test.js' %}"></script>
