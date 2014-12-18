@@ -85,8 +85,8 @@ $(document).ready(function(){
 		post_data = $(this).serialize() + '&id=' + $(this).attr('id').split('_')[0]	
 		$('#behavior_conditions').show()
 				.animate({
-					width: "30%",
-				    height: "150px",
+					width: "100%",
+				    height: "100%",
 				    opacity: 1,
 				    borderWidth: "1px"
 				  }, 400 );
@@ -221,8 +221,8 @@ $(document).ready(function(){
 			var match_to_form = "#" + $(ui.draggable).attr('id') + "_conditions";
  			$(match_to_form).show()
  				.animate({
-				    width: "30%",
-				    height: "150px",
+				    width: "100%",
+				    height: "100%",
 				    opacity: 1,
 				    borderWidth: "1px"
 				  }, 400 );

@@ -6,28 +6,45 @@
 {% endblock %}
 
 {% block content %}
-<div class='builder_container'>
+<div class='container col-md-12'>
     <div class='main_four'>
-        <div class='fixed_logic if_statement'>IF</div>
-        <div class='fixed_logic form_full_two'>
-            <div class='popup_conditions' id='SMA_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs cancel_button" id='SMA_button' aria-label="remove">
+        <div class='fixed_logic if_statement col-md-1'>IF</div>
+        <div class='fixed_logic form_full_two col-md-4'>
+            <div class='popup_conditions col-md-4' id='SMA_conditions'>
+                <button style='float:right;' type="button" class="btn btn-danger btn-xs cancel_button" id='SMA_button' aria-label="remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
                 SMA
                     <form class="form-inline conditionals" id='SMA_form' method = "POST" role="form">
-                        <div class="control-group" style='display:inline;'>
-                            <label class='field_labels' style='width:8em;' class="control-label"><h6>Time Period :</h6></label>
-                                <input type="number" data-validation-matches-message=
-                                "format 1.0" class="form-control" style='margin-left:1em; width:6em' placeholder="period 1" name='period1'>
-                                <input type="text" class="form-control" placeholder="period 2" style='width:6em;' name='period2'>
-                            <label class='field_labels' style='width:8em;'><h6>%d Range :</h6></label>
-                                <input type="text" class="form-control" placeholder="lowest" style='margin-left:1em; width:6em;' name='range0'>
-                                <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
-                            <label class='field_labels' style='width:8em;'><h6>Appetite : </h6></label>
-                                <input style='margin-left:1em; width:12.2em;' type="text" class="form-control" placeholder="appetite" name='appetite'>
+                        <div class="control-group">
+                            <div class='row'>
+                                <div class="col-md-1">
+                                    <label class="control-label">Time Period :</label>  
+                                    <div class='col-md-1'>
+                                        <input type="texts" class="form-control" placeholder="period 1" name='period1'>
+                                    </div>
+                                </div>
+<!--                                 <div class='col-md-1'>
+                                    <input type="text" class="form-control" placeholder="period 2" name='period2'>
+                                </div>
+ -->                            </div>
+                            <div class='row'>
+                                <label class='col-md-3'><h6>%d Range :</h6></label>
+                                <div class='col-md-1'>
+                                    <input type="text" class="form-control col-md-2" placeholder="lowest" name='range0'>
+                                </div>
+                                <div class='col-md-1'>
+                                <input type="text" class="form-control col-md-2" placeholder="highest" name='range1'>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <label class='col-md-4'><h6>Appetite : </h6></label>
+                                <div class='col-md-1'>
+                                    <input type="text" class="form-control" placeholder="appetite" name='appetite'>
+                                </div>
+                            </div>
                         </div>
-                        <button style='margin-left:2.5em;' type="submit" class="btn btn-primary">Ok!</button>
+                        <button type="submit" class="btn btn-primary">Ok!</button>
                     </form>
         </div>
         <div class='popup_conditions' id='Volatility_conditions'>
@@ -166,8 +183,8 @@
                     </form>
         </div>
         <div class='droppable'>this</div></div>
-        <div class='fixed_logic then_statement'>THEN</div>
-        <div class='fixed_logic form_full_two'>
+        <div class='fixed_logic then_statement col-md-3'>THEN</div>
+        <div class='fixed_logic form_full_two col-md-3'>
             <div class='popup_conditions' id='behavior_conditions'>
                 <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs" id='behavior_cancel' aria-label="remove">
                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
