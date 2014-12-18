@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 
 from account.mixins import LoginRequiredMixin
 
-from backtest.tasks import test_backtest
+from backtest.tasks import test_backtest, run_backtest
 from backtest.queues import ReturnsQueue
 
 
@@ -47,7 +47,7 @@ class RunView(LoginRequiredMixin, TemplateView):
                     'num_holdings': int(data.get('num_holdings'))
                 }
                 print(backtest_environ)
-                test_backtest.delay(algo_id, backtest_environ)
+                run_backtest.delay(algo_id, backtest_environ)
             except Exception as e:
                 err = e
             return JsonResponse({'backtest_id': backtest_environ['uuid'], 'error': err})
