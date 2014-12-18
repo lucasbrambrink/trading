@@ -50,28 +50,28 @@ class RunView(LoginRequiredMixin, TemplateView):
                 test_backtest.delay(algo_id, backtest_environ)
             except Exception as e:
                 err = e
-            return JsonResponse({'error': err})
+            return JsonResponse({'backtest_id': backtest_environ['uuid'], 'error': err})
         else:
             return HttpResponseNotFound('<h1>No Page Here</h1>')
 
 
-class ResultView(TemplateView):
-    """
-    The api for serving the data while running backtest
+# class RealView(TemplateView):
+#     """
+#     The api for serving the data while running backtest
+#
+#     """
+#     template_name = 'backtest/result.html'
+#
+#     def get_context_data(self, **kwargs):
+#         content = super(ResultView, self).get_context_data(**kwargs)
+#         content['id'] = self.kwargs.get('id', None)
+#         return content
+#             # returns_queue = ReturnsQueue(id)
+#             # content = returns_queue.dequeue(int(n))
+#             # return JSONResponse(content[0], content[1])
 
-    """
-    template_name = 'backtest/result.html'
-
-    def get_context_data(self, **kwargs):
-        content = super(ResultView, self).get_context_data(**kwargs)
-        content['id'] = self.kwargs.get('id', None)
-        return content
-            # returns_queue = ReturnsQueue(id)
-            # content = returns_queue.dequeue(int(n))
-            # return JSONResponse(content[0], content[1])
-
-def data(request, id, num):
-    print(id, num)
-    returns_queue = ReturnsQueue(id)
+def realtime_view(request, backtest_id, num):
+    print(backtest_id, num)
+    returns_queue = ReturnsQueue(backtest_id)
     content = returns_queue.dequeue(int(num))
     return JSONResponse(content[0], content[1])
