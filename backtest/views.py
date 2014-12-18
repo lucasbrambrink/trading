@@ -1,17 +1,19 @@
-import json
 from uuid import uuid1
-from datetime import date
 
 from django.shortcuts import redirect, render_to_response
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseNotFound, Http404
 from django.views.generic.base import TemplateView
-from django.http import HttpResponseNotFound, QueryDict
 from django.core.urlresolvers import reverse
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from account.mixins import LoginRequiredMixin
 
-from backtest.tasks import test_backtest, run_backtest
+from backtest.tasks import run_backtest
 from backtest.queues import ReturnsQueue
+from backtest.models import Backtests, Assets
+from backtest.serializers import AssetsSerializer
 
 
 class JSONResponse(JsonResponse):
@@ -55,23 +57,43 @@ class RunView(LoginRequiredMixin, TemplateView):
             return HttpResponseNotFound('<h1>No Page Here</h1>')
 
 
-# class RealView(TemplateView):
-#     """
-#     The api for serving the data while running backtest
-#
-#     """
-#     template_name = 'backtest/result.html'
-#
-#     def get_context_data(self, **kwargs):
-#         content = super(ResultView, self).get_context_data(**kwargs)
-#         content['id'] = self.kwargs.get('id', None)
-#         return content
-#             # returns_queue = ReturnsQueue(id)
-#             # content = returns_queue.dequeue(int(n))
-#             # return JSONResponse(content[0], content[1])
-
 def realtime_view(request, backtest_id, num):
     print(backtest_id, num)
     returns_queue = ReturnsQueue(backtest_id)
     content = returns_queue.dequeue(int(num))
     return JSONResponse(content[0], content[1])
+
+
+class AssetsList(APIView):
+    """
+    List all assets for a backtest
+    """
+    def get_object(self, uuid):
+        try:
+            return Backtests.objects.get(uuid=uuid)
+        except Backtests.DoesNotExist:
+            raise Http404
+
+    def get(self, request, backtest_uuid, format=None):
+        backtest = self.get_object(backtest_uuid)
+        assets = Assets.objects.filter(backtest=backtest)
+        serializer = AssetsSerializer(assets, many=True)
+        return Response(serializer.data)
+
+
+class AssetsDateList(APIView):
+    """
+    List all assets for a backtest
+    """
+    def get_object(self, uuid):
+        try:
+            return Backtests.objects.get(uuid=uuid)
+        except Backtests.DoesNotExist:
+            raise Http404
+
+    def get(self, request, backtest_uuid, year, month, day, format=None):
+        backtest = self.get_object(backtest_uuid)
+        date = '{}-{}-{}'.format(year, month, day)
+        assets = Assets.objects.filter(backtest=backtest, date=date)
+        serializer = AssetsSerializer(assets, many=True)
+        return Response(serializer.data)
