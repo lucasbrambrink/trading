@@ -210,7 +210,7 @@ class BacktestingEnvironment:
         value = round(PortfolioCalculator(self.portfolio).value,2)
         rmc = RiskMetricsCalculator(self.portfolio,self.balance,self.initial_balance,self.market_index,previous_trade,date)
         risk_metrics = {
-            'backtest_id': self.uuid,
+            'backtest': self.backtest,
             'date': date,
             'alpha': rmc.alpha(), 
             'beta': rmc.beta(), 
