@@ -12,34 +12,16 @@ from backtest.models import Algorithms
 
 
 @shared_task
-def run_backtest(algorithm_json):
-    ## TODO: remove on production
+def run_backtest(algo_id, backtest_environ):
+    algorithm = Algorithms.objects.get(uuid=algo_id)
     algorithm_json = {
-        'backtest': {
-            'id': '100',
-            'start_date': "2013-01-01",
-            'end_date': "2014-01-01",
-            'initial_balance': 1000000,
-            'frequency': 12,
-            'num_holdings': 1,
-            },
-        'algorithm': {
-            'name' : 'Test',
-            'sma': {
-                'period1': 15,
-                'period2': 10,
-                'percent_difference_to_buy': 0.1,
-                'appetite': 5
-                },
-            }
-        }
-
+        'algorithm': json.loads(algorithm.json_string)
+    }
     base = BaseAlgorithm(algorithm_json['algorithm'])
-    backtest = BacktestingEnvironment(algorithm_json['backtest'], base.__dict__)
-
-    returns_queue = ReturnsQueue(backtest.id)
+    backtest = BacktestingEnvironment(backtest_environ, base.__dict__)
+    print(backtest.start_date, backtest.end_date, backtest.dates_in_range)
+    returns_queue = ReturnsQueue(backtest.uuid)
     backtest.set_queue(returns_queue)
-
     backtest.run()
 
 @shared_task
