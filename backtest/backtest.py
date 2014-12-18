@@ -1,18 +1,16 @@
 ## get contingencies
-from backtest.calculator import *
 from backtest.risk_calculator import *
-from backtest.blocks import *
 from backtest.conditions import *
 from backtest.algorithm import BaseAlgorithm
 from backtest.models import *
 
 import math
-import re
-from datetime import date,timedelta
+from datetime import timedelta
+
 
 class BacktestingEnvironment:
 
-    def __init__(self,backtest,algorithm):
+    def __init__(self, backtest, algorithm):
         self.uuid = backtest['uuid']
         self.start_date = backtest['start_date']
         self.end_date = backtest['end_date']
@@ -30,7 +28,7 @@ class BacktestingEnvironment:
             self.conditions_buy[list(condition)[0]] = condition[list(condition)[0]]
         for condition in algorithm['conditions_sell']:
             self.conditions_sell[list(condition)[0]] = condition[list(condition)[0]]
-        self.algorithm = algorithm['algorithm']
+        self.algo_id = algorithm['id']
         
         ## relevant dates ##
         self.most_recent_trade = self.start_date
@@ -48,19 +46,20 @@ class BacktestingEnvironment:
 
         ## save in DB
         self.backtest = Backtests.objects.create(
-            algorithm=self.algorithm,
-            start_date=self.start_date,
-            end_date=self.end_date,
-            initial_balance=self.initial_balance,
+            uuid = self.uuid,
+            start_date = self.start_date,
+            end_date = self.end_date,
+            initial_balance = self.initial_balance,
             frequency=self.frequency,
-            num_holdings=self.num_holdings
+            num_holdings = self.num_holdings,
+            algorithm_id = self.algo_id,
             )
 
     def set_queue(self, queue):
         self.queue = queue
 
     def dates_in_range(self):
-        robust_stock = Stocks.objects.get(symbol='A')
+        robust_stock = Stocks.objects.get(symbol='SPY')
         return [x.date for x in Prices.objects.filter(stock=robust_stock).filter(date__range=(self.start_date, self.end_date)).order_by('date')]
 
     ## main backtesting method ##
