@@ -1,61 +1,125 @@
-body {
-	background-color: black;
+.builder_container {
+	margin: 3em;
+	padding: 2em;
+	width: auto;
+	height: auto;
 }
 
-span {
-	color: white;
+.if_statement {
+	padding-top: 4px;
+	width: 10%;
 }
 
-.draggable {
-	display: inline-block;
-	width: 8em; 
-	height: 5em; 
-	border: 1px solid white;
-	padding: 1em;
+.then_statement {
+	padding-top: 4px;
+	margin-left: 5%;
+	width: 20%;
+
 }
 
-.droppable {
-	display: inline-block;
-	width: 12em; 
-	height: 10em; 
-	border:1px solid white;
-	padding: 1em;
-	margin: 1em;
+.form_full_two {
+	padding-top: 4px;
+	width: 30%;
 }
 
 .fixed_logic {
+	padding-top: 4px;
+	float: center;
+	text-align: center;
+	font-size: 650%;
 	display: inline-block;
-	background-color: black;
-	height: 10em;
-	padding: 1em;
+	height: 150px;
+}
+
+
+.condition_container {
+	display: inline-block;
+	width: 250px;
+	height: 150px;
+}
+
+.behavior_container {
+	display: inline-block;
+	width: 250px;
+	height: 150px;
+}
+
+.droppable {
+	padding-top: 1px;
+
+}
+
+.draggable {
+	padding-top: 1.5em;
+	text-align: center;
+	float: center;
+	display: inline-block;
+	border: 2px solid black;
+	border-radius: 10px;
+	background-color: rgba(13, 182, 94, 0.8);
+	box-shadow: 7px 7px 5px #888888;
+	width: 6em;
+	height: 5em;
 	margin: 1em;
 }
+.lower_portion {
+	margin-top: 2em;
+}
 
-.number {
+.block_container {
+	margin-top: 0;
+	padding: 2em;
 	display: inline-block;
-	background-color: black;
-	height: 10em;
-	padding: 1em;
-	margin: 1em;
+	width: 70%;
+	height: 20%;
+}
+
+.description_container {
+	display: inline-block;
+	width: 30%;
+	height: 58em;
+}
+
+.description {
+	border: 2px solid black;
+	margin: 2em;
+	padding: 2em;
+	height: 50%;
+
+}
+
+.button_container {
+	margin-top: 2em;
+	float: center;
+	padding-left: 40%;
+	width: 100%;
 }
 
 
-.item {
-	background-color: gray;
+.field_labels {
+	margin-left: 10%;
+	width: 10%;
 }
 
-.logic {
-	background-color: blue;
+.popup_conditions {
+	font-size: 10%;
+	text-align: left;
+	float: left;
+	padding: 1%;
+	position: absolute;
+	background: rgba(255, 255, 255, 1);
+	border: 0px solid black;
+	width: 0px;
+	height: 0px;
 }
 
-.behavior {
-	background-color: red;
+#behavior_conditions {
+	font-size: 10%;
+	text-align: left;
+	position: absolute;
+	background: rgba(255, 255, 255, 1);
+	border: 0px solid black;
+	width: 0px;
+	height: 0px;
 }
 
-.asset {
-	background-color: purple;
-}
-
-.page_break {
-	height: 10em;
-}

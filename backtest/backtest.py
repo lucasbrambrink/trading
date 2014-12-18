@@ -1,10 +1,10 @@
 ## get contingencies
-from calculator import *
-from risk_calculator import *
-from blocks import *
-from conditions import *
-from algorithm import BaseAlgorithm
-from models import *
+from backtest.calculator import *
+from backtest.risk_calculator import *
+from backtest.blocks import *
+from backtest.conditions import *
+from backtest.algorithm import BaseAlgorithm
+from backtest.models import *
 
 import math
 import re
@@ -67,19 +67,17 @@ class BacktestingEnvironment:
     def run_period_with_algorithm(self):
         for index,date in enumerate(self.dates_in_range):
             if index % math.floor(252/self.frequency) == 0:
+                # execute trade session
                 self.execute_trading_session(date)
-
+                
                 # calculate risk metrics
-
-                value = round(PortfolioCalculator(self.portfolio).value,2)
-                returns = round(float(((self.balance + value) - self.initial_balance) / self.initial_balance),2)
+                if index > 0:
+                    print(self.calculate_risk_metrics(self.most_recent_trade,date))
 
                 ## Save returns
                 # self.queue.enqueue({'key': 'returns', 'values': returns})
 
                 self.print_information(date)
-                if index > 0:
-                    print(self.calculate_risk_metrics(self.most_recent_trade,date))
                 # send portfolio to front end
                 self.most_recent_trade = date
         return True
