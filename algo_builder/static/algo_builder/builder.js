@@ -25,6 +25,10 @@ $(document).ready(function(){
 		$.cookie('final_json_object', final_json_object)
 	}
 	algorithm_text = $.cookie('algorithm_text')
+	for(var i = 0; i < Object.keys(algorithm_text).length; i++){
+		key = Object.keys(algorithm_text)[i]
+		$('#conditions_list').append("<li><h1>"+algorithm_text[key]+"</h1></li>")
+	}
 	if(!algorithm_text){
 		algorithm_text = {}
 		$.cookie('algorithm_text', algorithm_text)
@@ -40,6 +44,12 @@ $(document).ready(function(){
 	})
 
   	// $(".form-control").not("[0-9.]").jqBootstrapValidation(); 
+
+  	$("#reset_button").on('click', function() {
+  		algorithm_text = {}
+		$.cookie('algorithm_text', algorithm_text)
+		$('#conditions_list').empty();
+	});
 
 	$(".cancel_button").click(function() {
 
@@ -117,6 +127,7 @@ $(document).ready(function(){
 	 				} else {
 	 					var behavior = 'sell'
 	 				}
+	 				console.log(key)
 	 				if(key === 'sma'){
 	            		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < %change SMA ( "+data.block[key][behavior][0]['period1']+","+data.block[key][behavior][0]['period2']+" ) < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ")"
 	               		var find_block_id = '#SMA'
@@ -133,7 +144,7 @@ $(document).ready(function(){
 	            		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < " +data.block[key][behavior][0]['name'] + " < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 	            		var find_block_id = '#Ratio'
 	            	} else if(key === 'thresholds') {
-	            		var condition = 'Price must be between' + data.block[key][behavior][0]['range'][0] + " and " + data.block[key][behavior][0]['range'][1]
+	            		var condition = 'Price must be between ' + data.block[key][behavior][0]['price_range'][0] + " and " + data.block[key][behavior][0]['price_range'][1]
 	            		if(data.block[key][behavior][0]['sector']['include']){ 
 	            			condition += 'and include '
 	            			for(var i; i < data.block[key][behavior][0]['sector']['include'].length; i++){
@@ -160,14 +171,21 @@ $(document).ready(function(){
 	            		var find_block_id = '#Diversity'
 	            	}
 	            	$('#conditions_list').append("<li><h1>"+condition+"</h1></li>")
-	                
+
+            		$(find_block_id).show()
+						.css({
+							'top': $("#SMA").data('origionalTop'),
+							'left': $("#SMA").data('origionalLeft'),
+					});
+
+
 	            	// Store in Browser
 	                final_json_object = $.cookie('final_json_object')
-	                JSON.parse(final_json_object)
-	                final_json_object[key] = data.block
-	                console.log(final_json_object[key])
+	        		final_json_object[key] = data.block[key]
+	                console.log(final_json_object)
 	                $.cookie('final_json_object',final_json_object)
 	                algorithm_text = $.cookie('algorithm_text')
+	                console.log(algorithm_text)
 	                algorithm_text[key] = condition
 	                $.cookie('algorithm_text',algorithm_text)
 	            },
