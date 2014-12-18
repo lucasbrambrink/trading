@@ -22,7 +22,6 @@ class BuilderView(TemplateView):
 
 class JsonBuilder(TemplateView):
 	template_name = 'algo_builder/builder.html'
-	block_json = {}
 
 	def post(self,request):
 		"""
@@ -32,6 +31,7 @@ class JsonBuilder(TemplateView):
 		if request.is_ajax() and request.method == "POST":
 			err = ''
 			try:
+				block_json = {}
 				buy,sell = [],[]
 				data = request.POST['data'].split('&')
 				print(data)
@@ -40,15 +40,15 @@ class JsonBuilder(TemplateView):
 					key,value = item.split('=')
 					block[key] = value
 				formatted_block = self.parse_block(block)
-				if block['behavior'] == 'buy':
+				if block['behavior'] == 'Buy':
 					buy.append(formatted_block)
-				if block['behavior'] == 'sell':
+				if block['behavior'] == 'Sell':
 					sell.append(formatted_block)
-				self.block_json[block['id'].lower()] = {
+				block_json[block['id'].lower()] = {
 					'buy' : buy,
 					'sell' : sell
 				}
-				return JsonResponse({'block' : self.block_json})
+				return JsonResponse({'block' : block_json})
 			except Exception as e:
 				err = e
 				return JsonResponse({'error': err})
@@ -79,8 +79,19 @@ class JsonBuilder(TemplateView):
 					'appetite': block['appetite']
 					}
 		if block['id'].lower() == 'ratio':
+			print(block['name'])
+			if block['name'] == "Cash+per+Revenue":
+				name = 'CASH_REV'
+			elif block['name'] == 'EV+%2F+EBITDA':
+				name = 'EV_EBITDA'
+			elif block['name'] == 'PE+(Current)':
+				name = 'PE_CURR'
+			elif block['name'] == 'Market+Cap':
+				name = 'MKT_CAP'
+			elif block['name'] == 'Return+on+Equity':
+				name = 'ROE'
 			formatted_block = {
-					'name' : block['name'],
+					'name' : name,
 					'range': (block['range0'],block['range1']),
 					'appetite': block['appetite']
 					}

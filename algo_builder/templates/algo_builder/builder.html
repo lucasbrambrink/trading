@@ -173,17 +173,15 @@
                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
                 Behavior
-                    <div class="radio" style='font-size:350%'>
-                      <label class="checkbox-inline" style='width:15em;'>
-                        <input type="radio" name="buy" id="buy" value="Buy">
-                        <span>Buy</span>
-                      </label>
-                      <label class="checkbox-inline" style='width:15em;'>
-                        <input type="radio" name="sell" id="sell" value="Sell">
-                        <span>Sell</span>
-                      </label>
+                <form class="form-inline behaviorals" id='behavior_form' role="form">
+                    <div class="form-group" style='display:inline;'>
+                        <label class='field_labels' style='width:8em;'></label>
+                        <select class="form-control" style='width: 12em; margin-top: 2em;' name='behavior'>
+                          <option value='Buy'>Buy</option>
+                          <option value='Sell'>Sell</option>
+                        </select>
                     </div>
-                    <button style='float:right; margin-right:1em; margin-top:1em;' type="submit" class="btn btn-primary">Set!</button>
+                    <button style='float:right; margin-left:2em; margin-top:1em;' type="submit" class="btn btn-success">Set!</button>
                 </form>
             </div>
         that
@@ -213,8 +211,8 @@
 
     <div class='description_container' style='float:right;'>
         <div class='description'>
-            <h1 class='description_header'>Description</h1>
-            <p class='description_text'>This is a description about stuff where if you read long enough there are words that will come across your eyes and maybe you are processing them although I would advise you don't do that because it doesn't seem to be conjured from a proper source in my frontal cortex.</p>
+            <h1 class='description_header'>Build your own Algorithm</h1>
+            <p class='description_text'>By dragging and dropping blocks over the 'this' conditional, you can specify the behavior of your algorithm per trading session. Fill the corresponding forms and the condition will be added to your algorithm! Note: Be careful about selling conditions. The algorithm generally functions best if it is allowed to sell all your assets each time (to maximize your capital for new investments). But feel free to play around!</p>
         </div>
     </div>
 </div>

@@ -6,25 +6,29 @@
 }
 
 .if_statement {
+	padding-top: 4px;
 	width: 10%;
 }
 
 .then_statement {
+	padding-top: 4px;
 	margin-left: 5%;
 	width: 20%;
 
 }
 
 .form_full_two {
+	padding-top: 4px;
 	width: 30%;
 }
 
 .fixed_logic {
+	padding-top: 4px;
 	float: center;
 	text-align: center;
 	font-size: 650%;
 	display: inline-block;
-	height: 200px;
+	height: 150px;
 }
 
 
@@ -41,14 +45,20 @@
 }
 
 .droppable {
+	padding-top: 1px;
 
 }
 
 .draggable {
+	padding-top: 1.5em;
+	text-align: center;
+	float: center;
 	display: inline-block;
 	border: 2px solid black;
-	background-color: yellow;
-	width: 5em;
+	border-radius: 10px;
+	background-color: rgba(13, 182, 94, 0.8);
+	box-shadow: 7px 7px 5px #888888;
+	width: 6em;
 	height: 5em;
 	margin: 1em;
 }
@@ -67,13 +77,14 @@
 .description_container {
 	display: inline-block;
 	width: 30%;
-	height: 50%;
+	height: 58em;
 }
 
 .description {
 	border: 2px solid black;
 	margin: 2em;
 	padding: 2em;
+	height: 50%;
 
 }
 
