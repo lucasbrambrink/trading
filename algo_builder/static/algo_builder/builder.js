@@ -12,7 +12,11 @@ function resetForm(A,B){
 	document.getElementById(B).reset();
 }
 
-$(document).ready(function(){	
+$(document).ready(function(){
+	var token = $.cookie('csrftoken')
+	console.log(token)
+	$.cookie.json=true;	
+
 	final_json_object = $.cookie('final_json_object')
 	if(!final_json_object){
 		final_json_object = {}
@@ -20,7 +24,7 @@ $(document).ready(function(){
 	}
 	algorithm_text = $.cookie('algorithm_text')
 	if(!algorithm_text){
-		algorithm_text = []
+		algorithm_text = {}
 		$.cookie('algorithm_text', algorithm_text)
 	}
 
@@ -31,7 +35,7 @@ $(document).ready(function(){
     	'origionalTop': $("#SMA").css('top')
 	})
 
-
+  	// $(".form-control").not("[0-9.]").jqBootstrapValidation(); 
 
 	$(".cancel_button").click(function() {
 
@@ -42,7 +46,13 @@ $(document).ready(function(){
 			height: '0px',
 			opacity: 0,
 			borderWidth: '0px'
-		}, 300);
+		}, 400);
+		$('#behavior_conditions').animate({
+			width: '0px',
+			height: '0px',
+			opacity: 0,
+			borderWidth: '0px'
+		}, 400);
 		find_block_id = "#" + block_id
 		$(find_block_id).show()
 			.css({
@@ -59,11 +69,11 @@ $(document).ready(function(){
 		post_data = $(this).serialize() + '&id=' + $(this).attr('id').split('_')[0]	
 		$('#behavior_conditions').show()
 				.animate({
-					width: "22%",
-				    height: "250px",
+					width: "30%",
+				    height: "150px",
 				    opacity: 1,
-				    borderWidth: "4px"
-				  }, 300 );
+				    borderWidth: "1px"
+				  }, 400 );
 			});
 
 	$('#behavior_form').submit(function(e){
@@ -74,13 +84,7 @@ $(document).ready(function(){
 			height: '0px',
 			opacity: 0,
 			borderWidth: '0px'
-		}, 300);
-		$('#behavior_form').animate({
-			width: '0px',
-			height: '0px',
-			opacity: 0,
-			borderWidth: '0px'
-		}, 300);
+		}, 600);
 		var splits = post_data.split('&')
 		var block_id_pair = splits[splits.length-1]
 		var block_id = "#" + block_id_pair.split('=')[1]
@@ -97,7 +101,7 @@ $(document).ready(function(){
 	            url: "/builder/create_json/",
 	            type: "POST",
 	            data: {
-	                csrfmiddlewaretoken:$.cookie('csrftoken'),
+	                csrfmiddlewaretoken: token,
 	                data: post_data
 	            },
 	            success: function (data) {
@@ -109,33 +113,59 @@ $(document).ready(function(){
 	 				}
 	 				console.log(data.block[key][behavior][0])
 	            	if(key === 'sma'){
-	            		var condition = 'IF the average price of the last ' + data.block[key][behavior][0]['period1'] + ' days differs from the previous ' + data.block[key][behavior][0]['period2'] +' days by a percent difference between ' + data.block[key][behavior][0]['range'][0] + '% and ' + data.block[key][behavior][0]['range'][1] +'%, THEN ' + behavior + ' with an appetite of ' + data.block[key][behavior][0]['appetite']
+	            		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < %change SMA ( "+data.block[key][behavior][0]['period1']+","+data.block[key][behavior][0]['period2']+" ) < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ")"
 	               		var find_block_id = '#SMA'
-	               	} else if(key === 'volatility' || key === 'covariance') {
-	               		console.log(key)
-	               		if(key==='volatility'){var find_block_id = '#Volatility'}
-               			else {var find_block_id = '#Covariance'}
+	               	} else if(key === 'volatility'){
+	               		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < Volatility ( "+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
+						var find_block_id = '#Volatility'
+					} else if(key == 'covariance'){
+						var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < Covariance ( "+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
+						var find_block_id = '#Covariance'
 	            	} else if(key === 'event') {
+	            		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < Price of " +data.block[key][behavior][0]['stock'] + " < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 	            		console.log(key)
 	            		var find_block_id = '#Event'
 	            	} else if(key === 'ratio'){
+	            		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < " +data.block[key][behavior][0]['name'] + " < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 	            		console.log(key)
 	            		var find_block_id = '#Ratio'
 	            	} else if(key === 'thresholds') {
+	            		var condition = 'Price must be between' + data.block[key][behavior][0]['range'][0] + " and " + data.block[key][behavior][0]['range'][1]
+	            		if(data.block[key][behavior][0]['sector']['include']){ 
+	            			condition += 'and include '
+	            			for(var i; i < data.block[key][behavior][0]['sector']['include'].length; i++){
+	            				condition += data.block[key][behavior][0]['sector']['include'][i].toString()
+	            				if(i+1 < data.block[key][behavior][0]['sector']['include'].length){
+	            					condition += ","
+	            				}
+	            			}
+	            		}
+	            		if(data.block[key][behavior][0]['sector']['exclude']){ 
+	            			condition += 'and exclude '
+	            			for(var i; i < data.block[key][behavior][0]['sector']['exclude'].length; i++){
+	            				condition += data.block[key][behavior][0]['sector']['exclude'][i].toString()
+	            				if(i+1 < data.block[key][behavior][0]['sector']['exclude'].length){
+	            					condition += ","
+	            				}
+	            			}
+	            		}
 	            		console.log(key)
 	            		var find_block_id = '#Thresholds'
 	            	} else if(key === 'diversity') {
-	            		console.log(key)
+	            		var condition = 'Portfolio cannot contain more than ' + data.block[key][behavior][0]['num_sector'] + " and " +data.block[key][behavior][0]['num_industry']+" of the same sector and industry, respectively"
+	       				console.log(key)
 	            		var find_block_id = '#Diversity'
 	            	}
 	            	$('#conditions_list').append("<li><h1>"+condition+"</h1></li>")
 	                
 	            	// Store in Browser
 	                final_json_object = $.cookie('final_json_object')
+	                JSON.parse(final_json_object)
 	                final_json_object[key] = data.block
+	                console.log(final_json_object[key])
 	                $.cookie('final_json_object',final_json_object)
 	                algorithm_text = $.cookie('algorithm_text')
-	                algorithm_text.push(condition)
+	                algorithm_text[key] = condition
 	                $.cookie('algorithm_text',algorithm_text)
 	            },
 	            error: function (xhr, errmsg, err) {
@@ -150,7 +180,7 @@ $(document).ready(function(){
 			height: '0px',
 			opacity: 0,
 			borderWidth: '0px'
-		}, 300);
+		}, 400);
 
 		var splits = post_data.split('&')
 		var block_id_pair = splits[splits.length-1]
@@ -168,11 +198,11 @@ $(document).ready(function(){
 			var match_to_form = "#" + $(ui.draggable).attr('id') + "_conditions";
  			$(match_to_form).show()
  				.animate({
-				    width: "22%",
-				    height: "250px",
+				    width: "30%",
+				    height: "150px",
 				    opacity: 1,
-				    borderWidth: "4px"
-				  }, 300 );
+				    borderWidth: "1px"
+				  }, 400 );
  			$(ui.draggable).hide()
 		}
 	});
@@ -186,6 +216,4 @@ $(document).ready(function(){
         		.text(description_text[id])
 
     });
-
-
 });

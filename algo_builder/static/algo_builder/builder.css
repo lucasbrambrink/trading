@@ -2,34 +2,42 @@
 	margin: 3em;
 	padding: 2em;
 	width: auto;
-	height: 30%;
-	border: 2px solid black;
+	height: auto;
 }
 
+.if_statement {
+	width: 10%;
+}
+
+.then_statement {
+	margin-left: 5%;
+	width: 20%;
+
+}
+
+.form_full_two {
+	width: 30%;
+}
 
 .fixed_logic {
 	float: center;
 	text-align: center;
-	border: 1px solid black;
 	font-size: 650%;
 	display: inline-block;
-	width: 24%;
-	height: 250px;
+	height: 200px;
 }
 
 
 .condition_container {
-	border: 1px solid black;
 	display: inline-block;
 	width: 250px;
-	height: 250px;
+	height: 150px;
 }
 
 .behavior_container {
-	border: 1px solid black;
 	display: inline-block;
 	width: 250px;
-	height: 250px;
+	height: 150px;
 }
 
 .droppable {
@@ -49,18 +57,17 @@
 }
 
 .block_container {
-	border: 2px solid black;
 	margin-top: 0;
 	padding: 2em;
 	display: inline-block;
-	width: 44%;
-	height: 250px;
+	width: 70%;
+	height: 20%;
 }
 
 .description_container {
 	display: inline-block;
-	width: 44%;
-	height: 40%;
+	width: 30%;
+	height: 50%;
 }
 
 .description {
@@ -77,9 +84,17 @@
 	width: 100%;
 }
 
+
+.field_labels {
+	margin-left: 10%;
+	width: 10%;
+}
+
 .popup_conditions {
 	font-size: 10%;
-	text-align: center;
+	text-align: left;
+	float: left;
+	padding: 1%;
 	position: absolute;
 	background: rgba(255, 255, 255, 1);
 	border: 0px solid black;
@@ -89,7 +104,7 @@
 
 #behavior_conditions {
 	font-size: 10%;
-	text-align: center;
+	text-align: left;
 	position: absolute;
 	background: rgba(255, 255, 255, 1);
 	border: 0px solid black;
