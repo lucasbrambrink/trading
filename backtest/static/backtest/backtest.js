@@ -113,8 +113,13 @@ $(document).ready(function() {
 
                     // Start update graph
                     update = setInterval(function() {
-        getResult(1);
-    }, 10000);
+                        getResult(1);
+
+                        // Tried 10 times with errors, stop update
+                        if (updateTry < 0) {
+                            clearInterval(update);
+                        }
+                    }, updateRate);
                 })
                 .fail(function (data) {
                     unblock_form();
@@ -142,7 +147,9 @@ $(document).ready(function() {
             "values": [[]]
         }]
         , priceChart
-        , update;
+        , update
+        , updateTry = 10
+        , updateRate = 3000;
 
     // Generate returns graph
     generateGraph();
@@ -219,6 +226,7 @@ $(document).ready(function() {
             success: function(data) {
                 if (data["error"].length != 0) {
                     console.log("Ajax error: " + data["error"]);
+                    updateTry -= 1;
                     return;
                 }
                 //removeData(seriesData);
@@ -229,6 +237,7 @@ $(document).ready(function() {
             },
             error: function() {
                 console.log("error loading dataURL: " + 'http://localhost:8000/backtest/realtime/' + backtest_id + '/' + n);
+                updateTry -= 1;
             }
         } );
     };
@@ -254,9 +263,13 @@ $(document).ready(function() {
     });
 
     $("#continue_btn").on('click', function() {
+        updateRate = 10;
         update = setInterval(function() {
             getResult(1);
-    }, 10000);
+            if (updateTry < 0) {
+                clearInterval(update);
+            }
+    }, updateRate);
     })
 });
 
