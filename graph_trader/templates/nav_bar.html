@@ -30,11 +30,11 @@
           </ul>
         </li>
         {% if user and not user.is_anonymous %}
-        <li><a href="{% url 'account_settings' %}">{{ user.get_full_name|default:user.username }}</a></li>
-        <li><a href="{% url 'account_logout' %}">Log Out</a></li>
-      {% else %}
-        <li><a href="{% url 'account_login' %}">Sign In</a></li>
-        <li><a href="{% url 'account_signup' %}">Register</a></li>
+          <li><a href="{% url 'account_settings' %}">{{ user.get_full_name|default:user.username }}</a></li>
+          <li><a href="{% url 'account_logout' %}">Log Out</a></li>
+        {% else %}
+          <li><a href="{% url 'account_login' %}">Sign In</a></li>
+          <li><a href="{% url 'account_signup' %}">Register</a></li>
       {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->

@@ -25,7 +25,10 @@ class PortfolioReturns:
             for price in prices:
                 price_dict[price.date] = price.close
             for date in dates:
-                date['data'].append({'quantity': asset['quantity'], 'price': price_dict[date['date']]})
+                try:
+                    date['data'].append({'quantity': asset['quantity'], 'price': price_dict[date['date']]})
+                except:
+                    continue
         for date in dates:
             daily_value = 0
             for asset in date['data']:

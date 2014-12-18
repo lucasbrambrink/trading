@@ -25,10 +25,12 @@ $(document).ready(function(){
 		$.cookie('final_json_object', final_json_object)
 	}
 	algorithm_text = $.cookie('algorithm_text')
-	for(var i = 0; i < Object.keys(algorithm_text).length; i++){
-		key = Object.keys(algorithm_text)[i]
-		$('#conditions_list').append("<li><h1>"+algorithm_text[key]+"</h1></li>")
-	}
+	if(algorithm_text) {
+        for (var i = 0; i < Object.keys(algorithm_text).length; i++) {
+            key = Object.keys(algorithm_text)[i]
+            $('#conditions_list').append("<li><h1>" + algorithm_text[key] + "</h1></li>")
+        }
+    }
 	if(!algorithm_text){
 		algorithm_text = {}
 		$.cookie('algorithm_text', algorithm_text)

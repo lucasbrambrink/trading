@@ -12,10 +12,11 @@ class BaseAlgorithm:
         self.blocks_sell = []
         self.conditions_buy = []
         self.conditions_sell = []
-        setattr(self,'user_id',algorithm['user_id'])
-        setattr(self,'name',algorithm['name'])
-        setattr(self,'uuid',algorithm['uuid'])
-        setattr(self,'json_string',json.dumps(algorithm))
+        self.user_id = algorithm['user_id']
+        self.name = algorithm['name']
+        self.uuid = algorithm['uuid']
+        self.json_string = json.dumps(algorithm)
+        self.id = Algorithms.objects.get(uuid=self.uuid).id
         for key in algorithm['block']:
             ## active conditions ##
             if key == 'sma':
@@ -50,13 +51,23 @@ class BaseAlgorithm:
                 for condition in algorithm['block'][key]['sell']:
                     self.conditions_sell.append({key: condition})
 
-        self.algorithm = self.save_db()
-
-    def save_db(self):
-        a = Algorithms.objects.create(
-            user_id=self.user_id,
-            name=self.name,
-            uuid=self.uuid,
-            json_string=self.json_string)
-        return a
-           
+    @classmethod
+    def save_db(cls, algorithm):
+        try:
+            print('update old algo')
+            algo = Algorithms.objects.get(uuid=algorithm['uuid'])
+            algo.user_id = algorithm['user_id']
+            algo.name = algorithm['name']
+            algo.uuid = algorithm['uuid']
+            algo.json_string = json.dumps(algorithm)
+            algo.save()
+        except Algorithms.DoesNotExist:
+            print('create new algo')
+            algo = Algorithms.objects.create(
+            user_id=algorithm['user_id'],
+            name=algorithm['name'],
+            uuid=algorithm['uuid'],
+            json_string=json.dumps(algorithm))
+        except Exception as e:
+            print(e)
+        finally: return algo

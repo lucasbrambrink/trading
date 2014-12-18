@@ -1,10 +1,11 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 from backtest.views import *
 
+
 urlpatterns = patterns('',
-    url(r'^$', RootView.as_view(), name='root'),
-    url(r'^run/', run, name='run'),
-    url(r'^result/(?P<id>[0-9a-zA-Z]+)/$', ResultView.as_view(), name='result'),
-    url(r'^result/(?P<id>[0-9a-zA-Z]+)/(?P<num>[0-9]+)/', data, name='data')
+    url(r'^run/(?P<algo_id>[0-9a-zA-Z]{32})$', RunView.as_view(), name='run'),
+    url(r'^realtime/(?P<backtest_id>[0-9a-zA-Z]{32})/(?P<num>[0-9]+)/', realtime_view, name='realtime'),
+    # url(r'^history/$', list all algorithms)
+    # url(r'^history/(?P<algo_id>[0-9a-zA-Z]{32})/$', list all backtests)
+    # url(r'^history/(?P<algo_id>[0-9a-zA-Z]{32})/(?P<backtest_id>[0-9a-zA-Z]{32})$', show backtest result)
 )
