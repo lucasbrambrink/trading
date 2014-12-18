@@ -6,6 +6,7 @@ from backtest.models import *
 
 import math
 from datetime import timedelta
+from time import mktime
 
 
 class BacktestingEnvironment:
@@ -71,10 +72,20 @@ class BacktestingEnvironment:
                 
                 # calculate risk metrics
                 if index > 0:
-                    print(self.calculate_risk_metrics(self.most_recent_trade,date))
+                    risk_metrics = self.calculate_risk_metrics(self.most_recent_trade,date)
 
-                ## Save returns
-                # self.queue.enqueue({'key': 'returns', 'values': returns})
+                    ## Save returns
+                    self.queue.enqueue(
+                    {
+                        'returns': risk_metrics['returns'],
+                        'date': 1000 * mktime(date.timetuple())
+                    })
+                else:
+                    self.queue.enqueue(
+                    {
+                        'returns': 0.0,
+                        'date': 1000 * mktime(date.timetuple())
+                    })
 
                 self.print_information(date)
                 # send portfolio to front end
@@ -199,7 +210,7 @@ class BacktestingEnvironment:
         value = round(PortfolioCalculator(self.portfolio).value,2)
         rmc = RiskMetricsCalculator(self.portfolio,self.balance,self.initial_balance,self.market_index,previous_trade,date)
         risk_metrics = {
-            'backtest': self.backtest,
+            'backtest_id': self.uuid,
             'date': date,
             'alpha': rmc.alpha(), 
             'beta': rmc.beta(), 
