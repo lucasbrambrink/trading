@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    var update;
+
     /**** Backtest environment setup ****/
     // Setup date picker
     $( "#start_date" ).datepicker({
@@ -113,7 +115,7 @@ $(document).ready(function() {
 
                     // Start update graph
                     update = setInterval(function() {
-                        getResult(1);
+                        updatePage();
 
                         // Tried 10 times with errors, stop update
                         if (updateTry < 0) {
@@ -140,16 +142,22 @@ $(document).ready(function() {
     }
 
 
+    /**** Assets Table Configuration ****/
+    $('#assets').D
+
+
+
+
     /**** Graph Configuration ****/
     var backtest_id = ''
         , seriesData = [{
             "key": "returns",
             "values": [[]]
         }]
-        , priceChart
-        , update
+        , returnsChart
         , updateTry = 10
-        , updateRate = 3000;
+        , updateRate = 3000
+        , dataPointsPerUpdate = 1;
 
     // Generate returns graph
     generateGraph();
@@ -172,7 +180,7 @@ $(document).ready(function() {
 
     function generateGraph() {
         nv.addGraph(function() {
-        priceChart = nv.models.lineWithFocusChart()
+        returnsChart = nv.models.lineWithFocusChart()
             .margin({right: 100})
             //.useInteractiveGuideline(true)
             .x(function(d) { return d[0] })
@@ -181,24 +189,24 @@ $(document).ready(function() {
             //.showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
             .clipEdge(true);
 
-        priceChart.xAxis
+        returnsChart.xAxis
             .tickFormat(
                 function(d) {
                     return d3.time.format.utc("%Y-%m-%d")(new Date(d))
                 }
             );
 
-        priceChart.yAxis
+        returnsChart.yAxis
             .tickFormat(d3.format('%,.2f'));
 
-        priceChart.x2Axis
+        returnsChart.x2Axis
             .tickFormat(
                 function(d) {
                     return d3.time.format.utc("%Y-%m-%d")(new Date(d))
                 }
             );
 
-        priceChart.y2Axis
+        returnsChart.y2Axis
             .tickFormat(d3.format('%,.2f'));
 
 
@@ -208,18 +216,18 @@ $(document).ready(function() {
                 'min-height': '500px'
             })
             .datum(seriesData)
-            .call(priceChart);
+            .call(returnsChart);
 
-        nv.utils.windowResize(priceChart.update);
+        nv.utils.windowResize(returnsChart.update);
 
-        priceChart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+        returnsChart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
 
-        return priceChart;
+        return returnsChart;
         });
     }
 
 
-    var getResult = function(n) {
+    var updateChart = function(n) {
         $.ajax( {
             url: 'http://localhost:8000/backtest/realtime/' + backtest_id + '/' + n,
             dataType: 'json',
@@ -233,7 +241,7 @@ $(document).ready(function() {
                 addData(seriesData, data);
                 d3.select('#chart svg')
                     .datum(seriesData)
-                    .call(priceChart);
+                    .call(returnsChart);
             },
             error: function() {
                 console.log("error loading dataURL: " + 'http://localhost:8000/backtest/realtime/' + backtest_id + '/' + n);
@@ -265,12 +273,18 @@ $(document).ready(function() {
     $("#continue_btn").on('click', function() {
         updateRate = 10;
         update = setInterval(function() {
-            getResult(1);
+            updatePage();
             if (updateTry < 0) {
                 clearInterval(update);
             }
     }, updateRate);
-    })
+    });
+
+    var updatePage = function() {
+        updateAssetsTable();
+        updateRiskTable();
+        updateChart(dataPointsPerUpdate);
+    }
 });
 
 
