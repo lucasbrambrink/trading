@@ -16,6 +16,7 @@ class BaseAlgorithm:
         self.name = algorithm['name']
         self.uuid = algorithm['uuid']
         self.json_string = json.dumps(algorithm)
+        self.id = Algorithms.objects.get(uuid=self.uuid).id
         for key in algorithm['block']:
             ## active conditions ##
             if key == 'sma':
@@ -49,8 +50,6 @@ class BaseAlgorithm:
                     self.conditions_buy.append({key: condition})
                 for condition in algorithm['block'][key]['sell']:
                     self.conditions_sell.append({key: condition})
-
-        #self.algorithm = BaseAlgorithm.save_db(self)
 
     @classmethod
     def save_db(cls, algorithm):
