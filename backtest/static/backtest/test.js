@@ -1,29 +1,118 @@
 $(document).ready(function() {
     // Setup date picker
-    $( "#start-date" ).datepicker({
+    $( "#start_date" ).datepicker({
         minDate: new Date(2000, 1 - 1, 1),
-        defaultDate: new Date(2000, 1 - 1, 1),
+        defaultDate: new Date(2010, 1 - 1, 1),
         maxDate: new Date(2014, 12 - 1, 1),
         changeMonth: true,
         numberOfMonths: 1,
         stepMonths: 12,
+        dateFormat: 'yy-mm-dd',
         onClose: function( selectedDate ) {
-            $( "#end-date" ).datepicker( "option", "minDate", selectedDate );
+            $( "#end_date" ).datepicker( "option", "minDate", selectedDate );
         }
     });
-    $( "#end-date" ).datepicker({
+    $( "#end_date" ).datepicker({
         minDate: new Date(2000, 1 - 1, 1),
-        defaultDate: new Date(2014, 12 - 1, 1),
+        defaultDate: new Date(2010, 12 - 1, 1),
         maxDate: new Date(2014, 12 - 1, 1),
         changeMonth: true,
         numberOfMonths: 1,
         stepMonths: 12,
+        dateFormat: 'yy-mm-dd',
         onClose: function( selectedDate ) {
-            $( "#start-date" ).datepicker( "option", "maxDate", selectedDate );
+            $( "#start_date" ).datepicker( "option", "maxDate", selectedDate );
       }
     });
 
     // Setup form validation
+    $( "#setup" )
+        .bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        submitButtons: 'button[type="submit"]',
+        fields: {
+            start_date: {
+                validators: {
+                    notEmpty: {
+                        message: 'The start date is required'
+                    }
+                }
+            },
+            end_date: {
+                validators: {
+                    notEmpty: {
+                        message: 'The end date is required'
+                    }
+                }
+            },
+            initial_balance: {
+                validators: {
+                    notEmpty: {
+                        message: 'The initial balance is required'
+                    },
+                    greaterThan: {
+                        inclusive: true,
+                        value: 1,
+                        message: 'The initial balance must be equal or greater than 1'
+                    }
+                }
+            },
+            frequency: {
+                validators: {
+                    notEmpty: {
+                        message: 'The trading frequency is required'
+                    },
+                    between: {
+                        min: 1,
+                        max: 252,
+                        message: 'The trading frequency must be between 1 and 252'
+                    }
+                }
+            },
+            num_holdings:{
+                validators: {
+                    notEmpty: {
+                        message: 'The num of holdings is required'
+                    },
+                    greaterThan: {
+                        inclusive: true,
+                        value: 1,
+                        message: 'The num of holdings must be equal or greater than 1'
+                    }
+                }
+            }
+        }
+    })
+        // Submit form using Ajax
+        .on('success.form.bv', function(e) {
+            e.preventDefault();
+
+            // Get the form instance
+            var $form = $(e.target);
+
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+
+            // Use Ajax to submit form data
+            $.post($form.attr('action'), $form.serialize(), function () {
+                block_form();
+            }, 'json')
+                .done(function () {
+                    unblock_form();
+                    $("#form_ajax").show();
+                    setTimeout(function () {
+                        $("#form_ajax").hide();
+                    }, 5000);
+                })
+                .fail(function () {
+                    unblock_form();
+                    alert('ajax error');
+                });
+        });
 
     //submit_backtest_settings
     function block_form() {
@@ -35,25 +124,6 @@ $(document).ready(function() {
         $("#loading").hide();
         $('input').removeAttr('disabled');
     }
-
-    var options = {
-        beforeSubmit: function(form, option) {
-            block_form();
-        },
-        success: function() {
-            unblock_form();
-            $("#form_ajax").show();
-            setTimeout(function() {
-                    $("#form_ajax").hide();
-            }, 5000);
-        },
-        error: function(res) {
-            unblock_form();
-            alert('ajax error');
-        }
-    };
-
-    $('#settings').ajaxForm(options);
 
     // Get id
     var path = window.location.pathname.split('/');
