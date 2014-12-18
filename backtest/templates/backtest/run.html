@@ -4,6 +4,7 @@
 {% load bootstrap3 %}
 
 {% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css' %}">
     <link rel="stylesheet" href="{% static 'bower_components/nvd3/nv.d3.css' %}">
 {% endblock %}
 
@@ -12,35 +13,37 @@
     <h1>algo_id: {{ algo_id }}</h1>
 
     <div id="backtest-control">
-      <form id="settings" method="POST" role="form">
+      <form id="setup" class="form-horizontal" method="POST" role="form" action="">
         {% csrf_token %}
         <input type="hidden" name="algo_id" value="{{ algo_id }}">
         <div class="form-group">
-          <label for="start-date">Start Date:</label>
-          <input id="start-date" name="start_date" type="text"  placeholder="start date">
+          <label class="control-label">Start Date:</label>
+          <input id="start_date" class="form-control" name="start_date" type="text"  placeholder="start date">
         </div>
         <div class="form-group">
-          <label for="end-date">End Date:</label>
-          <input id="end-date" name="end_date" type="text"  placeholder="end date">
+          <label class="control-label">End Date:</label>
+          <input id="end_date" class="form-control" name="end_date" type="text"  placeholder="end date">
         </div>
         <div class="form-group">
-          <label for="init-balance">Initial Balance:</label>
-          <input id="init-balance" name="initial_balance" type="number" placeholder="initial_balance" value="1000000">
+          <label class="control-label">Initial Balance:</label>
+          <input id="initital_balance" class="form-control" name="initial_balance" type="text" placeholder="initial_balance" value="1000000">
         </div>
         <div class="form-group">
-          <label for="frequency">Frequency:</label>
-          <input id="frequency" name="frequency" type="number" value="12" placeholder="frequency">
+          <label class="control-label">Frequency:</label>
+          <input id="frequency" class="form-control" name="frequency" type="number" value="12" placeholder="frequency">
         </div>
         <div class="form-group">
-          <label for="num_of_holdings">Num of holdings:</label>
-          <input id="num_of_holdings" name="num_of_holdings" type="number" value="2" placeholder="number of holdings">
+          <label class="control-label">Num of holdings:</label>
+          <input id="num_holdings" class="form-control" name="num_holdings" type="number" value="2" placeholder="number of holdings">
         </div>
-          <button type="submit" id="run-btn">Run!</button>
-          <div id="loading" style="display:none;">
-            <span id="load_text">loading...</span>
-          </div>
-          <div id="form_ajax" style="display:none;">
-            <span>Form submit successfully.</span>
+        <div class="form-group">
+          <button type="submit" id="run-btn" class="btn btn-default">Run!</button>
+        </div>
+        <div id="loading" style="display:none;">
+          <span id="load_text">loading...</span>
+        </div>
+        <div id="form_ajax" style="display:none;">
+          <span>Form submit successfully.</span>
         </div>
       </form>
     </div>
@@ -57,7 +60,7 @@
 {% block scripts %}
     <script src="{% static 'bower_components/underscore/underscore.js' %}"></script>
     <script src="{% static 'bower_components/jquery-cookie/jquery.cookie.js' %}"></script>
-    <script src="{% static 'bower_components/jquery-form/jquery.form.js' %}"></script>
+    <script src="{% static 'bower_components/bootstrapvalidator/dist/js/bootstrapValidator.js' %}"></script>
     <script src="{% static 'bower_components/d3/d3.js' %}"></script>
     <script src="{% static 'bower_components/nvd3/nv.d3.js' %}"></script>
     <script src="{% static 'backtest/test.js' %}"></script>
