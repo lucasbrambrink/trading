@@ -1,30 +1,59 @@
 $(document).ready(function() {
-    // Setup datepicker
+    // Setup date picker
     $( "#start-date" ).datepicker({
-      minDate: new Date(1999, 1 - 1, 1),
-      defaultDate: new Date(1999, 1 - 1, 1),
-      maxDate: new Date(2014, 1 - 1, 1),
-      changeMonth: true,
-      numberOfMonths: 1,
-      stepMonths: 12,
-      onClose: function( selectedDate ) {
-        $( "#end-date" ).datepicker( "option", "minDate", selectedDate );
-      }
+        minDate: new Date(2000, 1 - 1, 1),
+        defaultDate: new Date(2000, 1 - 1, 1),
+        maxDate: new Date(2014, 12 - 1, 1),
+        changeMonth: true,
+        numberOfMonths: 1,
+        stepMonths: 12,
+        onClose: function( selectedDate ) {
+            $( "#end-date" ).datepicker( "option", "minDate", selectedDate );
+        }
     });
     $( "#end-date" ).datepicker({
-      minDate: new Date(1999, 1 - 1, 1),
-      defaultDate: new Date(2014, 1 - 1, 1),
-      maxDate: new Date(2014, 1 - 1, 1),
-      changeMonth: true,
-      numberOfMonths: 1,
-      stepMonths: 12,
-      onClose: function( selectedDate ) {
-        $( "#start-date" ).datepicker( "option", "maxDate", selectedDate );
+        minDate: new Date(2000, 1 - 1, 1),
+        defaultDate: new Date(2014, 12 - 1, 1),
+        maxDate: new Date(2014, 12 - 1, 1),
+        changeMonth: true,
+        numberOfMonths: 1,
+        stepMonths: 12,
+        onClose: function( selectedDate ) {
+            $( "#start-date" ).datepicker( "option", "maxDate", selectedDate );
       }
     });
 
-    //submit_backtest_settings
+    // Setup form validation
 
+    //submit_backtest_settings
+    function block_form() {
+        $("#loading").show();
+        $('input').attr('disabled', 'disabled');
+    }
+
+    function unblock_form() {
+        $("#loading").hide();
+        $('input').removeAttr('disabled');
+    }
+
+    var options = {
+        beforeSubmit: function(form, option) {
+            block_form();
+        },
+        success: function() {
+            unblock_form();
+            $("#form_ajax").show();
+            setTimeout(function() {
+                    $("#form_ajax").hide();
+            }, 5000);
+        },
+        error: function(res) {
+            unblock_form();
+            alert('ajax error');
+        }
+    };
+
+    $('#settings').ajaxForm(options);
 
     // Get id
     var path = window.location.pathname.split('/');
