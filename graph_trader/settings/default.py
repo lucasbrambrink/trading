@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'graph_trader.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': '', # Database name
         'USER': '', # Not used with sqlite3.
         'PASSWORD': '', # Not used with sqlite3.
@@ -112,14 +112,13 @@ MEDIA_URL = '/media/'
 #### STATIC FILE CONFIGURATION
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-STATIC_ROOT = normpath(join(BASE_DIR, 'static'))
+STATIC_ROOT = 'staticfiles'
 
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    normpath(join(BASE_DIR, 'assets')),
+    normpath(join(BASE_DIR, 'static')),
 )
-
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -129,7 +128,7 @@ STATICFILES_FINDERS = (
 
 #### TEMPLATE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
-TEMPLATE_CONTEXT_PROCESSORS = (
+DEFAULT_TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
@@ -154,10 +153,4 @@ TEMPLATE_DIRS = (
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
-try:
-    from .local_settings import *
-except ImportError:
-    import sys, traceback
-    sys.stderr.write("Warning: Can't find the file 'local_settings.py' in the directory containing {}. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n(If the file settings.py does indeed exist, it's causing an ImportError somehow.)\n".format(__file__))
-    sys.stderr.write("\nFor debugging purposes, the exception was:\n\n")
-    traceback.print_exc()
+from graph_trader.settings.local_settings import *

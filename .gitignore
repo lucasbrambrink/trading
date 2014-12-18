@@ -68,6 +68,12 @@ target/
 
 # Django
 local_settings.py
+staticfiles
 
 # PyCharm
 .idea
+
+bower_components
+
+# Data source
+data_source/csv

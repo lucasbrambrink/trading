@@ -1,0 +1,17 @@
+$(document).ready(function(){	
+	$('.draggable').draggable();
+
+	$('.droppable').droppable({	
+		accept: '.item',
+ 		drop: function(event, ui) {
+ 			// possible to run AJAX post/get request if we want
+ 			$(ui.draggable).css('color','white');
+    		$( this )
+	          .css('background-color','green')
+	          // .css('color','white')
+	          .find( "p" )
+	            .html( "Dropped!" );
+            $(this.ui)
+    		}
+  		});
+});

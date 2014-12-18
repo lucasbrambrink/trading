@@ -1,0 +1,387 @@
+Ticker,Name,Sector,Industry,Price,Collection,Ratios Code
+A,Agilent Technologies Inc.,Healthcare,Medical Laboratories & Research,WIKI/A,stocks/a,DMDRN/A_ALLFINANCIALRATIOS
+AA,Alcoa Inc.,Basic Materials,Aluminum,WIKI/AA,stocks/aa,DMDRN/AA_ALLFINANCIALRATIOS
+AAPL,Apple Inc.,Consumer Goods,Electronic Equipment,WIKI/AAPL,stocks/aapl,DMDRN/AAPL_ALLFINANCIALRATIOS
+ABC,AmerisourceBergen Corporation,Services,Drugs Wholesale,WIKI/ABC,stocks/abc,DMDRN/ABC_ALLFINANCIALRATIOS
+ABT,Abbott Laboratories,Healthcare,Medical Appliances & Equipment,WIKI/ABT,stocks/abt,DMDRN/ABT_ALLFINANCIALRATIOS
+ACE,ACE Limited,Financial,Property & Casualty Insurance,WIKI/ACE,stocks/ace,DMDRN/ACE_ALLFINANCIALRATIOS
+ACN,Accenture plc,Technology,Information Technology Services,WIKI/ACN,stocks/acn,DMDRN/ACN_ALLFINANCIALRATIOS
+ADBE,Adobe Systems Inc.,Technology,Application Software,WIKI/ADBE,stocks/adbe,DMDRN/ADBE_ALLFINANCIALRATIOS
+ADI,"Analog Devices, Inc.",Technology,Semiconductor - Integrated Circuits,WIKI/ADI,stocks/adi,DMDRN/ADI_ALLFINANCIALRATIOS
+ADM,Archer Daniels Midland Company,Consumer Goods,Farm Products,WIKI/ADM,stocks/adm,DMDRN/ADM_ALLFINANCIALRATIOS
+ADP,"Automatic Data Processing, Inc.",Technology,Business Software & Services,WIKI/ADP,stocks/adp,DMDRN/ADP_ALLFINANCIALRATIOS
+ADS,Alliance Data Systems Corporation,Services,Business Services,WIKI/ADS,stocks/ads,DMDRN/ADS_ALLFINANCIALRATIOS
+ADSK,"Autodesk, Inc.",Technology,Technical & System Software,WIKI/ADSK,stocks/adsk,DMDRN/ADSK_ALLFINANCIALRATIOS
+ADT,The ADT Corporation,Services,Security & Protection Services,WIKI/ADT,stocks/adt,DMDRN/ADT_ALLFINANCIALRATIOS
+AEE,Ameren Corporation,Utilities,Diversified Utilities,WIKI/AEE,stocks/aee,DMDRN/AEE_ALLFINANCIALRATIOS
+AEP,"American Electric Power Co., Inc.",Utilities,Electric Utilities,WIKI/AEP,stocks/aep,DMDRN/AEP_ALLFINANCIALRATIOS
+AES,The AES Corporation,Utilities,Electric Utilities,WIKI/AES,stocks/aes,DMDRN/AES_ALLFINANCIALRATIOS
+AET,Aetna Inc.,Healthcare,Health Care Plans,WIKI/AET,stocks/aet,DMDRN/AET_ALLFINANCIALRATIOS
+AGN,Allergan Inc.,Healthcare,Drug Manufacturers - Other,WIKI/AGN,stocks/agn,DMDRN/AGN_ALLFINANCIALRATIOS
+AIG,"American International Group, Inc.",Financial,Property & Casualty Insurance,WIKI/AIG,stocks/aig,DMDRN/AIG_ALLFINANCIALRATIOS
+AIV,Apartment Investment and Management Company,Financial,REIT - Residential,WIKI/AIV,stocks/aiv,DMDRN/AIV_ALLFINANCIALRATIOS
+AIZ,Assurant Inc.,Financial,Accident & Health Insurance,WIKI/AIZ,stocks/aiz,DMDRN/AIZ_ALLFINANCIALRATIOS
+AKAM,"Akamai Technologies, Inc.",Technology,Internet Information Providers,WIKI/AKAM,stocks/akam,DMDRN/AKAM_ALLFINANCIALRATIOS
+ALL,The Allstate Corporation,,,WIKI/ALL,stocks/all,DMDRN/ALL_ALLFINANCIALRATIOS
+ALTR,Altera Corp.,Technology,Semiconductor - Specialized,WIKI/ALTR,stocks/altr,DMDRN/ALTR_ALLFINANCIALRATIOS
+ALXN,"Alexion Pharmaceuticals, Inc.",Healthcare,Biotechnology,WIKI/ALXN,stocks/alxn,DMDRN/ALXN_ALLFINANCIALRATIOS
+AMAT,"Applied Materials, Inc.",Technology,Semiconductor Equipment & Materials,WIKI/AMAT,stocks/amat,DMDRN/AMAT_ALLFINANCIALRATIOS
+AME,Ametek Inc.,Industrial Goods,Diversified Machinery,WIKI/AME,stocks/ame,DMDRN/AME_ALLFINANCIALRATIOS
+AMG,Affiliated Managers Group Inc.,Financial,Asset Management,WIKI/AMG,stocks/amg,DMDRN/AMG_ALLFINANCIALRATIOS
+AMGN,Amgen Inc.,Healthcare,Biotechnology,WIKI/AMGN,stocks/amgn,DMDRN/AMGN_ALLFINANCIALRATIOS
+AMP,"Ameriprise Financial, Inc.",Financial,Asset Management,WIKI/AMP,stocks/amp,DMDRN/AMP_ALLFINANCIALRATIOS
+AMZN,Amazon.com Inc.,Services,Catalog & Mail Order Houses,WIKI/AMZN,stocks/amzn,DMDRN/AMZN_ALLFINANCIALRATIOS
+AN,AutoNation Inc.,Services,Auto Dealerships,WIKI/AN,stocks/an,DMDRN/AN_ALLFINANCIALRATIOS
+APA,Apache Corp.,Basic Materials,Independent Oil & Gas,WIKI/APA,stocks/apa,DMDRN/APA_ALLFINANCIALRATIOS
+APC,Anadarko Petroleum Corporation,Basic Materials,Independent Oil & Gas,WIKI/APC,stocks/apc,DMDRN/APC_ALLFINANCIALRATIOS
+APD,Air Products & Chemicals Inc.,Basic Materials,Chemicals - Major Diversified,WIKI/APD,stocks/apd,DMDRN/APD_ALLFINANCIALRATIOS
+APH,Amphenol Corporation,Technology,Diversified Electronics,WIKI/APH,stocks/aph,DMDRN/APH_ALLFINANCIALRATIOS
+ARG,"Airgas, Inc.",Basic Materials,Chemicals - Major Diversified,WIKI/ARG,stocks/arg,DMDRN/ARG_ALLFINANCIALRATIOS
+ATI,Allegheny Technologies Inc.,Industrial Goods,Metal Fabrication,WIKI/ATI,stocks/ati,DMDRN/ATI_ALLFINANCIALRATIOS
+AVB,Avalonbay Communities Inc.,Financial,REIT - Residential,WIKI/AVB,stocks/avb,DMDRN/AVB_ALLFINANCIALRATIOS
+AVGO,Avago Technologies Limited,Technology,Semiconductor - Broad Line,WIKI/AVGO,stocks/avgo,DMDRN/AVGO_ALLFINANCIALRATIOS
+AVP,Avon Products Inc.,Consumer Goods,Personal Products,WIKI/AVP,stocks/avp,DMDRN/AVP_ALLFINANCIALRATIOS
+AVY,Avery Dennison Corporation,Consumer Goods,Business Equipment,WIKI/AVY,stocks/avy,DMDRN/AVY_ALLFINANCIALRATIOS
+AXP,American Express Company,Financial,Credit Services,WIKI/AXP,stocks/axp,DMDRN/AXP_ALLFINANCIALRATIOS
+AZO,"AutoZone, Inc.",Services,Auto Parts Stores,WIKI/AZO,stocks/azo,DMDRN/AZO_ALLFINANCIALRATIOS
+BA,The Boeing Company,Industrial Goods,Aerospace/Defense Products & Services,WIKI/BA,stocks/ba,DMDRN/BA_ALLFINANCIALRATIOS
+BAC,Bank of America Corporation,Financial,Money Center Banks,WIKI/BAC,stocks/bac,DMDRN/BAC_ALLFINANCIALRATIOS
+BAX,Baxter International Inc.,Healthcare,Medical Instruments & Supplies,WIKI/BAX,stocks/bax,DMDRN/BAX_ALLFINANCIALRATIOS
+BBBY,Bed Bath & Beyond Inc.,Services,Home Furnishing Stores,WIKI/BBBY,stocks/bbby,DMDRN/BBBY_ALLFINANCIALRATIOS
+BCR,CR Bard Inc.,Healthcare,Medical Instruments & Supplies,WIKI/BCR,stocks/bcr,DMDRN/BCR_ALLFINANCIALRATIOS
+BDX,"Becton, Dickinson and Company",Healthcare,Medical Instruments & Supplies,WIKI/BDX,stocks/bdx,DMDRN/BDX_ALLFINANCIALRATIOS
+BEN,Franklin Resources Inc.,Financial,Asset Management,WIKI/BEN,stocks/ben,DMDRN/BEN_ALLFINANCIALRATIOS
+BHI,Baker Hughes Incorporated,Basic Materials,Oil & Gas Equipment & Services,WIKI/BHI,stocks/bhi,DMDRN/BHI_ALLFINANCIALRATIOS
+BIIB,Biogen Idec Inc.,Healthcare,Biotechnology,WIKI/BIIB,stocks/biib,DMDRN/BIIB_ALLFINANCIALRATIOS
+BLK,"BlackRock, Inc.",Financial,Asset Management,WIKI/BLK,stocks/blk,DMDRN/BLK_ALLFINANCIALRATIOS
+BLL,Ball Corporation,Consumer Goods,Packaging & Containers,WIKI/BLL,stocks/bll,DMDRN/BLL_ALLFINANCIALRATIOS
+BMY,Bristol-Myers Squibb Company,Healthcare,Drug Manufacturers - Major,WIKI/BMY,stocks/bmy,DMDRN/BMY_ALLFINANCIALRATIOS
+BRCM,Broadcom Corp.,Technology,Semiconductor - Integrated Circuits,WIKI/BRCM,stocks/brcm,DMDRN/BRCM_ALLFINANCIALRATIOS
+BSX,Boston Scientific Corporation,Healthcare,Medical Appliances & Equipment,WIKI/BSX,stocks/bsx,DMDRN/BSX_ALLFINANCIALRATIOS
+BWA,BorgWarner Inc.,Consumer Goods,Auto Parts,WIKI/BWA,stocks/bwa,DMDRN/BWA_ALLFINANCIALRATIOS
+BXP,Boston Properties Inc.,Financial,REIT - Office,WIKI/BXP,stocks/bxp,DMDRN/BXP_ALLFINANCIALRATIOS
+C,Citigroup Inc.,Financial,Money Center Banks,WIKI/C,stocks/c,DMDRN/C_ALLFINANCIALRATIOS
+CA,CA Technologies,Technology,Business Software & Services,WIKI/CA,stocks/ca,DMDRN/CA_ALLFINANCIALRATIOS
+CAG,"ConAgra Foods, Inc.",Consumer Goods,Processed & Packaged Goods,WIKI/CAG,stocks/cag,DMDRN/CAG_ALLFINANCIALRATIOS
+CAH,"Cardinal Health, Inc.",Services,Drugs Wholesale,WIKI/CAH,stocks/cah,DMDRN/CAH_ALLFINANCIALRATIOS
+CAM,Cameron International Corporation,Basic Materials,Oil & Gas Equipment & Services,WIKI/CAM,stocks/cam,DMDRN/CAM_ALLFINANCIALRATIOS
+CAT,Caterpillar Inc.,Industrial Goods,Farm & Construction Machinery,WIKI/CAT,stocks/cat,DMDRN/CAT_ALLFINANCIALRATIOS
+CB,The Chubb Corporation,Financial,Property & Casualty Insurance,WIKI/CB,stocks/cb,DMDRN/CB_ALLFINANCIALRATIOS
+CBG,"CBRE Group, Inc.",Financial,Property Management,WIKI/CBG,stocks/cbg,DMDRN/CBG_ALLFINANCIALRATIOS
+CBS,CBS Corporation,Services,Entertainment - Diversified,WIKI/CBS,stocks/cbs,DMDRN/CBS_ALLFINANCIALRATIOS
+CCE,Coca-Cola Enterprises Inc.,Consumer Goods,Beverages - Soft Drinks,WIKI/CCE,stocks/cce,DMDRN/CCE_ALLFINANCIALRATIOS
+CCI,Crown Castle International Corp.,Technology,Diversified Communication Services,WIKI/CCI,stocks/cci,DMDRN/CCI_ALLFINANCIALRATIOS
+CCL,Carnival Corporation,Services,Resorts & Casinos,WIKI/CCL,stocks/ccl,DMDRN/CCL_ALLFINANCIALRATIOS
+CELG,Celgene Corporation,Healthcare,Biotechnology,WIKI/CELG,stocks/celg,DMDRN/CELG_ALLFINANCIALRATIOS
+CERN,Cerner Corporation,Technology,Healthcare Information Services,WIKI/CERN,stocks/cern,DMDRN/CERN_ALLFINANCIALRATIOS
+CF,"CF Industries Holdings, Inc.",Basic Materials,Agricultural Chemicals,WIKI/CF,stocks/cf,DMDRN/CF_ALLFINANCIALRATIOS
+CFN,CareFusion Corporation,Healthcare,Medical Instruments & Supplies,WIKI/CFN,stocks/cfn,DMDRN/CFN_ALLFINANCIALRATIOS
+CHK,Chesapeake Energy Corporation,Basic Materials,Independent Oil & Gas,WIKI/CHK,stocks/chk,DMDRN/CHK_ALLFINANCIALRATIOS
+CHRW,CH Robinson Worldwide Inc.,Services,Air Delivery & Freight Services,WIKI/CHRW,stocks/chrw,DMDRN/CHRW_ALLFINANCIALRATIOS
+CI,Cigna Corp.,Healthcare,Health Care Plans,WIKI/CI,stocks/ci,DMDRN/CI_ALLFINANCIALRATIOS
+CINF,Cincinnati Financial Corp.,Financial,Property & Casualty Insurance,WIKI/CINF,stocks/cinf,DMDRN/CINF_ALLFINANCIALRATIOS
+CL,Colgate-Palmolive Co.,Consumer Goods,Personal Products,WIKI/CL,stocks/cl,DMDRN/CL_ALLFINANCIALRATIOS
+CLX,The Clorox Company,Consumer Goods,Housewares & Accessories,WIKI/CLX,stocks/clx,DMDRN/CLX_ALLFINANCIALRATIOS
+CMA,Comerica Incorporated,Financial,Money Center Banks,WIKI/CMA,stocks/cma,DMDRN/CMA_ALLFINANCIALRATIOS
+CMCSA,Comcast Corporation,Services,Entertainment - Diversified,WIKI/CMCSA,stocks/cmcsa,DMDRN/CMCSA_ALLFINANCIALRATIOS
+CME,CME Group Inc.,Financial,Investment Brokerage - National,WIKI/CME,stocks/cme,DMDRN/CME_ALLFINANCIALRATIOS
+CMG,"Chipotle Mexican Grill, Inc.",Services,Restaurants,WIKI/CMG,stocks/cmg,DMDRN/CMG_ALLFINANCIALRATIOS
+CMI,Cummins Inc.,Industrial Goods,Diversified Machinery,WIKI/CMI,stocks/cmi,DMDRN/CMI_ALLFINANCIALRATIOS
+CNX,CONSOL Energy Inc.,Basic Materials,Independent Oil & Gas,WIKI/CNX,stocks/cnx,DMDRN/CNX_ALLFINANCIALRATIOS
+COF,Capital One Financial Corporation,Financial,Credit Services,WIKI/COF,stocks/cof,DMDRN/COF_ALLFINANCIALRATIOS
+COG,Cabot Oil & Gas Corporation,Basic Materials,Independent Oil & Gas,WIKI/COG,stocks/cog,DMDRN/COG_ALLFINANCIALRATIOS
+COH,"Coach, Inc.",Consumer Goods,Textile - Apparel Footwear & Accessories,WIKI/COH,stocks/coh,DMDRN/COH_ALLFINANCIALRATIOS
+COL,Rockwell Collins Inc.,Industrial Goods,Aerospace/Defense Products & Services,WIKI/COL,stocks/col,DMDRN/COL_ALLFINANCIALRATIOS
+COP,ConocoPhillips,Basic Materials,Independent Oil & Gas,WIKI/COP,stocks/cop,DMDRN/COP_ALLFINANCIALRATIOS
+COST,Costco Wholesale Corporation,Services,"Discount, Variety Stores",WIKI/COST,stocks/cost,DMDRN/COST_ALLFINANCIALRATIOS
+COV,Covidien plc,Healthcare,Medical Instruments & Supplies,WIKI/COV,stocks/cov,DMDRN/COV_ALLFINANCIALRATIOS
+CPB,Campbell Soup Company,Consumer Goods,Processed & Packaged Goods,WIKI/CPB,stocks/cpb,DMDRN/CPB_ALLFINANCIALRATIOS
+CSC,Computer Sciences Corporation,Technology,Information Technology Services,WIKI/CSC,stocks/csc,DMDRN/CSC_ALLFINANCIALRATIOS
+CSCO,"Cisco Systems, Inc.",Technology,Networking & Communication Devices,WIKI/CSCO,stocks/csco,DMDRN/CSCO_ALLFINANCIALRATIOS
+CSX,CSX Corp.,Services,Railroads,WIKI/CSX,stocks/csx,DMDRN/CSX_ALLFINANCIALRATIOS
+CTAS,Cintas Corporation,Services,Business Services,WIKI/CTAS,stocks/ctas,DMDRN/CTAS_ALLFINANCIALRATIOS
+CTL,"CenturyLink, Inc.",Technology,Telecom Services - Domestic,WIKI/CTL,stocks/ctl,DMDRN/CTL_ALLFINANCIALRATIOS
+CTSH,Cognizant Technology Solutions Corporation,Technology,Business Software & Services,WIKI/CTSH,stocks/ctsh,DMDRN/CTSH_ALLFINANCIALRATIOS
+CTXS,"Citrix Systems, Inc.",Technology,Business Software & Services,WIKI/CTXS,stocks/ctxs,DMDRN/CTXS_ALLFINANCIALRATIOS
+CVC,Cablevision Systems Corporation,Services,CATV Systems,WIKI/CVC,stocks/cvc,DMDRN/CVC_ALLFINANCIALRATIOS
+CVS,CVS Caremark Corporation,Services,Drug Stores,WIKI/CVS,stocks/cvs,DMDRN/CVS_ALLFINANCIALRATIOS
+CVX,Chevron Corporation,Basic Materials,Major Integrated Oil & Gas,WIKI/CVX,stocks/cvx,DMDRN/CVX_ALLFINANCIALRATIOS
+D,"Dominion Resources, Inc.",Utilities,Electric Utilities,WIKI/D,stocks/d,DMDRN/D_ALLFINANCIALRATIOS
+DAL,Delta Air Lines Inc.,Services,Major Airlines,WIKI/DAL,stocks/dal,DMDRN/DAL_ALLFINANCIALRATIOS
+DD,E. I. du Pont de Nemours and Company,Basic Materials,Agricultural Chemicals,WIKI/DD,stocks/dd,DMDRN/DD_ALLFINANCIALRATIOS
+DE,Deere & Company,Industrial Goods,Farm & Construction Machinery,WIKI/DE,stocks/de,DMDRN/DE_ALLFINANCIALRATIOS
+DFS,Discover Financial Services,Financial,Credit Services,WIKI/DFS,stocks/dfs,DMDRN/DFS_ALLFINANCIALRATIOS
+DG,Dollar General Corporation,Services,"Discount, Variety Stores",WIKI/DG,stocks/dg,DMDRN/DG_ALLFINANCIALRATIOS
+DGX,Quest Diagnostics Inc.,Healthcare,Medical Laboratories & Research,WIKI/DGX,stocks/dgx,DMDRN/DGX_ALLFINANCIALRATIOS
+DHI,DR Horton Inc.,Industrial Goods,Residential Construction,WIKI/DHI,stocks/dhi,DMDRN/DHI_ALLFINANCIALRATIOS
+DHR,Danaher Corp.,Industrial Goods,Diversified Machinery,WIKI/DHR,stocks/dhr,DMDRN/DHR_ALLFINANCIALRATIOS
+DIS,The Walt Disney Company,Services,Entertainment - Diversified,WIKI/DIS,stocks/dis,DMDRN/DIS_ALLFINANCIALRATIOS
+DISCA,"Discovery Communications, Inc.",Services,CATV Systems,WIKI/DISCA,stocks/disca,DMDRN/DISCA_ALLFINANCIALRATIOS
+DLPH,Delphi Automotive PLC,Consumer Goods,Auto Parts,WIKI/DLPH,stocks/dlph,DMDRN/DLPH_ALLFINANCIALRATIOS
+DLTR,"Dollar Tree, Inc.",Services,"Discount, Variety Stores",WIKI/DLTR,stocks/dltr,DMDRN/DLTR_ALLFINANCIALRATIOS
+DNB,Dun & Bradstreet Corp.,Technology,Information & Delivery Services,WIKI/DNB,stocks/dnb,DMDRN/DNB_ALLFINANCIALRATIOS
+DNR,Denbury Resources Inc.,Basic Materials,Independent Oil & Gas,WIKI/DNR,stocks/dnr,DMDRN/DNR_ALLFINANCIALRATIOS
+DO,"Diamond Offshore Drilling, Inc.",Basic Materials,Oil & Gas Drilling & Exploration,WIKI/DO,stocks/do,DMDRN/DO_ALLFINANCIALRATIOS
+DOV,Dover Corporation,Industrial Goods,Diversified Machinery,WIKI/DOV,stocks/dov,DMDRN/DOV_ALLFINANCIALRATIOS
+DOW,The Dow Chemical Company,Basic Materials,Chemicals - Major Diversified,WIKI/DOW,stocks/dow,DMDRN/DOW_ALLFINANCIALRATIOS
+DPS,"Dr Pepper Snapple Group, Inc.",Consumer Goods,Beverages - Soft Drinks,WIKI/DPS,stocks/dps,DMDRN/DPS_ALLFINANCIALRATIOS
+DRI,"Darden Restaurants, Inc.",Services,Restaurants,WIKI/DRI,stocks/dri,DMDRN/DRI_ALLFINANCIALRATIOS
+DTE,DTE Energy Company,Utilities,Electric Utilities,WIKI/DTE,stocks/dte,DMDRN/DTE_ALLFINANCIALRATIOS
+DTV,DIRECTV,Services,CATV Systems,WIKI/DTV,stocks/dtv,DMDRN/DTV_ALLFINANCIALRATIOS
+DUK,Duke Energy Corporation,Utilities,Diversified Utilities,WIKI/DUK,stocks/duk,DMDRN/DUK_ALLFINANCIALRATIOS
+DVA,DaVita HealthCare Partners Inc.,Healthcare,Specialized Health Services,WIKI/DVA,stocks/dva,DMDRN/DVA_ALLFINANCIALRATIOS
+DVN,Devon Energy Corporation,Basic Materials,Independent Oil & Gas,WIKI/DVN,stocks/dvn,DMDRN/DVN_ALLFINANCIALRATIOS
+EA,Electronic Arts Inc.,Technology,Multimedia & Graphics Software,WIKI/EA,stocks/ea,DMDRN/EA_ALLFINANCIALRATIOS
+EBAY,eBay Inc.,Services,"Specialty Retail, Other",WIKI/EBAY,stocks/ebay,DMDRN/EBAY_ALLFINANCIALRATIOS
+ECL,Ecolab Inc.,Consumer Goods,Cleaning Products,WIKI/ECL,stocks/ecl,DMDRN/ECL_ALLFINANCIALRATIOS
+ED,"Consolidated Edison, Inc.",Utilities,Diversified Utilities,WIKI/ED,stocks/ed,DMDRN/ED_ALLFINANCIALRATIOS
+EFX,Equifax Inc.,Financial,Credit Services,WIKI/EFX,stocks/efx,DMDRN/EFX_ALLFINANCIALRATIOS
+F,Ford Motor Co.,Consumer Goods,Auto Manufacturers - Major,WIKI/F,stocks/f,DMDRN/F_ALLFINANCIALRATIOS
+FAST,Fastenal Company,Services,Industrial Equipment Wholesale,WIKI/FAST,stocks/fast,DMDRN/FAST_ALLFINANCIALRATIOS
+FB,"Facebook, Inc.",Technology,Internet Information Providers,WIKI/FB,stocks/fb,DMDRN/FB_ALLFINANCIALRATIOS
+FCX,Freeport-McMoRan Copper & Gold Inc.,Basic Materials,Copper,WIKI/FCX,stocks/fcx,DMDRN/FCX_ALLFINANCIALRATIOS
+FDO,Family Dollar Stores Inc.,Services,"Discount, Variety Stores",WIKI/FDO,stocks/fdo,DMDRN/FDO_ALLFINANCIALRATIOS
+FDX,FedEx Corporation,Services,Air Delivery & Freight Services,WIKI/FDX,stocks/fdx,DMDRN/FDX_ALLFINANCIALRATIOS
+FE,FirstEnergy Corp.,Utilities,Electric Utilities,WIKI/FE,stocks/fe,DMDRN/FE_ALLFINANCIALRATIOS
+FFIV,"F5 Networks, Inc.",Technology,Business Software & Services,WIKI/FFIV,stocks/ffiv,DMDRN/FFIV_ALLFINANCIALRATIOS
+FIS,"Fidelity National Information Services, Inc.",Technology,Information Technology Services,WIKI/FIS,stocks/fis,DMDRN/FIS_ALLFINANCIALRATIOS
+FISV,"Fiserv, Inc.",Services,Business Services,WIKI/FISV,stocks/fisv,DMDRN/FISV_ALLFINANCIALRATIOS
+FITB,Fifth Third Bancorp,Financial,Regional - Midwest Banks,WIKI/FITB,stocks/fitb,DMDRN/FITB_ALLFINANCIALRATIOS
+FLIR,"FLIR Systems, Inc.",Technology,Scientific & Technical Instruments,WIKI/FLIR,stocks/flir,DMDRN/FLIR_ALLFINANCIALRATIOS
+FLR,Fluor Corporation,Industrial Goods,Heavy Construction,WIKI/FLR,stocks/flr,DMDRN/FLR_ALLFINANCIALRATIOS
+FLS,Flowserve Corp.,Industrial Goods,Diversified Machinery,WIKI/FLS,stocks/fls,DMDRN/FLS_ALLFINANCIALRATIOS
+FMC,FMC Corp.,Basic Materials,Chemicals - Major Diversified,WIKI/FMC,stocks/fmc,DMDRN/FMC_ALLFINANCIALRATIOS
+FOSL,"Fossil Group, Inc.",Consumer Goods,"Recreational Goods, Other",WIKI/FOSL,stocks/fosl,DMDRN/FOSL_ALLFINANCIALRATIOS
+FSLR,"First Solar, Inc.",Technology,Semiconductor - Specialized,WIKI/FSLR,stocks/fslr,DMDRN/FSLR_ALLFINANCIALRATIOS
+FTI,"FMC Technologies, Inc.",Basic Materials,Oil & Gas Equipment & Services,WIKI/FTI,stocks/fti,DMDRN/FTI_ALLFINANCIALRATIOS
+FTR,Frontier Communications Corporation,Technology,Telecom Services - Domestic,WIKI/FTR,stocks/ftr,DMDRN/FTR_ALLFINANCIALRATIOS
+GAS,AGL Resources Inc.,Utilities,Gas Utilities,WIKI/GAS,stocks/gas,DMDRN/GAS_ALLFINANCIALRATIOS
+GCI,"Gannett Co., Inc.",Services,Publishing - Newspapers,WIKI/GCI,stocks/gci,DMDRN/GCI_ALLFINANCIALRATIOS
+GD,General Dynamics Corp.,Industrial Goods,Aerospace/Defense Products & Services,WIKI/GD,stocks/gd,DMDRN/GD_ALLFINANCIALRATIOS
+GE,General Electric Company,Industrial Goods,Diversified Machinery,WIKI/GE,stocks/ge,DMDRN/GE_ALLFINANCIALRATIOS
+GILD,Gilead Sciences Inc.,Healthcare,Biotechnology,WIKI/GILD,stocks/gild,DMDRN/GILD_ALLFINANCIALRATIOS
+GIS,"General Mills, Inc.",Consumer Goods,Processed & Packaged Goods,WIKI/GIS,stocks/gis,DMDRN/GIS_ALLFINANCIALRATIOS
+GLW,Corning Inc.,Technology,Diversified Electronics,WIKI/GLW,stocks/glw,DMDRN/GLW_ALLFINANCIALRATIOS
+GM,General Motors Company,Consumer Goods,Auto Manufacturers - Major,WIKI/GM,stocks/gm,DMDRN/GM_ALLFINANCIALRATIOS
+GME,GameStop Corp.,Services,Electronics Stores,WIKI/GME,stocks/gme,DMDRN/GME_ALLFINANCIALRATIOS
+GNW,Genworth Financial Inc.,Financial,Life Insurance,WIKI/GNW,stocks/gnw,DMDRN/GNW_ALLFINANCIALRATIOS
+GOOG,Google Inc.,Technology,Internet Information Providers,WIKI/GOOG,stocks/goog,DMDRN/GOOG_ALLFINANCIALRATIOS
+GPC,Genuine Parts Company,Services,Auto Parts Wholesale,WIKI/GPC,stocks/gpc,DMDRN/GPC_ALLFINANCIALRATIOS
+HES,Hess Corporation,Basic Materials,Independent Oil & Gas,WIKI/HES,stocks/hes,DMDRN/HES_ALLFINANCIALRATIOS
+HIG,"The Hartford Financial Services Group, Inc.",Financial,Property & Casualty Insurance,WIKI/HIG,stocks/hig,DMDRN/HIG_ALLFINANCIALRATIOS
+HOG,"Harley-Davidson, Inc.",Consumer Goods,Recreational Vehicles,WIKI/HOG,stocks/hog,DMDRN/HOG_ALLFINANCIALRATIOS
+HON,Honeywell International Inc.,Industrial Goods,Diversified Machinery,WIKI/HON,stocks/hon,DMDRN/HON_ALLFINANCIALRATIOS
+HOT,Starwood Hotels & Resorts Worldwide Inc.,Services,Lodging,WIKI/HOT,stocks/hot,DMDRN/HOT_ALLFINANCIALRATIOS
+HPQ,Hewlett-Packard Company,Technology,Diversified Computer Systems,WIKI/HPQ,stocks/hpq,DMDRN/HPQ_ALLFINANCIALRATIOS
+HRB,,Services,Personal Services,WIKI/HRB,stocks/hrb,DMDRN/HRB_ALLFINANCIALRATIOS
+HRL,Hormel Foods Corporation,Consumer Goods,Meat Products,WIKI/HRL,stocks/hrl,DMDRN/HRL_ALLFINANCIALRATIOS
+HRS,Harris Corporation,Technology,Communication Equipment,WIKI/HRS,stocks/hrs,DMDRN/HRS_ALLFINANCIALRATIOS
+HSP,Hospira Inc.,Healthcare,Drugs - Generic,WIKI/HSP,stocks/hsp,DMDRN/HSP_ALLFINANCIALRATIOS
+HST,"Host Hotels & Resorts, Inc.",Financial,REIT - Hotel/Motel,WIKI/HST,stocks/hst,DMDRN/HST_ALLFINANCIALRATIOS
+HSY,The Hershey Company,Consumer Goods,Confectioners,WIKI/HSY,stocks/hsy,DMDRN/HSY_ALLFINANCIALRATIOS
+HUM,Humana Inc.,Healthcare,Health Care Plans,WIKI/HUM,stocks/hum,DMDRN/HUM_ALLFINANCIALRATIOS
+IBM,International Business Machines Corporation,Technology,Information Technology Services,WIKI/IBM,stocks/ibm,DMDRN/IBM_ALLFINANCIALRATIOS
+IFF,International Flavors & Fragrances Inc.,Basic Materials,Specialty Chemicals,WIKI/IFF,stocks/iff,DMDRN/IFF_ALLFINANCIALRATIOS
+INTC,Intel Corporation,Technology,Semiconductor - Broad Line,WIKI/INTC,stocks/intc,DMDRN/INTC_ALLFINANCIALRATIOS
+INTU,Intuit Inc.,Technology,Application Software,WIKI/INTU,stocks/intu,DMDRN/INTU_ALLFINANCIALRATIOS
+IP,International Paper Company,Consumer Goods,Packaging & Containers,WIKI/IP,stocks/ip,DMDRN/IP_ALLFINANCIALRATIOS
+IPG,"The Interpublic Group of Companies, Inc.",Services,Advertising Agencies,WIKI/IPG,stocks/ipg,DMDRN/IPG_ALLFINANCIALRATIOS
+IR,Ingersoll-Rand Plc,Industrial Goods,Diversified Machinery,WIKI/IR,stocks/ir,DMDRN/IR_ALLFINANCIALRATIOS
+IRM,Iron Mountain Inc.,Technology,Business Software & Services,WIKI/IRM,stocks/irm,DMDRN/IRM_ALLFINANCIALRATIOS
+ISRG,"Intuitive Surgical, Inc.",Healthcare,Medical Appliances & Equipment,WIKI/ISRG,stocks/isrg,DMDRN/ISRG_ALLFINANCIALRATIOS
+ITW,Illinois Tool Works Inc.,Industrial Goods,Diversified Machinery,WIKI/ITW,stocks/itw,DMDRN/ITW_ALLFINANCIALRATIOS
+IVZ,Invesco Ltd.,Financial,Asset Management,WIKI/IVZ,stocks/ivz,DMDRN/IVZ_ALLFINANCIALRATIOS
+JCI,Johnson Controls Inc.,Consumer Goods,Auto Parts,WIKI/JCI,stocks/jci,DMDRN/JCI_ALLFINANCIALRATIOS
+JEC,Jacobs Engineering Group Inc.,Services,Technical Services,WIKI/JEC,stocks/jec,DMDRN/JEC_ALLFINANCIALRATIOS
+JNJ,Johnson & Johnson,Healthcare,Drug Manufacturers - Major,WIKI/JNJ,stocks/jnj,DMDRN/JNJ_ALLFINANCIALRATIOS
+JNPR,"Juniper Networks, Inc.",Technology,Networking & Communication Devices,WIKI/JNPR,stocks/jnpr,DMDRN/JNPR_ALLFINANCIALRATIOS
+LEG,"Leggett & Platt, Incorporated",Consumer Goods,Home Furnishings & Fixtures,WIKI/LEG,stocks/leg,DMDRN/LEG_ALLFINANCIALRATIOS
+LEN,Lennar Corp.,Industrial Goods,Residential Construction,WIKI/LEN,stocks/len,DMDRN/LEN_ALLFINANCIALRATIOS
+LH,Laboratory Corp. of America Holdings,Healthcare,Medical Laboratories & Research,WIKI/LH,stocks/lh,DMDRN/LH_ALLFINANCIALRATIOS
+LLL,L-3 Communications Holdings Inc.,Industrial Goods,Aerospace/Defense Products & Services,WIKI/LLL,stocks/lll,DMDRN/LLL_ALLFINANCIALRATIOS
+LLTC,Linear Technology Corporation,Technology,Semiconductor - Specialized,WIKI/LLTC,stocks/lltc,DMDRN/LLTC_ALLFINANCIALRATIOS
+LLY,Eli Lilly and Company,Healthcare,Drug Manufacturers - Major,WIKI/LLY,stocks/lly,DMDRN/LLY_ALLFINANCIALRATIOS
+LMT,Lockheed Martin Corporation,Industrial Goods,Aerospace/Defense Products & Services,WIKI/LMT,stocks/lmt,DMDRN/LMT_ALLFINANCIALRATIOS
+LNC,Lincoln National Corporation,Financial,Life Insurance,WIKI/LNC,stocks/lnc,DMDRN/LNC_ALLFINANCIALRATIOS
+LO,"Lorillard, Inc.",Consumer Goods,Cigarettes,WIKI/LO,stocks/lo,DMDRN/LO_ALLFINANCIALRATIOS
+LOW,Lowe's Companies Inc.,Services,Home Improvement Stores,WIKI/LOW,stocks/low,DMDRN/LOW_ALLFINANCIALRATIOS
+LRCX,Lam Research Corporation,Technology,Semiconductor Equipment & Materials,WIKI/LRCX,stocks/lrcx,DMDRN/LRCX_ALLFINANCIALRATIOS
+LUV,Southwest Airlines Co.,Services,Regional Airlines,WIKI/LUV,stocks/luv,DMDRN/LUV_ALLFINANCIALRATIOS
+LYB,LyondellBasell Industries NV,Basic Materials,Specialty Chemicals,WIKI/LYB,stocks/lyb,DMDRN/LYB_ALLFINANCIALRATIOS
+M,"Macy's, Inc.",Services,Department Stores,WIKI/M,stocks/m,DMDRN/M_ALLFINANCIALRATIOS
+MA,MasterCard Incorporated,Financial,Credit Services,WIKI/MA,stocks/ma,DMDRN/MA_ALLFINANCIALRATIOS
+MAC,The Macerich Company,Financial,REIT - Retail,WIKI/MAC,stocks/mac,DMDRN/MAC_ALLFINANCIALRATIOS
+MAR,"Marriott International, Inc.",Services,Lodging,WIKI/MAR,stocks/mar,DMDRN/MAR_ALLFINANCIALRATIOS
+MAS,Masco Corporation,Industrial Goods,General Building Materials,WIKI/MAS,stocks/mas,DMDRN/MAS_ALLFINANCIALRATIOS
+MAT,"Mattel, Inc.",Consumer Goods,Toys & Games,WIKI/MAT,stocks/mat,DMDRN/MAT_ALLFINANCIALRATIOS
+MCD,McDonald's Corp.,Services,Restaurants,WIKI/MCD,stocks/mcd,DMDRN/MCD_ALLFINANCIALRATIOS
+MCHP,Microchip Technology Inc.,Technology,Semiconductor - Specialized,WIKI/MCHP,stocks/mchp,DMDRN/MCHP_ALLFINANCIALRATIOS
+MCK,McKesson Corporation,Services,Drugs Wholesale,WIKI/MCK,stocks/mck,DMDRN/MCK_ALLFINANCIALRATIOS
+MCO,Moody's Corporation,Services,Business Services,WIKI/MCO,stocks/mco,DMDRN/MCO_ALLFINANCIALRATIOS
+MDLZ,"Mondelez International, Inc.",Consumer Goods,Confectioners,WIKI/MDLZ,stocks/mdlz,DMDRN/MDLZ_ALLFINANCIALRATIOS
+MDT,"Medtronic, Inc.",Healthcare,Medical Appliances & Equipment,WIKI/MDT,stocks/mdt,DMDRN/MDT_ALLFINANCIALRATIOS
+MET,"MetLife, Inc.",Financial,Life Insurance,WIKI/MET,stocks/met,DMDRN/MET_ALLFINANCIALRATIOS
+MHK,Mohawk Industries Inc.,Consumer Goods,Home Furnishings & Fixtures,WIKI/MHK,stocks/mhk,DMDRN/MHK_ALLFINANCIALRATIOS
+MJN,Mead Johnson Nutrition Company,Consumer Goods,Processed & Packaged Goods,WIKI/MJN,stocks/mjn,DMDRN/MJN_ALLFINANCIALRATIOS
+MKC,"McCormick & Company, Incorporated",Consumer Goods,Processed & Packaged Goods,WIKI/MKC,stocks/mkc,DMDRN/MKC_ALLFINANCIALRATIOS
+MLM,Martin Marietta Materials Inc.,Industrial Goods,General Building Materials,WIKI/MLM,stocks/mlm,DMDRN/MLM_ALLFINANCIALRATIOS
+MMC,"Marsh & McLennan Companies, Inc.",Financial,Insurance Brokers,WIKI/MMC,stocks/mmc,DMDRN/MMC_ALLFINANCIALRATIOS
+MMM,3M Company,Industrial Goods,Diversified Machinery,WIKI/MMM,stocks/mmm,DMDRN/MMM_ALLFINANCIALRATIOS
+MNST,Monster Beverage Corporation,Consumer Goods,Beverages - Soft Drinks,WIKI/MNST,stocks/mnst,DMDRN/MNST_ALLFINANCIALRATIOS
+MO,Altria Group Inc.,Consumer Goods,Cigarettes,WIKI/MO,stocks/mo,DMDRN/MO_ALLFINANCIALRATIOS
+MON,Monsanto Company,Basic Materials,Agricultural Chemicals,WIKI/MON,stocks/mon,DMDRN/MON_ALLFINANCIALRATIOS
+MOS,The Mosaic Company,Basic Materials,Agricultural Chemicals,WIKI/MOS,stocks/mos,DMDRN/MOS_ALLFINANCIALRATIOS
+MPC,Marathon Petroleum Corporation,Basic Materials,Oil & Gas Refining & Marketing,WIKI/MPC,stocks/mpc,DMDRN/MPC_ALLFINANCIALRATIOS
+MRK,Merck & Co. Inc.,Healthcare,Drug Manufacturers - Major,WIKI/MRK,stocks/mrk,DMDRN/MRK_ALLFINANCIALRATIOS
+MSFT,Microsoft Corporation,Technology,Business Software & Services,WIKI/MSFT,stocks/msft,DMDRN/MSFT_ALLFINANCIALRATIOS
+NDAQ,"The Nasdaq OMX Group, Inc.",Financial,Diversified Investments,WIKI/NDAQ,stocks/ndaq,DMDRN/NDAQ_ALLFINANCIALRATIOS
+NE,Noble Corp.,Basic Materials,Oil & Gas Drilling & Exploration,WIKI/NE,stocks/ne,DMDRN/NE_ALLFINANCIALRATIOS
+NEE,"NextEra Energy, Inc.",Utilities,Electric Utilities,WIKI/NEE,stocks/nee,DMDRN/NEE_ALLFINANCIALRATIOS
+NEM,Newmont Mining Corporation,Basic Materials,Gold,WIKI/NEM,stocks/nem,DMDRN/NEM_ALLFINANCIALRATIOS
+NFLX,"Netflix, Inc.",Services,CATV Systems,WIKI/NFLX,stocks/nflx,DMDRN/NFLX_ALLFINANCIALRATIOS
+NFX,Newfield Exploration Co.,Basic Materials,Independent Oil & Gas,WIKI/NFX,stocks/nfx,DMDRN/NFX_ALLFINANCIALRATIOS
+NI,NiSource Inc.,Utilities,Diversified Utilities,WIKI/NI,stocks/ni,DMDRN/NI_ALLFINANCIALRATIOS
+NKE,"Nike, Inc.",Consumer Goods,Textile - Apparel Footwear & Accessories,WIKI/NKE,stocks/nke,DMDRN/NKE_ALLFINANCIALRATIOS
+NLSN,Nielsen Holdings N.V.,Technology,Information & Delivery Services,WIKI/NLSN,stocks/nlsn,DMDRN/NLSN_ALLFINANCIALRATIOS
+NOC,Northrop Grumman Corporation,Industrial Goods,Aerospace/Defense - Major Diversified,WIKI/NOC,stocks/noc,DMDRN/NOC_ALLFINANCIALRATIOS
+NOV,"National Oilwell Varco, Inc.",Basic Materials,Oil & Gas Equipment & Services,WIKI/NOV,stocks/nov,DMDRN/NOV_ALLFINANCIALRATIOS
+NRG,"NRG Energy, Inc.",Utilities,Diversified Utilities,WIKI/NRG,stocks/nrg,DMDRN/NRG_ALLFINANCIALRATIOS
+NSC,Norfolk Southern Corporation,Services,Railroads,WIKI/NSC,stocks/nsc,DMDRN/NSC_ALLFINANCIALRATIOS
+NTAP,"NetApp, Inc.",Technology,Data Storage Devices,WIKI/NTAP,stocks/ntap,DMDRN/NTAP_ALLFINANCIALRATIOS
+NTRS,Northern Trust Corporation,Financial,Asset Management,WIKI/NTRS,stocks/ntrs,DMDRN/NTRS_ALLFINANCIALRATIOS
+NU,Northeast Utilities,Utilities,Diversified Utilities,WIKI/NU,stocks/nu,DMDRN/NU_ALLFINANCIALRATIOS
+NUE,Nucor Corporation,Basic Materials,Steel & Iron,WIKI/NUE,stocks/nue,DMDRN/NUE_ALLFINANCIALRATIOS
+NVDA,NVIDIA Corporation,Technology,Semiconductor - Specialized,WIKI/NVDA,stocks/nvda,DMDRN/NVDA_ALLFINANCIALRATIOS
+ORCL,Oracle Corporation,Technology,Application Software,WIKI/ORCL,stocks/orcl,DMDRN/ORCL_ALLFINANCIALRATIOS
+ORLY,O'Reilly Automotive Inc.,Services,Auto Parts Stores,WIKI/ORLY,stocks/orly,DMDRN/ORLY_ALLFINANCIALRATIOS
+OXY,Occidental Petroleum Corporation,Basic Materials,Independent Oil & Gas,WIKI/OXY,stocks/oxy,DMDRN/OXY_ALLFINANCIALRATIOS
+PAYX,"Paychex, Inc.",Services,Staffing & Outsourcing Services,WIKI/PAYX,stocks/payx,DMDRN/PAYX_ALLFINANCIALRATIOS
+PBCT,People's United Financial Inc.,Financial,Savings & Loans,WIKI/PBCT,stocks/pbct,DMDRN/PBCT_ALLFINANCIALRATIOS
+PBI,Pitney Bowes Inc.,Consumer Goods,Business Equipment,WIKI/PBI,stocks/pbi,DMDRN/PBI_ALLFINANCIALRATIOS
+PCAR,PACCAR Inc.,Consumer Goods,Trucks & Other Vehicles,WIKI/PCAR,stocks/pcar,DMDRN/PCAR_ALLFINANCIALRATIOS
+PCG,,Utilities,Electric Utilities,WIKI/PCG,stocks/pcg,DMDRN/PCG_ALLFINANCIALRATIOS
+PCL,Plum Creek Timber Co. Inc.,Industrial Goods,"Lumber, Wood Production",WIKI/PCL,stocks/pcl,DMDRN/PCL_ALLFINANCIALRATIOS
+PCLN,The Priceline Group Inc.,Services,Business Services,WIKI/PCLN,stocks/pcln,DMDRN/PCLN_ALLFINANCIALRATIOS
+PCP,Precision Castparts Corp.,Industrial Goods,Metal Fabrication,WIKI/PCP,stocks/pcp,DMDRN/PCP_ALLFINANCIALRATIOS
+PDCO,"Patterson Companies, Inc.",Services,Medical Equipment Wholesale,WIKI/PDCO,stocks/pdco,DMDRN/PDCO_ALLFINANCIALRATIOS
+PEG,Public Service Enterprise Group Inc.,Utilities,Diversified Utilities,WIKI/PEG,stocks/peg,DMDRN/PEG_ALLFINANCIALRATIOS
+PEP,"Pepsico, Inc.",Consumer Goods,Beverages - Soft Drinks,WIKI/PEP,stocks/pep,DMDRN/PEP_ALLFINANCIALRATIOS
+PETM,"PetSmart, Inc.",Services,"Specialty Retail, Other",WIKI/PETM,stocks/petm,DMDRN/PETM_ALLFINANCIALRATIOS
+PFE,Pfizer Inc.,Healthcare,Drug Manufacturers - Major,WIKI/PFE,stocks/pfe,DMDRN/PFE_ALLFINANCIALRATIOS
+PFG,Principal Financial Group Inc.,Financial,Life Insurance,WIKI/PFG,stocks/pfg,DMDRN/PFG_ALLFINANCIALRATIOS
+PG,The Procter & Gamble Company,Consumer Goods,Personal Products,WIKI/PG,stocks/pg,DMDRN/PG_ALLFINANCIALRATIOS
+PNC,"The PNC Financial Services Group, Inc.",Financial,Money Center Banks,WIKI/PNC,stocks/pnc,DMDRN/PNC_ALLFINANCIALRATIOS
+PNW,Pinnacle West Capital Corporation,Utilities,Electric Utilities,WIKI/PNW,stocks/pnw,DMDRN/PNW_ALLFINANCIALRATIOS
+POM,"Pepco Holdings, Inc.",Utilities,Electric Utilities,WIKI/POM,stocks/pom,DMDRN/POM_ALLFINANCIALRATIOS
+PPG,PPG Industries Inc.,Basic Materials,Specialty Chemicals,WIKI/PPG,stocks/ppg,DMDRN/PPG_ALLFINANCIALRATIOS
+PPL,PPL Corporation,Utilities,Electric Utilities,WIKI/PPL,stocks/ppl,DMDRN/PPL_ALLFINANCIALRATIOS
+PRU,"Prudential Financial, Inc.",Financial,Life Insurance,WIKI/PRU,stocks/pru,DMDRN/PRU_ALLFINANCIALRATIOS
+PSA,Public Storage,Financial,REIT - Industrial,WIKI/PSA,stocks/psa,DMDRN/PSA_ALLFINANCIALRATIOS
+PSX,Phillips 66,Basic Materials,Oil & Gas Refining & Marketing,WIKI/PSX,stocks/psx,DMDRN/PSX_ALLFINANCIALRATIOS
+PVH,PVH Corp.,Consumer Goods,Textile - Apparel Clothing,WIKI/PVH,stocks/pvh,DMDRN/PVH_ALLFINANCIALRATIOS
+PX,Praxair Inc.,Basic Materials,Chemicals - Major Diversified,WIKI/PX,stocks/px,DMDRN/PX_ALLFINANCIALRATIOS
+PXD,Pioneer Natural Resources Co.,Basic Materials,Independent Oil & Gas,WIKI/PXD,stocks/pxd,DMDRN/PXD_ALLFINANCIALRATIOS
+QCOM,QUALCOMM Incorporated,Technology,Communication Equipment,WIKI/QCOM,stocks/qcom,DMDRN/QCOM_ALLFINANCIALRATIOS
+R,"Ryder System, Inc.",Services,Rental & Leasing Services,WIKI/R,stocks/r,DMDRN/R_ALLFINANCIALRATIOS
+RAI,Reynolds American Inc.,Consumer Goods,Cigarettes,WIKI/RAI,stocks/rai,DMDRN/RAI_ALLFINANCIALRATIOS
+RCL,Royal Caribbean Cruises Ltd.,Services,Resorts & Casinos,WIKI/RCL,stocks/rcl,DMDRN/RCL_ALLFINANCIALRATIOS
+REGN,"Regeneron Pharmaceuticals, Inc.",Healthcare,Biotechnology,WIKI/REGN,stocks/regn,DMDRN/REGN_ALLFINANCIALRATIOS
+RF,Regions Financial Corporation,Financial,Regional - Southeast Banks,WIKI/RF,stocks/rf,DMDRN/RF_ALLFINANCIALRATIOS
+RHI,Robert Half International Inc.,Services,Staffing & Outsourcing Services,WIKI/RHI,stocks/rhi,DMDRN/RHI_ALLFINANCIALRATIOS
+RHT,"Red Hat, Inc.",Technology,Application Software,WIKI/RHT,stocks/rht,DMDRN/RHT_ALLFINANCIALRATIOS
+RL,Ralph Lauren Corporation,Consumer Goods,Textile - Apparel Clothing,WIKI/RL,stocks/rl,DMDRN/RL_ALLFINANCIALRATIOS
+ROK,Rockwell Automation Inc.,Industrial Goods,Diversified Machinery,WIKI/ROK,stocks/rok,DMDRN/ROK_ALLFINANCIALRATIOS
+ROP,Roper Industries Inc.,Industrial Goods,Diversified Machinery,WIKI/ROP,stocks/rop,DMDRN/ROP_ALLFINANCIALRATIOS
+ROST,Ross Stores Inc.,Services,Apparel Stores,WIKI/ROST,stocks/rost,DMDRN/ROST_ALLFINANCIALRATIOS
+RRC,Range Resources Corporation,Basic Materials,Independent Oil & Gas,WIKI/RRC,stocks/rrc,DMDRN/RRC_ALLFINANCIALRATIOS
+RSG,"Republic Services, Inc.",Industrial Goods,Waste Management,WIKI/RSG,stocks/rsg,DMDRN/RSG_ALLFINANCIALRATIOS
+RTN,Raytheon Co.,Industrial Goods,Aerospace/Defense Products & Services,WIKI/RTN,stocks/rtn,DMDRN/RTN_ALLFINANCIALRATIOS
+SBUX,Starbucks Corporation,Services,Specialty Eateries,WIKI/SBUX,stocks/sbux,DMDRN/SBUX_ALLFINANCIALRATIOS
+SCG,SCANA Corp.,Utilities,Electric Utilities,WIKI/SCG,stocks/scg,DMDRN/SCG_ALLFINANCIALRATIOS
+SCHW,The Charles Schwab Corporation,Financial,Investment Brokerage - National,WIKI/SCHW,stocks/schw,DMDRN/SCHW_ALLFINANCIALRATIOS
+SE,Spectra Energy Corp.,Basic Materials,Oil & Gas Pipelines,WIKI/SE,stocks/se,DMDRN/SE_ALLFINANCIALRATIOS
+SEE,Sealed Air Corporation,Consumer Goods,Packaging & Containers,WIKI/SEE,stocks/see,DMDRN/SEE_ALLFINANCIALRATIOS
+SLB,Schlumberger Limited,Basic Materials,Oil & Gas Equipment & Services,WIKI/SLB,stocks/slb,DMDRN/SLB_ALLFINANCIALRATIOS
+SNA,Snap-on Inc.,Industrial Goods,Small Tools & Accessories,WIKI/SNA,stocks/sna,DMDRN/SNA_ALLFINANCIALRATIOS
+SNDK,SanDisk Corp.,Technology,Data Storage Devices,WIKI/SNDK,stocks/sndk,DMDRN/SNDK_ALLFINANCIALRATIOS
+SNI,"Scripps Networks Interactive, Inc.",Services,Broadcasting - TV,WIKI/SNI,stocks/sni,DMDRN/SNI_ALLFINANCIALRATIOS
+SO,Southern Company,Utilities,Diversified Utilities,WIKI/SO,stocks/so,DMDRN/SO_ALLFINANCIALRATIOS
+SPG,Simon Property Group Inc.,Financial,REIT - Retail,WIKI/SPG,stocks/spg,DMDRN/SPG_ALLFINANCIALRATIOS
+SPLS,"Staples, Inc.",Services,"Specialty Retail, Other",WIKI/SPLS,stocks/spls,DMDRN/SPLS_ALLFINANCIALRATIOS
+SRCL,"Stericycle, Inc.",Industrial Goods,Waste Management,WIKI/SRCL,stocks/srcl,DMDRN/SRCL_ALLFINANCIALRATIOS
+SRE,Sempra Energy,Utilities,Diversified Utilities,WIKI/SRE,stocks/sre,DMDRN/SRE_ALLFINANCIALRATIOS
+STI,"SunTrust Banks, Inc.",Financial,Money Center Banks,WIKI/STI,stocks/sti,DMDRN/STI_ALLFINANCIALRATIOS
+STJ,St. Jude Medical Inc.,Healthcare,Medical Appliances & Equipment,WIKI/STJ,stocks/stj,DMDRN/STJ_ALLFINANCIALRATIOS
+STX,Seagate Technology Public Limited Company,Technology,Data Storage Devices,WIKI/STX,stocks/stx,DMDRN/STX_ALLFINANCIALRATIOS
+STZ,Constellation Brands Inc.,Consumer Goods,Beverages - Wineries & Distillers,WIKI/STZ,stocks/stz,DMDRN/STZ_ALLFINANCIALRATIOS
+SWK,"Stanley Black & Decker, Inc.",Industrial Goods,Machine Tools & Accessories,WIKI/SWK,stocks/swk,DMDRN/SWK_ALLFINANCIALRATIOS
+SWN,Southwestern Energy Co.,Basic Materials,Independent Oil & Gas,WIKI/SWN,stocks/swn,DMDRN/SWN_ALLFINANCIALRATIOS
+SWY,Safeway Inc.,Services,Grocery Stores,WIKI/SWY,stocks/swy,DMDRN/SWY_ALLFINANCIALRATIOS
+SYK,Stryker Corporation,Healthcare,Medical Appliances & Equipment,WIKI/SYK,stocks/syk,DMDRN/SYK_ALLFINANCIALRATIOS
+SYMC,Symantec Corporation,Technology,Security Software & Services,WIKI/SYMC,stocks/symc,DMDRN/SYMC_ALLFINANCIALRATIOS
+SYY,Sysco Corporation,Services,Food Wholesale,WIKI/SYY,stocks/syy,DMDRN/SYY_ALLFINANCIALRATIOS
+T,,Technology,Telecom Services - Domestic,WIKI/T,stocks/t,DMDRN/T_ALLFINANCIALRATIOS
+TAP,Molson Coors Brewing Company,Consumer Goods,Beverages - Brewers,WIKI/TAP,stocks/tap,DMDRN/TAP_ALLFINANCIALRATIOS
+TDC,Teradata Corporation,Technology,Data Storage Devices,WIKI/TDC,stocks/tdc,DMDRN/TDC_ALLFINANCIALRATIOS
+TE,"TECO Energy, Inc.",Utilities,Electric Utilities,WIKI/TE,stocks/te,DMDRN/TE_ALLFINANCIALRATIOS
+TEG,"Integrys Energy Group, Inc.",Utilities,Gas Utilities,WIKI/TEG,stocks/teg,DMDRN/TEG_ALLFINANCIALRATIOS
+TEL,TE Connectivity Ltd.,Technology,Diversified Electronics,WIKI/TEL,stocks/tel,DMDRN/TEL_ALLFINANCIALRATIOS
+TGT,Target Corp.,Services,"Discount, Variety Stores",WIKI/TGT,stocks/tgt,DMDRN/TGT_ALLFINANCIALRATIOS
+THC,Tenet Healthcare Corp.,Healthcare,Hospitals,WIKI/THC,stocks/thc,DMDRN/THC_ALLFINANCIALRATIOS
+TIF,Tiffany & Co.,Services,Jewelry Stores,WIKI/TIF,stocks/tif,DMDRN/TIF_ALLFINANCIALRATIOS
+TJX,"The TJX Companies, Inc.",Services,Department Stores,WIKI/TJX,stocks/tjx,DMDRN/TJX_ALLFINANCIALRATIOS
+TMO,"Thermo Fisher Scientific, Inc.",Healthcare,Medical Laboratories & Research,WIKI/TMO,stocks/tmo,DMDRN/TMO_ALLFINANCIALRATIOS
+TRIP,TripAdvisor Inc.,Technology,Internet Information Providers,WIKI/TRIP,stocks/trip,DMDRN/TRIP_ALLFINANCIALRATIOS
+TRV,"The Travelers Companies, Inc.",Financial,Property & Casualty Insurance,WIKI/TRV,stocks/trv,DMDRN/TRV_ALLFINANCIALRATIOS
+TSCO,Tractor Supply Company,Services,"Specialty Retail, Other",WIKI/TSCO,stocks/tsco,DMDRN/TSCO_ALLFINANCIALRATIOS
+TSN,"Tyson Foods, Inc.",Consumer Goods,Meat Products,WIKI/TSN,stocks/tsn,DMDRN/TSN_ALLFINANCIALRATIOS
+TSO,Tesoro Corporation,Basic Materials,Oil & Gas Refining & Marketing,WIKI/TSO,stocks/tso,DMDRN/TSO_ALLFINANCIALRATIOS
+TWC,Time Warner Cable Inc.,Services,CATV Systems,WIKI/TWC,stocks/twc,DMDRN/TWC_ALLFINANCIALRATIOS
+TWX,Time Warner Inc.,Services,Entertainment - Diversified,WIKI/TWX,stocks/twx,DMDRN/TWX_ALLFINANCIALRATIOS
+TXN,Texas Instruments Inc.,Technology,Semiconductor - Broad Line,WIKI/TXN,stocks/txn,DMDRN/TXN_ALLFINANCIALRATIOS
+TXT,Textron Inc.,Industrial Goods,Aerospace/Defense - Major Diversified,WIKI/TXT,stocks/txt,DMDRN/TXT_ALLFINANCIALRATIOS
+TYC,Tyco International Ltd.,Services,Security & Protection Services,WIKI/TYC,stocks/tyc,DMDRN/TYC_ALLFINANCIALRATIOS
+UA,"Under Armour, Inc.",Consumer Goods,Textile - Apparel Clothing,WIKI/UA,stocks/ua,DMDRN/UA_ALLFINANCIALRATIOS
+UHS,Universal Health Services Inc.,Healthcare,Hospitals,WIKI/UHS,stocks/uhs,DMDRN/UHS_ALLFINANCIALRATIOS
+UNH,UnitedHealth Group Incorporated,Healthcare,Health Care Plans,WIKI/UNH,stocks/unh,DMDRN/UNH_ALLFINANCIALRATIOS
+UNM,Unum Group,Financial,Accident & Health Insurance,WIKI/UNM,stocks/unm,DMDRN/UNM_ALLFINANCIALRATIOS
+UNP,Union Pacific Corporation,Services,Railroads,WIKI/UNP,stocks/unp,DMDRN/UNP_ALLFINANCIALRATIOS
+UPS,"United Parcel Service, Inc.",Services,Air Delivery & Freight Services,WIKI/UPS,stocks/ups,DMDRN/UPS_ALLFINANCIALRATIOS
+URBN,Urban Outfitters Inc.,Services,Apparel Stores,WIKI/URBN,stocks/urbn,DMDRN/URBN_ALLFINANCIALRATIOS
+URI,"United Rentals, Inc.",Services,Rental & Leasing Services,WIKI/URI,stocks/uri,DMDRN/URI_ALLFINANCIALRATIOS
+UTX,United Technologies Corp.,Industrial Goods,Aerospace/Defense Products & Services,WIKI/UTX,stocks/utx,DMDRN/UTX_ALLFINANCIALRATIOS
+V,Visa Inc.,Financial,Credit Services,WIKI/V,stocks/v,DMDRN/V_ALLFINANCIALRATIOS
+VAR,"Varian Medical Systems, Inc.",Healthcare,Medical Appliances & Equipment,WIKI/VAR,stocks/var,DMDRN/VAR_ALLFINANCIALRATIOS
+VIAB,"Viacom, Inc.",Services,Entertainment - Diversified,WIKI/VIAB,stocks/viab,DMDRN/VIAB_ALLFINANCIALRATIOS
+VLO,Valero Energy Corporation,Basic Materials,Oil & Gas Refining & Marketing,WIKI/VLO,stocks/vlo,DMDRN/VLO_ALLFINANCIALRATIOS
+VMC,Vulcan Materials Company,Industrial Goods,General Building Materials,WIKI/VMC,stocks/vmc,DMDRN/VMC_ALLFINANCIALRATIOS
+VNO,Vornado Realty Trust,Financial,REIT - Diversified,WIKI/VNO,stocks/vno,DMDRN/VNO_ALLFINANCIALRATIOS
+VRSN,"VeriSign, Inc.",Technology,Internet Information Providers,WIKI/VRSN,stocks/vrsn,DMDRN/VRSN_ALLFINANCIALRATIOS
+VRTX,Vertex Pharmaceuticals Incorporated,Healthcare,Biotechnology,WIKI/VRTX,stocks/vrtx,DMDRN/VRTX_ALLFINANCIALRATIOS
+VTR,"Ventas, Inc.",Financial,REIT - Healthcare Facilities,WIKI/VTR,stocks/vtr,DMDRN/VTR_ALLFINANCIALRATIOS
+VZ,Verizon Communications Inc.,Technology,Telecom Services - Domestic,WIKI/VZ,stocks/vz,DMDRN/VZ_ALLFINANCIALRATIOS
+WAG,Walgreen Co.,Services,Drug Stores,WIKI/WAG,stocks/wag,DMDRN/WAG_ALLFINANCIALRATIOS
+WAT,Waters Corporation,Technology,Scientific & Technical Instruments,WIKI/WAT,stocks/wat,DMDRN/WAT_ALLFINANCIALRATIOS
+WDC,Western Digital Corporation,Technology,Data Storage Devices,WIKI/WDC,stocks/wdc,DMDRN/WDC_ALLFINANCIALRATIOS
+WEC,Wisconsin Energy Corp.,Utilities,Electric Utilities,WIKI/WEC,stocks/wec,DMDRN/WEC_ALLFINANCIALRATIOS
+WFM,"Whole Foods Market, Inc.",Services,Grocery Stores,WIKI/WFM,stocks/wfm,DMDRN/WFM_ALLFINANCIALRATIOS
+WHR,Whirlpool Corp.,Consumer Goods,Appliances,WIKI/WHR,stocks/whr,DMDRN/WHR_ALLFINANCIALRATIOS
+WM,"Waste Management, Inc.",Industrial Goods,Waste Management,WIKI/WM,stocks/wm,DMDRN/WM_ALLFINANCIALRATIOS
+WMB,"Williams Companies, Inc.",Basic Materials,Oil & Gas Pipelines,WIKI/WMB,stocks/wmb,DMDRN/WMB_ALLFINANCIALRATIOS
+WMT,Wal-Mart Stores Inc.,Services,"Discount, Variety Stores",WIKI/WMT,stocks/wmt,DMDRN/WMT_ALLFINANCIALRATIOS
+WU,The Western Union Company,Financial,Credit Services,WIKI/WU,stocks/wu,DMDRN/WU_ALLFINANCIALRATIOS
+WY,Weyerhaeuser Co.,Industrial Goods,"Lumber, Wood Production",WIKI/WY,stocks/wy,DMDRN/WY_ALLFINANCIALRATIOS
+WYN,Wyndham Worldwide Corporation,Services,Lodging,WIKI/WYN,stocks/wyn,DMDRN/WYN_ALLFINANCIALRATIOS
+WYNN,Wynn Resorts Ltd.,Services,Resorts & Casinos,WIKI/WYNN,stocks/wynn,DMDRN/WYNN_ALLFINANCIALRATIOS
+XEC,Cimarex Energy Co.,Basic Materials,Independent Oil & Gas,WIKI/XEC,stocks/xec,DMDRN/XEC_ALLFINANCIALRATIOS
+XEL,Xcel Energy Inc.,Utilities,Electric Utilities,WIKI/XEL,stocks/xel,DMDRN/XEL_ALLFINANCIALRATIOS
+XL,XL Group plc,Financial,Property & Casualty Insurance,WIKI/XL,stocks/xl,DMDRN/XL_ALLFINANCIALRATIOS
+XLNX,Xilinx Inc.,Technology,Semiconductor - Integrated Circuits,WIKI/XLNX,stocks/xlnx,DMDRN/XLNX_ALLFINANCIALRATIOS
+XOM,Exxon Mobil Corporation,Basic Materials,Major Integrated Oil & Gas,WIKI/XOM,stocks/xom,DMDRN/XOM_ALLFINANCIALRATIOS
+XRAY,DENTSPLY International Inc.,Healthcare,Medical Instruments & Supplies,WIKI/XRAY,stocks/xray,DMDRN/XRAY_ALLFINANCIALRATIOS
+XRX,Xerox Corporation,Technology,Information Technology Services,WIKI/XRX,stocks/xrx,DMDRN/XRX_ALLFINANCIALRATIOS
+XYL,Xylem Inc.,Industrial Goods,Diversified Machinery,WIKI/XYL,stocks/xyl,DMDRN/XYL_ALLFINANCIALRATIOS
+YHOO,Yahoo! Inc.,Technology,Internet Information Providers,WIKI/YHOO,stocks/yhoo,DMDRN/YHOO_ALLFINANCIALRATIOS
+YUM,"Yum! Brands, Inc.",Services,Restaurants,WIKI/YUM,stocks/yum,DMDRN/YUM_ALLFINANCIALRATIOS
+ZION,Zions Bancorporation,Financial,Regional - Pacific Banks,WIKI/ZION,stocks/zion,DMDRN/ZION_ALLFINANCIALRATIOS
+ZMH,"Zimmer Holdings, Inc.",Healthcare,Medical Appliances & Equipment,WIKI/ZMH,stocks/zmh,DMDRN/ZMH_ALLFINANCIALRATIOS

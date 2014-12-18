@@ -1,0 +1,61 @@
+body {
+	background-color: black;
+}
+
+span {
+	color: white;
+}
+
+.draggable {
+	display: inline-block;
+	width: 8em; 
+	height: 5em; 
+	border: 1px solid white;
+	padding: 1em;
+}
+
+.droppable {
+	display: inline-block;
+	width: 12em; 
+	height: 10em; 
+	border:1px solid white;
+	padding: 1em;
+	margin: 1em;
+}
+
+.fixed_logic {
+	display: inline-block;
+	background-color: black;
+	height: 10em;
+	padding: 1em;
+	margin: 1em;
+}
+
+.number {
+	display: inline-block;
+	background-color: black;
+	height: 10em;
+	padding: 1em;
+	margin: 1em;
+}
+
+
+.item {
+	background-color: gray;
+}
+
+.logic {
+	background-color: blue;
+}
+
+.behavior {
+	background-color: red;
+}
+
+.asset {
+	background-color: purple;
+}
+
+.page_break {
+	height: 10em;
+}

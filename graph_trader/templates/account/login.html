@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block head_title %}{% trans "Log in" %}{% endblock %}
+
+{% block stylesheets %}
+  <link href="{% static 'account/css/login.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="bg glass">
+    <img src="{% static 'images/background.jpg' %}">
+  </div>
+
+  <div class="block">
+    <div class="inner">
+      <div class="auth-box pad-3">
+        <p align="center"><em>login with your email</em></p>
+        <form method="POST" action="{% url "account_login" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button class="auth-btn" type="submit">{% trans "LOGIN" %}</button>
+          <a href="{% url "account_password_reset" %}">{% trans "Forgot your password?" %}</a>
+        </form>
+        <p align="center"><em>- or -</em></p>
+        <div class="social-login">
+          <a class="facebook" href="{% url 'social:begin' 'facebook' %}?next={% url 'home:index' %}">Login with Facebook</a>
+          <a class="twitter" href="{% url 'social:begin' 'twitter' %}?next={% url 'homepage:index' %}">Login with Twitter</a>
+        </div>
+        <p>Join us today!</p>
+        <a href="{% url 'account_signup' %}">Register</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#id_username').focus();
+    });
+  </script>
+{% endblock %}

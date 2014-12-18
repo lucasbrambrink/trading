@@ -1,0 +1,13 @@
+{
+  "name": "graph-trader",
+  "description": "A trading strategy development platform",
+  "version": "0.0.0",
+  "homepage": "https://github.com/lucasbrambrink/trading",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "d3": "~3.3.13",
+    "bootstrap": "~3.3.1",
+    "underscore": "~1.7.0"
+  }
+}

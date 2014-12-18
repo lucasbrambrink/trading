@@ -1,0 +1,57 @@
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1; }
+  .bg img {
+    -webkit-filter: sepia(1) brightness(0.2);
+    filter: sepia(1) brightness(0.2); }
+
+.auth-box {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  color: #ffffff; }
+  .auth-box a {
+    color: #ffffff; }
+  .auth-box form .control-label {
+    display: none; }
+  .auth-box form .form-control {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0; }
+  .auth-box form .auth-btn {
+    position: relative;
+    float: left;
+    display: inline-block;
+    width: 100%;
+    height: 3em;
+    line-height: 3em;
+    font-size: 17px;
+    text-align: text;
+    margin-bottom: 30px;
+    background-color: orangered;
+    border: 0; }
+    .auth-box form .auth-btn:hover {
+      opacity: .75; }
+  .auth-box form .alert {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    background-image: None; }
+
+.auth-box legend {
+  color: #ffffff;
+  border-bottom: 0;
+  text-align: center; }
+.auth-box form .form-control {
+  height: 3em; }
+.auth-box form .form-group {
+  margin-bottom: 40px; }
+.auth-box form .auth-btn {
+  background-color: #37CD3C; }
+
+/*# sourceMappingURL=signup.css.map */
