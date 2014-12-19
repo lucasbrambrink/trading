@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="{% static 'bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css' %}">
     <link rel="stylesheet" href="{% static 'bower_components/datatables/media/css/jquery.dataTables.min.css' %}">
     <link rel="stylesheet" href="{% static 'bower_components/nvd3/nv.d3.css' %}">
+    <link rel="stylesheet" href="{% static 'backtest/backtest.css' %}">
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
         <div id="backtest-control" class="col-md-3">
           <form id="setup" class="form-horizontal" method="POST" role="form" action="">
