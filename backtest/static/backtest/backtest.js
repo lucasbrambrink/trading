@@ -30,6 +30,18 @@ $(document).ready(function() {
 
     // Setup form validation
     $( "#setup" )
+        .find('[name="start_date"]')
+            // Revalidate the start date when it is changed
+            .change(function(e) {
+                $('#setup').bootstrapValidator('revalidateField', 'start_date');
+            })
+            .end()
+        .find('[name="end_date"]')
+            // Revalidate the end date when it is changed
+            .change(function(e) {
+                $('#setup').bootstrapValidator('revalidateField', 'end_date');
+            })
+            .end()
         .bootstrapValidator({
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
