@@ -87,7 +87,8 @@ class BacktestingEnvironment:
                         'date': 1000 * mktime(date.timetuple())
                     })
 
-                self.print_information(date)
+                #self.print_information(date)
+
                 # send portfolio to front end
                 self.most_recent_trade = date
         return True

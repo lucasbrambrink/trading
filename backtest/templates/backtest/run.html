@@ -1,0 +1,94 @@
+{% extends 'nav_bar.html' %}
+
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bower_components/datatables/media/css/jquery.dataTables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bower_components/nvd3/nv.d3.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+      <div class="row">
+        <div id="backtest-control" class="col-md-3">
+          <form id="setup" class="form-horizontal" method="POST" role="form" action="">
+            {% csrf_token %}
+            <input type="hidden" name="algo_id" value="{{ algo_id }}">
+            <div class="form-group">
+              <label class="control-label">Start Date:</label>
+              <input id="start_date" class="form-control" name="start_date" type="text"  placeholder="start date">
+            </div>
+            <div class="form-group">
+              <label class="control-label">End Date:</label>
+              <input id="end_date" class="form-control" name="end_date" type="text"  placeholder="end date">
+            </div>
+            <div class="form-group">
+              <label class="control-label">Initial Balance:</label>
+              <input id="initital_balance" class="form-control" name="initial_balance" type="text" placeholder="initial_balance" value="1000000">
+            </div>
+            <div class="form-group">
+              <label class="control-label">Frequency:</label>
+              <input id="frequency" class="form-control" name="frequency" type="number" value="12" placeholder="frequency">
+            </div>
+            <div class="form-group">
+              <label class="control-label">Num of holdings:</label>
+              <input id="num_holdings" class="form-control" name="num_holdings" type="number" value="2" placeholder="number of holdings">
+            </div>
+            <div class="form-group">
+              <button type="submit" id="run-btn" class="btn btn-default">Run!</button>
+            </div>
+            <div id="loading" style="display:none;">
+              <span id="load_text">loading...</span>
+            </div>
+            <div id="form_ajax" style="display:none;">
+              <span>Form submit successfully.</span>
+            </div>
+          </form>
+        </div>
+        <div id="asset-table" class="col-md-4">
+          <table id="assets" class="display">
+            <thead>
+              <tr>
+                <th>Stock</th>
+                <th>Quantity</th>
+                <th>Price Purchased</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div id="riskmetrics-table" class="col-md-5">
+          <table id="riskmetrics" class="display" style="margin-top: 24px">
+            <thead>
+              <tr>
+                <th>Alpha</th>
+                <th>Beta</th>
+                <th>Sharpe</th>
+                <th>Volatility</th>
+                <th>Returns</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="chart_container" class="container-fluid">
+		  <div id="chart"><svg></svg></div>
+	  </div>
+
+    <button id="stop_btn">Stop!</button>
+    <button id="continue_btn">Continue!</button>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'bower_components/underscore/underscore.js' %}"></script>
+    <script src="{% static 'bower_components/jquery-cookie/jquery.cookie.js' %}"></script>
+    <script src="{% static 'bower_components/bootstrapvalidator/dist/js/bootstrapValidator.js' %}"></script>
+    <script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'bower_components/d3/d3.js' %}"></script>
+    <script src="{% static 'bower_components/nvd3/nv.d3.js' %}"></script>
+    <script src="{% static 'backtest/backtest.js' %}"></script>
+{% endblock %}
