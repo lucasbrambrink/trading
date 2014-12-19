@@ -15,13 +15,7 @@ function resetForm(A,B){
 
 
 $(document).ready(function(){
-	$("<link/>", {
-	   rel: "stylesheet",
-	   type: "text/css",
-	   href: "builder.css"
-	}).appendTo("head");
-
-
+	
 	var token = $.cookie('csrftoken')
 	console.log(token)
 	$.cookie.json=true;	
@@ -154,6 +148,7 @@ $(document).ready(function(){
 	            		var find_block_id = '#Ratio'
 	            	} else if(key === 'thresholds') {
 	            		var condition = 'Price must be between ' + data.block[key][behavior][0]['price_range'][0] + " and " + data.block[key][behavior][0]['price_range'][1]
+	            		console.log(data.block[key][behavior][0]['sector']['include'])
 	            		if(data.block[key][behavior][0]['sector']['include']){ 
 	            			condition += 'and include '
 	            			for(var i; i < data.block[key][behavior][0]['sector']['include'].length; i++){
@@ -222,6 +217,7 @@ $(document).ready(function(){
 			}) // ('display','block');
     });
 
+
 	$('.droppable').droppable({	
  		drop: function(event, ui) {
  			var match_to_block = $(ui.draggable).attr('id')
@@ -260,5 +256,23 @@ $(document).ready(function(){
         		.text(id)
         	$('.description_text')
         		.text(description_text[id])
-  });
+  	});
+
+  	$('#test_button').on('click', function(){
+  		json_to_send = $.cookie('final_json_object')
+  		json = JSON.stringify(json_to_send)
+  		console.log(json)
+  		$.ajax({
+	            url: "/builder/test_json/",
+	            type: "POST",
+	            data: {
+	                csrfmiddlewaretoken: token,
+	                data: json
+	            },
+	            success: function (data) {
+	            	console.log('awesome!')
+	            }
+        });
+  	});
+
 });

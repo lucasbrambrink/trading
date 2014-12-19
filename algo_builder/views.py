@@ -130,3 +130,19 @@ def save_view(request):
         return JsonResponse({'error': err})
     else:
         return HttpResponseNotFound('<h1>No Page Here</h1>')
+
+
+class JsonTester(TemplateView):
+
+    def post(self,request):
+        if request.is_ajax() and request.method == "POST":
+            err = ''
+            try:
+                print(request.POST)
+                json_test = request.POST['data']
+                loaded_json = json.loads(json_test)
+                print(loaded_json)
+                return JsonResponse({'block' : loaded_json})
+            except Exception as e:
+                err = e
+                return JsonResponse({'error': err})

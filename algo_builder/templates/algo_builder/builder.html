@@ -3,6 +3,8 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{% static 'algo_builder/builder.css' %}">
+    <link rel="stylesheet" href="{% static 'bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css' %}">
+    
 {% endblock %}
 
 {% block content %}  
@@ -259,6 +261,7 @@
 </div>
 <div class='button_holder col-md-3 col-md-offset-8'>
     <button type="submit" id='reset_button' class="btn btn-danger btn-lg group">Reset</button>
+    <button type="submit" id='test_button' class="btn btn-success btn-lg group">Test</button>
     <button id="save-btn" class="btn btn-success btn-lg group">Save</button>
     <a href="{% url 'backtest:run' algo_id=algo_id %}"><button id="run-btn" class='btn btn-primary btn-lg group run_algorithm'>Run Algorithm</button></a>
     <input id="algo_id" type="hidden" value="{{ algo_id }}">
@@ -375,6 +378,8 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="{% static 'bower_components/bootstrapvalidator/dist/js/bootstrapValidator.js' %}"></script>
     <script src="{% static 'bower_components/jquery-cookie/jquery.cookie.js' %}"></script>
     <script src="{% static 'algo_builder/builder.js' %}"></script>
+    <script src="{% static 'algo_builder/validator.js' %}"></script>
 {% endblock %}
