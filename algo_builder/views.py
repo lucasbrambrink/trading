@@ -66,7 +66,7 @@ class JsonBuilder(TemplateView):
                     'stock' : block['stock'],
                     'attribute': 'close',
                     'inout' : block['inout'],
-                    'price': (block['range0'],block['range1']),
+                    'price': block['price'],
                     'appetite': block['appetite']
                     }
         if block['id'].lower() == 'ratio':

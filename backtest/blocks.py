@@ -132,6 +132,8 @@ class Event_Block:
     def __init__(self,**kwargs):
         for key in kwargs:
             setattr(self,key,kwargs[key])
+        for attr in self.__dict__:
+            print(attr)
         self.stock_object = Stocks.objects.get(symbol=self.stock)
 
     def test_event(self,date):
