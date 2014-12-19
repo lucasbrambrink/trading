@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    var update;
+    var update
+        , dataCache;
 
     /**** Backtest environment setup ****/
     // Setup date picker
@@ -218,7 +219,7 @@ $(document).ready(function() {
         , updateTry = 10
         , updateRate = 3000
         , dataPointsPerUpdate = 1
-        , lastDate;
+        , lastTimestamp;
 
     // Generate returns graph
     generateGraph();
@@ -226,6 +227,17 @@ $(document).ready(function() {
     // Change date into timestamp
     var dateToTimestamp = function(date) {
         return +new Date(date);
+    };
+
+    // Change timestamp into date
+    var timestampToDate = function(timestamp) {
+        var date = new Date(timestamp);
+        date = date.toLocaleDateString();
+        date = date.split('/');
+        var year = date.pop();
+        date.unshift(year);
+        date = date.join('/');
+        return date
     };
 
     var cleanData = function(rawData) {
@@ -281,12 +293,19 @@ $(document).ready(function() {
 
         nv.utils.windowResize(returnsChart.update);
 
-        returnsChart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+        // Add event listener for hover data points in graph
+        var dispatch = d3.dispatch('updateTables');
+        returnsChart.lines.dispatch.on('elementMouseover.updateTables', function(e) {
+            console.log(e);
+            var point = e.point;
+            var date = timestampToDate(point[0]);
+            updateAssetsTable(date);
+            updateRiskMetricsTable(date);
+    });
 
         return returnsChart;
         });
     }
-
 
     var updateChart = function(n) {
         $.ajax( {
@@ -305,7 +324,7 @@ $(document).ready(function() {
                     .call(returnsChart);
 
                 // The last date
-                lastDate = data.data.date[n-1];
+                lastTimestamp = data.data.date[n-1];
             },
             error: function() {
                 console.log("error loading dataURL: " + 'http://localhost:8000/backtest/realtime/' + backtest_id + '/' + n);
@@ -348,14 +367,8 @@ $(document).ready(function() {
         updateChart(dataPointsPerUpdate);
 
         // Covert timestamp to YYYY/MM/DD
-        if (lastDate != undefined) {
-            lastDate = new Date(lastDate);
-            lastDate = lastDate.toLocaleDateString();
-            lastDate = lastDate.split('/');
-            var year = lastDate.pop();
-            lastDate.unshift(year);
-            lastDate = lastDate.join('/');
-            console.log(lastDate);
+        if (lastTimestamp != undefined) {
+            var lastDate = timestampToDate(lastTimestamp);
             updateAssetsTable(lastDate);
             updateRiskMetricsTable(lastDate);
         }
