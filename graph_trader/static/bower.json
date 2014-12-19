@@ -12,6 +12,7 @@
     "jquery-ui": "~1.11.2",
     "bootstrapvalidator": "~0.5.3",
     "nvd3": "~1.1.15-beta",
-    "jquery-cookie": "~1.4.1"
+    "jquery-cookie": "~1.4.1",
+    "datatables": "~1.10.4"
   }
 }
