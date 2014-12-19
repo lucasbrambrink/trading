@@ -143,7 +143,33 @@ $(document).ready(function() {
 
 
     /**** Assets Table Configuration ****/
-    $('#assets').D
+    var assetsUrlBase = 'http://localhost:8000/backtest/assets/';
+
+    // Setup empty data table
+    var assetsTable = $('#assets').DataTable( {
+        "ordering": true,
+        "searching": false,
+        "columns": [
+            { "data": "stock.symbol"},
+            { "data": "quantity"},
+            { "data": "price_purchased"}
+        ],
+        "processing": true
+    } );
+
+    // update table
+    function updateAssetsTable(date) {
+        date = date.split('/');
+        var year = date.pop();
+        date.unshift(year);
+        date = date.join('/');
+        console.log(date);
+
+        // Reload data
+        assetsTable.ajax.dataSrc = "";
+        assetsTable.ajax.url( assetsUrlBase + backtest_id + '/' + date ).load();
+    }
+
 
 
 
@@ -157,7 +183,8 @@ $(document).ready(function() {
         , returnsChart
         , updateTry = 10
         , updateRate = 3000
-        , dataPointsPerUpdate = 1;
+        , dataPointsPerUpdate = 1
+        , lastDate;
 
     // Generate returns graph
     generateGraph();
@@ -242,6 +269,9 @@ $(document).ready(function() {
                 d3.select('#chart svg')
                     .datum(seriesData)
                     .call(returnsChart);
+
+                // The last date
+                lastDate = data.data.date[n-1];
             },
             error: function() {
                 console.log("error loading dataURL: " + 'http://localhost:8000/backtest/realtime/' + backtest_id + '/' + n);
@@ -281,9 +311,11 @@ $(document).ready(function() {
     });
 
     var updatePage = function() {
-        updateAssetsTable();
-        updateRiskTable();
         updateChart(dataPointsPerUpdate);
+        lastDate = new Date(lastDate);
+        var dateString = lastDate.toLocaleDateString();
+        updateAssetsTable(dateString);
+        //updateRiskTable();
     }
 });
 
