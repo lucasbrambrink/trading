@@ -141,6 +141,8 @@ $(document).ready(function() {
         $('input').removeAttr('disabled');
     }
 
+    /**** Setup datatables ****/
+    $.fn.dataTableExt.sErrMode = 'throw';
 
     /**** Assets Table Configuration ****/
     var assetsUrlBase = 'http://localhost:8000/backtest/assets/';
@@ -154,24 +156,44 @@ $(document).ready(function() {
             { "data": "quantity"},
             { "data": "price_purchased"}
         ],
-        "processing": true
+        "ajax": {
+            "dataSrc": ""
+        }
     } );
 
     // update table
     function updateAssetsTable(date) {
-        date = date.split('/');
-        var year = date.pop();
-        date.unshift(year);
-        date = date.join('/');
-        console.log(date);
-
         // Reload data
-        assetsTable.ajax.dataSrc = "";
         assetsTable.ajax.url( assetsUrlBase + backtest_id + '/' + date ).load();
     }
 
 
+    /**** Risk Metrics Table Configuration ****/
+    /**** Assets Table Configuration ****/
+    var riskMetricsUrlBase = 'http://localhost:8000/backtest/risks/';
 
+    // Setup empty data table
+    var riskMetricsTable = $('#riskmetrics').DataTable( {
+        "ordering": true,
+        "searching": false,
+        "columns": [
+            { "data": "alpha"},
+            { "data": "beta"},
+            { "data": "sharpe"},
+            { "data": "volatility"},
+            { "data": "returns"}
+        ],
+        "paging": false,
+        "ajax": {
+            "dataSrc": ""
+        }
+    } );
+
+    // update table
+    function updateRiskMetricsTable(date) {
+        // Reload data
+        riskMetricsTable.ajax.url( riskMetricsUrlBase + backtest_id + '/' + date ).load();
+    }
 
 
     /**** Graph Configuration ****/
@@ -312,10 +334,19 @@ $(document).ready(function() {
 
     var updatePage = function() {
         updateChart(dataPointsPerUpdate);
-        lastDate = new Date(lastDate);
-        var dateString = lastDate.toLocaleDateString();
-        updateAssetsTable(dateString);
-        //updateRiskTable();
+
+        // Covert timestamp to YYYY/MM/DD
+        if (lastDate != undefined) {
+            lastDate = new Date(lastDate);
+            lastDate = lastDate.toLocaleDateString();
+            lastDate = lastDate.split('/');
+            var year = lastDate.pop();
+            lastDate.unshift(year);
+            lastDate = lastDate.join('/');
+            console.log(lastDate);
+            updateAssetsTable(lastDate);
+            updateRiskMetricsTable(lastDate);
+        }
     }
 });
 
