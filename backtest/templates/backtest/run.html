@@ -5,6 +5,7 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{% static 'bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bower_components/datatables/media/css/jquery.dataTables.min.css' %}">
     <link rel="stylesheet" href="{% static 'bower_components/nvd3/nv.d3.css' %}">
 {% endblock %}
 
@@ -46,6 +47,30 @@
             </div>
           </form>
         </div>
+        <div id="asset-table" class="col-md-4">
+          <table id="assets" class="display">
+            <thead>
+              <tr>
+                <th>Stock</th>
+                <th>Quantity</th>
+                <th>Price Purchased</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div id="riskmetrics-table" class="col-md-5">
+          <table id="riskmetrics" class="display" style="margin-top: 24px">
+            <thead>
+              <tr>
+                <th>Alpha</th>
+                <th>Beta</th>
+                <th>Sharpe</th>
+                <th>Volatility</th>
+                <th>Returns</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -62,6 +87,7 @@
     <script src="{% static 'bower_components/underscore/underscore.js' %}"></script>
     <script src="{% static 'bower_components/jquery-cookie/jquery.cookie.js' %}"></script>
     <script src="{% static 'bower_components/bootstrapvalidator/dist/js/bootstrapValidator.js' %}"></script>
+    <script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.js' %}"></script>
     <script src="{% static 'bower_components/d3/d3.js' %}"></script>
     <script src="{% static 'bower_components/nvd3/nv.d3.js' %}"></script>
     <script src="{% static 'backtest/backtest.js' %}"></script>

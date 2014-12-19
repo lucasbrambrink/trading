@@ -19,7 +19,6 @@ def run_backtest(algo_id, backtest_environ):
     }
     base = BaseAlgorithm(algorithm_json['algorithm'])
     backtest = BacktestingEnvironment(backtest_environ, base.__dict__)
-    print(backtest.start_date, backtest.end_date, backtest.dates_in_range)
     returns_queue = ReturnsQueue(backtest.uuid)
     backtest.set_queue(returns_queue)
     backtest.run()
@@ -38,13 +37,11 @@ def test_backtest(algo_id, backtest_environ):
     }
     base = BaseAlgorithm(algorithm_json['algorithm'])
     backtest = BacktestingEnvironment(backtest_environ, base.__dict__)
-    print(backtest.start_date, backtest.end_date, backtest.dates_in_range)
     returns_queue = ReturnsQueue(backtest.uuid)
 
     for index, date in enumerate(backtest.dates_in_range):
         if index % math.floor(252/backtest.frequency) == 0:
             returns = random()
-            print(date, returns)
             returns_queue.enqueue(
                 {
                     'returns': returns,
