@@ -52,6 +52,8 @@ $(document).ready(function(){
   		algorithm_text = {}
 		$.cookie('algorithm_text', algorithm_text)
 		$('#conditions_list').empty();
+		final_json_object = {}
+		$.cookie('final_json_object', final_json_object)
 	});
 
 	$(".cancel_button").click(function() {
@@ -132,13 +134,13 @@ $(document).ready(function(){
 	 				}
 	 				console.log(key)
 	 				if(key === 'sma'){
-	            		var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < %change SMA ( "+data.block[key][behavior][0]['period1']+","+data.block[key][behavior][0]['period2']+" ) < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ")"
+	            		var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < %change SMA ("+data.block[key][behavior][0]['period1']+","+data.block[key][behavior][0]['period2']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ")"
 	               		var find_block_id = '#SMA'
 	               	} else if(key === 'volatility'){
-	               		var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < Volatility ( "+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
+	               		var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < Volatility ("+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 						var find_block_id = '#Volatility'
 					} else if(key == 'covariance'){
-						var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < Covariance ( "+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
+						var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < Covariance ("+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 						var find_block_id = '#Covariance'
 	            	} else if(key === 'event') {
 	            		var condition = 'IF ' + data.block[key][behavior][0]['stock'] +" "+ data.block[key][behavior][0]['inout'] + " " +data.block[key][behavior][0]['price'] + ' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
@@ -147,11 +149,11 @@ $(document).ready(function(){
 	            		var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < " +data.block[key][behavior][0]['name'] + " < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 	            		var find_block_id = '#Ratio'
 	            	} else if(key === 'thresholds') {
-	            		var condition = 'Price must be between ' + data.block[key][behavior][0]['price_range'][0] + " and " + data.block[key][behavior][0]['price_range'][1]
+	            		var condition = 'Price must be between $' + data.block[key][behavior][0]['price_range'][0] + " and $" + data.block[key][behavior][0]['price_range'][1]
 	            		console.log(data.block[key][behavior][0]['sector']['include'])
 	            		if(data.block[key][behavior][0]['sector']['include']){ 
-	            			condition += 'and include '
-	            			for(var i; i < data.block[key][behavior][0]['sector']['include'].length; i++){
+	            			condition += ' and include the '
+	            			for(var i = 0; i < data.block[key][behavior][0]['sector']['include'].length; i++){
 	            				condition += data.block[key][behavior][0]['sector']['include'][i].toString()
 	            				if(i+1 < data.block[key][behavior][0]['sector']['include'].length){
 	            					condition += ","
@@ -159,14 +161,15 @@ $(document).ready(function(){
 	            			}
 	            		}
 	            		if(data.block[key][behavior][0]['sector']['exclude']){ 
-	            			condition += 'and exclude '
-	            			for(var i; i < data.block[key][behavior][0]['sector']['exclude'].length; i++){
+	            			condition += ' and exclude the '
+	            			for(var i = 0; i < data.block[key][behavior][0]['sector']['exclude'].length; i++){
 	            				condition += data.block[key][behavior][0]['sector']['exclude'][i].toString()
 	            				if(i+1 < data.block[key][behavior][0]['sector']['exclude'].length){
 	            					condition += ","
 	            				}
 	            			}
 	            		}
+	            		condition += ' sector'
 	            		console.log(key)
 	            		var find_block_id = '#Thresholds'
 	            	} else if(key === 'diversity') {

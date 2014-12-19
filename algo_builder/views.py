@@ -57,7 +57,7 @@ class JsonBuilder(TemplateView):
                     }
         if block['id'].lower() == 'volatility' or block['id'].lower() == 'covariance':
             formatted_block = {
-                    'period1' : block['period'],
+                    'period' : block['period'],
                     'range': (block['range0'],block['range1']),
                     'appetite': block['appetite']
                     }
@@ -89,7 +89,7 @@ class JsonBuilder(TemplateView):
         if block['id'].lower() == 'thresholds':
             formatted_block = {
                     'price_range' : (block['price_range0'],block['price_range1']),
-                    'sector': {block['inout']: block['sector']}
+                    'sector': {block['inout']: (block['sector'],)}
                     }
         if block['id'].lower() == 'diversity':
             formatted_block = {
