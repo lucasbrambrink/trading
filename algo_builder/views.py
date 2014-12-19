@@ -57,7 +57,7 @@ class JsonBuilder(TemplateView):
                     }
         if block['id'].lower() == 'volatility' or block['id'].lower() == 'covariance':
             formatted_block = {
-                    'period1' : block['period'],
+                    'period' : block['period'],
                     'range': (block['range0'],block['range1']),
                     'appetite': block['appetite']
                     }
@@ -65,7 +65,8 @@ class JsonBuilder(TemplateView):
             formatted_block = {
                     'stock' : block['stock'],
                     'attribute': 'close',
-                    'range': (block['range0'],block['range1']),
+                    'inout' : block['inout'],
+                    'price': block['price'],
                     'appetite': block['appetite']
                     }
         if block['id'].lower() == 'ratio':
@@ -88,7 +89,7 @@ class JsonBuilder(TemplateView):
         if block['id'].lower() == 'thresholds':
             formatted_block = {
                     'price_range' : (block['price_range0'],block['price_range1']),
-                    'sector': {block['inout']: block['sector']}
+                    'sector': {block['inout']: (block['sector'],)}
                     }
         if block['id'].lower() == 'diversity':
             formatted_block = {
@@ -129,3 +130,19 @@ def save_view(request):
         return JsonResponse({'error': err})
     else:
         return HttpResponseNotFound('<h1>No Page Here</h1>')
+
+
+class JsonTester(TemplateView):
+
+    def post(self,request):
+        if request.is_ajax() and request.method == "POST":
+            err = ''
+            try:
+                print(request.POST)
+                json_test = request.POST['data']
+                loaded_json = json.loads(json_test)
+                print(loaded_json)
+                return JsonResponse({'block' : loaded_json})
+            except Exception as e:
+                err = e
+                return JsonResponse({'error': err})

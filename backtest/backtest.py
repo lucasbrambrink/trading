@@ -308,9 +308,10 @@ if __name__ == '__main__':
                 },
                 'event': {
                     'buy': [{
+                        'inout': 'above',
                         'stock': 'GOOG',
                         'attribute': 'close',
-                        'range': (600,650,),
+                        'range': 600,
                         'appetite': 300
                         }],
                     'sell': []

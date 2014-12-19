@@ -3,133 +3,168 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{% static 'algo_builder/builder.css' %}">
+    <link rel="stylesheet" href="{% static 'bower_components/bootstrapvalidator/dist/css/bootstrapValidator.min.css' %}">
+    
 {% endblock %}
 
-{% block content %}
-<div class='builder_container'>
+{% block content %}  
+<div class='container col-md-12'>
     <div class='main_four'>
-        <div class='fixed_logic if_statement'>IF</div>
-        <div class='fixed_logic form_full_two'>
-            <div class='popup_conditions' id='SMA_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs cancel_button" id='SMA_button' aria-label="remove">
+        <div class='fixed_logic if_statement col-md-1'>IF</div>
+        <div class='fixed_logic form_full_two col-md-4'>
+            <div class='popup_conditions col-md-4' id='SMA_conditions'>
+                <button type="button" class="btn btn-danger btn-xs cancel_button" id='SMA_button' aria-label="remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                SMA
-                    <form class="form-inline conditionals" id='SMA_form' method = "POST" role="form">
-                        <div class="control-group" style='display:inline;'>
-                            <label class='field_labels' style='width:8em;' class="control-label"><h6>Time Period :</h6></label>
-                                <input type="number" data-validation-matches-message=
-                                "format 1.0" class="form-control" style='margin-left:1em; width:6em' placeholder="period 1" name='period1'>
-                                <input type="text" class="form-control" placeholder="period 2" style='width:6em;' name='period2'>
-                            <label class='field_labels' style='width:8em;'><h6>%d Range :</h6></label>
-                                <input type="text" class="form-control" placeholder="lowest" style='margin-left:1em; width:6em;' name='range0'>
-                                <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
-                            <label class='field_labels' style='width:8em;'><h6>Appetite : </h6></label>
-                                <input style='margin-left:1em; width:12.2em;' type="text" class="form-control" placeholder="appetite" name='appetite'>
+                <form class="form-inline conditionals" id='SMA_form' method = "POST" role="form">
+                <div class='form_title'><h4>SMA</h4></div>
+                    <div class="control-group top_level">
+                        <div class='row'>
+                            <label class="control-label label_title"><h6>Time Period :</h6></label>  
+                            <input type="text" class="form-control double_line" placeholder="period 1" name='period1'>
+                            <input type="text" class="form-control double_line" placeholder="period 2" name='period2'>
                         </div>
-                        <button style='margin-left:2.5em;' type="submit" class="btn btn-primary">Ok!</button>
-                    </form>
-        </div>
-        <div class='popup_conditions' id='Volatility_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs cancel_button" id='Volatility_button' aria-label="remove">
+                        <div class='row'>
+                            <label class="control-label label_title"><h6>%d Range :</h6></label>
+                            <input type="text" class="form-control double_line" placeholder="lowest" name='range0'>
+                            <input type="text" class="form-control double_line" placeholder="highest" name='range1'>
+                        </div>
+                        <div class='row'>
+                            <label class="control-label label_title"><h6>Appetite : </h6></label>
+                            <input type="text" class="form-control single_line" placeholder="appetite" name='appetite'>
+                            <button type="submit" class="btn btn-primary conditional_submit">Ok!</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        <div class='popup_conditions col-md-4' id='Volatility_conditions'>
+                <button type="button" class="btn btn-danger btn-xs cancel_button" id='Volatility_button' aria-label="remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                Volatility
+                <div class='form_title'><h4>Volatility</h4></div>
                     <form class="form-inline conditionals" id='Volatility_form' role="form">
-                        <div class="form-group" style='display:inline;'>
-                            <label class='field_labels' style='width:8em;'><h6>Time Period :</h6></label>
-                                <input type="text" class="form-control" <input style='margin-left:1em; width:12.2em;' placeholder="period" name='period'>
-                            <label class='field_labels' style='width:8em;'><h6>%P Range :</h6></label>
-                                <input type="text" class="form-control" placeholder="lowest" style='margin-left:1em; width:6em;' name='range0'>
-                                <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
-                            <label class='field_labels' style='width:8em;'><h6>Appetite : </h6></label>
-                                <input <input style='margin-left:1em; width:12.2em;' type="text" class="form-control" placeholder="appetite" name='appetite'>
+                        <div class="control-group top_level">
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Time Period :</h6></label>
+                                <input type="text" class="form-control single_line" placeholder="period" name='period'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>%P Range :</h6></label>
+                                <input type="text" class="form-control double_line" placeholder="lowest" name='range0'>
+                                <input type="text" class="form-control double_line" placeholder="highest" name='range1'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Appetite : </h6></label>
+                                <input type="text" class="form-control single_line" placeholder="appetite" name='appetite'>
+                                <button type="submit" class="btn btn-primary conditional_submit">Ok!</button>
+                            </div>
                         </div>
-                        <button style='margin-left:2.5em;' type="submit" class="btn btn-primary">Ok!</button>
-
                     </form>
-        </div>
-        <div class='popup_conditions' id='Covariance_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs cancel_button" id='Covariance_button' aria-label="remove">
+            </div>
+        <div class='popup_conditions col-md-4' id='Covariance_conditions'>
+                <button type="button" class="btn btn-danger btn-xs cancel_button" id='Covariance_button' aria-label="remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                Covariance
+                <div class='form_title'><h4>Covariance</h4></div>
                     <form class="form-inline conditionals" id='Covariance_form' role="form">
-                        <div class="form-group" style='display:inline;'>
-                            <label class='field_labels' style='width:8em;'><h6>Time Period :</h6></label>
-                                <input type="text" class="form-control" <input style='margin-left:1em; width:12.2em;' placeholder="period" name='period'>
-                            <label class='field_labels' style='width:8em;'><h6>%d Range :</h6></label>
-                                <input type="text" class="form-control" placeholder="lowest" style='margin-left:1em; width:6em;' name='range0'>
-                                <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
-                            <label class='field_labels' style='width:8em;'><h6>Appetite : </h6></label>
-                                <input <input style='margin-left:1em; width:12.2em;' type="text" class="form-control" placeholder="appetite" name='appetite'>
+                        <div class="control-group top_level">
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Time Period :</h6></label>
+                                <input type="text" class="form-control single_line"placeholder="period" name='period'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>%d Range :</h6></label>
+                                <input type="text" class="form-control double_line" placeholder="lowest" name='range0'>
+                                <input type="text" class="form-control double_line" placeholder="highest" name='range1'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Appetite : </h6></label>
+                                <input type="text" class="form-control single_line" placeholder="appetite" name='appetite'>
+                                <button type="submit" class="btn btn-primary conditional_submit">Ok!</button>
+                            </div>
                         </div>
-                        <button style='margin-left:2.5em;' type="submit" class="btn btn-primary goto_behavior">Ok!</button>
-
                     </form>
-        </div>
-        <div class='popup_conditions' id='Event_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs cancel_button" id='Event_button' aria-label="remove">
+            </div>
+        <div class='popup_conditions col-md-4' id='Event_conditions'>
+                <button type="button" class="btn btn-danger btn-xs cancel_button" id='Event_button' aria-label="remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                Event
+                <div class='form_title'><h4>Event</h4></div>
                     <form class="form-inline conditionals" id='Event_form' role="form">
-                        <div class="form-group" style='display:inline;'>
-                            <label class='field_labels' style='width:8em;'><h6>Stock :</h6></label>
-                                <input type="text" class="form-control" <input style='margin-left:1em; width:12.2em;' placeholder="Stock" name='stock'>
-                            <label class='field_labels' style='width:8em;'><h6>Price Range :</h6></label>
-                                <input type="text" class="form-control" placeholder="lowest" style='margin-left:1em; width:6em;' name='range0'>
-                                <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
-                            <label class='field_labels' style='width:8em;'><h6>Appetite : </h6></label>
-                                <input <input style='margin-left:1em; width:12.2em;' type="text" class="form-control" placeholder="appetite" name='appetite'>
+                        <div class="control-group top_level">
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Stock :</h6></label>
+                                <input type="text" class="form-control single_line" placeholder="Stock" name='stock'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Price :</h6></label>
+                                <select class="form-control double_line" name='inout'>
+                                  <option>above</option>
+                                  <option>below</option>
+                                </select>
+                                <input type="text" class="form-control double_line" placeholder="price" name='price'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Appetite : </h6></label>
+                                <input type="text" class="form-control single_line" placeholder="appetite" name='appetite'>
+                                <button type="submit" class="btn btn-primary conditional_submit">Ok!</button>
+                            </div>
                         </div>
-                        <button style='margin-left:2.5em;' type="submit" class="btn btn-primary">Ok!</button>
-
                     </form>
-        </div>
-        <div class='popup_conditions' id='Ratio_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs cancel_button" id='Ratio_button' aria-label="remove">
+            </div>
+        <div class='popup_conditions col-md-4' id='Ratio_conditions'>
+                <button type="button" class="btn btn-danger btn-xs cancel_button" id='Ratio_button' aria-label="remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                Ratio
+                <div class='form_title'><h4>Ratio</h4></div>
                     <form class="form-inline conditionals" id='Ratio_form' role="form">
-                        <div class="form-group" style='display:inline;'>
-                            <label class='field_labels' style='width:8em;'><h6>Type :</h6></label>
-                                <select class="form-control" style='margin-left:1em; width:12.2em;' name='name'>
+                        <div class="control-group top_level">
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Type :</h6></label>
+                                <select class="form-control single_line" name='name'>
                                   <option>Cash per Revenue</option>
                                   <option>EV / EBITDA</option>
                                   <option>PE (Current)</option>
                                   <option>Market Cap</option>
                                   <option>Return on Equity</option>
                                 </select>
-                            <label class='field_labels' style='width:8em;'><h6>Range :</h6></label>
-                                <input type="text" class="form-control" placeholder="lowest" style='margin-left:1em; width:6em;' name='range0'>
-                                <input type="text" class="form-control" placeholder="highest" style='width:6em;' name='range1'>
-                            <label class='field_labels' style='width:8em;'><h6>Appetite : </h6></label>
-                                <input style='margin-left:1em; width:12.2em;' type="text" class="form-control" placeholder="appetite" name='appetite'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Range :</h6></label>
+                                <input type="text" class="form-control double_line" placeholder="lowest" name='range0'>
+                                <input type="text" class="form-control double_line" placeholder="highest" name='range1'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Appetite : </h6></label>
+                                <input type="text" class="form-control single_line" placeholder="appetite" name='appetite'>
+                                <button type="submit" class="btn btn-primary conditional_submit">Ok!</button>
+                            </div>
                         </div>
-                        <button style='margin-left:2.5em;' id='goto_behavior' type="submit" class="btn btn-primary">Ok!</button>
-
                     </form>
-        </div>
-        <div class='popup_conditions' id='Thresholds_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs cancel_button" id='Thresholds_button' aria-label="remove">
+            </div>
+        <div class='popup_conditions col-md-4' id='Thresholds_conditions'>
+                <button type="button" class="btn btn-danger btn-xs cancel_button" id='Thresholds_button' aria-label="remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                Thresholds
+                <div class='form_title'><h4>Thresholds</h4></div>
                     <form class="form-inline conditionals" id='Thresholds_form' role="form">
-                        <div class="form-group" style='display:inline;'>
-                            <label class='field_labels' style='width:8em;'><h6>Price Range :</h6></label>
-                                <input type="text" class="form-control" style='margin-left:1em; width:6em' placeholder="lowest" name='price_range0'>
-                                <input type="text" class="form-control" style='width:6em' placeholder="highest" name='price_range1'>
-                            <label class='field_labels' style='width:8em;'><h6>Sector :</h6></label>
-                                <select class="form-control" style='margin-left:1em; width:12.2em;' name='inout'>
+                        <div class="control-group top_level">
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Price Range :</h6></label>
+                                <input type="text" class="form-control double_line" placeholder="lowest" name='price_range0'>
+                                <input type="text" class="form-control double_line" placeholder="highest" name='price_range1'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"><h6>Sector :</h6></label>
+                                <select class="form-control single_line" name='inout'>
                                   <option>none</option>
                                   <option>include</option>
                                   <option>exclude</option>
                                 </select>
-                            <label class='field_labels' style='width:8em;'></label>
-                                <select class="form-control" style='margin-left: 1em; width:12.2em;' name='sector'>
+                            </div>
+                            <div class='row'>
+                                <label class="control-label label_title"></label>
+                                <select class="form-control single_line" name='sector'>
                                   <option>none</option>
                                   <option>Services</option>
                                   <option>Technology</option>
@@ -144,44 +179,52 @@
                                   <option>Materials</option>
                                   <option>Basic Materials</option>
                                 </select>
+                                <button type="submit" class="btn btn-primary conditional_submit">Ok!</button>
+                            </div>
                         </div>
-                        <button style='margin-left:2.5em;' id='goto_behavior' type="submit" class="btn btn-primary">Ok!</button>
-
                     </form> 
-        </div>
-        <div class='popup_conditions' id='Diversity_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs cancel_button" id='Diversity_button' aria-label="remove">
+            </div>
+        <div class='popup_conditions col-md-4' id='Diversity_conditions'>
+                <button type="button" class="btn btn-danger btn-xs cancel_button" id='Diversity_button' aria-label="remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                Diversity
+                <div class='form_title'><h4>Diversity</h4></div>
                     <form class="form-inline conditionals" id='Diversity_form' role="form">
-                        <div class="form-group" style='display:inline;'>
-                            <label class='field_labels' style='width:8em; margin-top:1em;'><h6>Same Sector :</h6></label>
-                                <input type="text" class="form-control" style='margin-left:1em; width:12.2em' placeholder="Maximum" name='num_sector'>
-                            <label style='margin-left:7.5%; width:9em;'><h6>Same Industry :</h6></label>
-                                <input type="text" class="form-control" placeholder="Maximum" style='margin-left:1em; width:12.2em' name='num_industry'>
+                        <div class="control-group top_level">
+                            <div class='row' id='diversity_row'>
+                                <label class="control-label diversity_label"><h6>Same Sector :</h6></label>
+                                <input type="text" class="form-control diversity_line"placeholder="Maximum" name='num_sector'>
+                            </div>
+                            <div class='row'>
+                                <label class='control-label diversity_label'><h6>Same Industry :</h6></label>
+                                <input type="text" class="form-control diversity_line" placeholder="Maximum" name='num_industry'>
+                                <button type="submit" class="btn btn-primary conditional_submit" id='diversity_button'>Ok!</button>
+                            </div>
                         </div>
-                        <button style='margin-left:2.5em; margin-top:1.5em;' id='goto_behavior' type="submit" class="btn btn-primary">Ok!</button>
 
                     </form>
         </div>
         <div class='droppable'>this</div></div>
-        <div class='fixed_logic then_statement'>THEN</div>
-        <div class='fixed_logic form_full_two'>
-            <div class='popup_conditions' id='behavior_conditions'>
-                <button style='float:right; margin:2px;' type="button" class="btn btn-danger btn-xs" id='behavior_cancel' aria-label="remove">
+        <div class='fixed_logic then_statement col-md-3'>THEN</div>
+        <div class='fixed_logic form_full_two col-md-3'>
+            <div class='popup_conditions col-md-4' id='behavior_conditions'>
+                <button type="button" class="btn btn-danger btn-xs cancel_button" id='behavior_cancel' aria-label="remove">
                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>
-                Behavior
+                <div class='form_title'><h4>Behavior</h4></div>
                 <form class="form-inline behaviorals" id='behavior_form' role="form">
-                    <div class="form-group" style='display:inline;'>
-                        <label class='field_labels' style='width:8em;'></label>
-                        <select class="form-control" style='width: 12em; margin-top: 2em;' name='behavior'>
-                          <option value='Buy'>Buy</option>
-                          <option value='Sell'>Sell</option>
-                        </select>
+                    <div class="control-group">
+                        <div class='row' id='behavior_row'>
+                            <label class="control-label behavior_title"></label>
+                            <select class="form-control single_line" name='behavior'>
+                              <option value='Buy'>Buy</option>
+                              <option value='Sell'>Sell</option>
+                            </select>
+                        </div>
+                        <div class='row'>
+                            <button type="submit" class="btn btn-success" id='behavior_submit'>Set!</button>
+                        </div>
                     </div>
-                    <button style='float:right; margin-left:2em; margin-top:1em;' type="submit" class="btn btn-success">Set!</button>
                 </form>
             </div>
         that
@@ -192,35 +235,36 @@
     <a href='/backtest/add/' class='btn btn-primary' style='margin-left:1.7em;'>Add Conditional</a>
 </div> -->
 <div class='lower_portion'>
-    <div class='block_container'>
+    <div class='block_container col-md-8'>
         <div class='blocks'>
-            <div class='draggable' id='SMA'>SMA</div>
-            <div class='draggable' id='Volatility'>Volatility</div>
-            <div class='draggable' id='Covariance'>Covariance</div>
-            <div class='draggable' id='Ratio'>Ratio</div>
-            <div class='draggable' id='Event'>Event</div>
-            <div class='draggable' id='Thresholds'>Thresholds</div>
-            <div class='draggable' id='Diversity'>Diversity</div>
+            <div class='draggable' id='SMA'><h3>SMA</h3></div>
+            <div class='draggable' id='Volatility'><h3>Volatility</h3></div>
+            <div class='draggable' id='Covariance'><h3>Covariance</h3></div>
+            <div class='draggable' id='Ratio'><h3>Ratio</h3></div>
+            <div class='draggable' id='Event'><h3>Event</h3></div>
+            <div class='draggable' id='Thresholds'><h3>Thresholds</h3></div>
+            <div class='draggable' id='Diversity'><h3>Diversity</h3></div>
         </div>
-        <div class='accepted_conditions'>
+        <div class='accepted_conditions col-md-8'>
             <ul id='conditions_list'>
             </ul>
             <span id='json_holder' style='display:none;'></span>
         </div>
     </div>
 
-    <div class='description_container' style='float:right;'>
+    <div class='description_container col-md-4' style='float:right;'>
         <div class='description'>
-            <h1 class='description_header'>Build your own Algorithm</h1>
+            <h1 class='description_header'>Build your own Algorithm</h1><br>
             <p class='description_text'>By dragging and dropping blocks over the 'this' conditional, you can specify the behavior of your algorithm per trading session. Fill the corresponding forms and the condition will be added to your algorithm! Note: Be careful about selling conditions. The algorithm generally functions best if it is allowed to sell all your assets each time (to maximize your capital for new investments). But feel free to play around!</p>
         </div>
     </div>
 </div>
-<button style='float:right; margin:3em;' type="submit" id='reset_button' class="btn btn-success">Reset</button>
-<button id="save-btn" class="btn btn-primary">Save</button>
-    <a style='float:right; margin:3em;' href="{% url 'backtest:run' algo_id=algo_id %}"><button id="run-btn" class='btn btn-primary' style='margin-left:1.7em;'>Run Algorithm</button></a>
-
-  <input id="algo_id" type="hidden" value="{{ algo_id }}">
+<div class='button_holder col-md-3 col-md-offset-8'>
+    <button type="submit" id='reset_button' class="btn btn-danger btn-lg group">Reset</button>
+    <button type="submit" id='test_button' class="btn btn-success btn-lg group">Test</button>
+    <button id="save-btn" class="btn btn-success btn-lg group">Save</button>
+    <a href="{% url 'backtest:run' algo_id=algo_id %}"><button id="run-btn" class='btn btn-primary btn-lg group run_algorithm'>Run Algorithm</button></a>
+    <input id="algo_id" type="hidden" value="{{ algo_id }}">
         <script>
         algo_id = $('#algo_id').val();
         var testResponse = {
@@ -292,7 +336,8 @@
                           {
                             'stock': 'GOOG',
                             'attribute': 'close',
-                            'range': [600, 650],
+                            'inout': 'above',
+                            'price': 600,
                             'appetite': 300
                             }
                         ],
@@ -334,6 +379,8 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="{% static 'bower_components/bootstrapvalidator/dist/js/bootstrapValidator.js' %}"></script>
     <script src="{% static 'bower_components/jquery-cookie/jquery.cookie.js' %}"></script>
     <script src="{% static 'algo_builder/builder.js' %}"></script>
+    <script src="{% static 'algo_builder/validator.js' %}"></script>
 {% endblock %}

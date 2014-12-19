@@ -15,6 +15,7 @@ function resetForm(A,B){
 
 
 $(document).ready(function(){
+	
 	var token = $.cookie('csrftoken')
 	console.log(token)
 	$.cookie.json=true;	
@@ -51,6 +52,8 @@ $(document).ready(function(){
   		algorithm_text = {}
 		$.cookie('algorithm_text', algorithm_text)
 		$('#conditions_list').empty();
+		final_json_object = {}
+		$.cookie('final_json_object', final_json_object)
 	});
 
 	$(".cancel_button").click(function() {
@@ -62,13 +65,13 @@ $(document).ready(function(){
 			height: '0px',
 			opacity: 0,
 			borderWidth: '0px'
-		}, 400);
+		}, 300);
 		$('#behavior_conditions').animate({
 			width: '0px',
 			height: '0px',
 			opacity: 0,
 			borderWidth: '0px'
-		}, 400);
+		}, 300);
 		find_block_id = "#" + block_id
 		$(find_block_id).show()
 			.css({
@@ -85,11 +88,11 @@ $(document).ready(function(){
 		post_data = $(this).serialize() + '&id=' + $(this).attr('id').split('_')[0]	
 		$('#behavior_conditions').show()
 				.animate({
-					width: "30%",
-				    height: "150px",
+					width: "100%",
+				    height: "100%",
 				    opacity: 1,
 				    borderWidth: "1px"
-				  }, 400 );
+				  }, 300 );
 			});
 
 	$('#behavior_form').submit(function(e){
@@ -131,25 +134,26 @@ $(document).ready(function(){
 	 				}
 	 				console.log(key)
 	 				if(key === 'sma'){
-	            		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < %change SMA ( "+data.block[key][behavior][0]['period1']+","+data.block[key][behavior][0]['period2']+" ) < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ")"
+	            		var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < %change SMA ("+data.block[key][behavior][0]['period1']+","+data.block[key][behavior][0]['period2']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ")"
 	               		var find_block_id = '#SMA'
 	               	} else if(key === 'volatility'){
-	               		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < Volatility ( "+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
+	               		var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < Volatility ("+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 						var find_block_id = '#Volatility'
 					} else if(key == 'covariance'){
-						var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < Covariance ( "+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
+						var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < Covariance ("+data.block[key][behavior][0]['period']+") < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 						var find_block_id = '#Covariance'
 	            	} else if(key === 'event') {
-	            		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < Price of " +data.block[key][behavior][0]['stock'] + " < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
+	            		var condition = 'IF ' + data.block[key][behavior][0]['stock'] +" "+ data.block[key][behavior][0]['inout'] + " " +data.block[key][behavior][0]['price'] + ' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 	            		var find_block_id = '#Event'
 	            	} else if(key === 'ratio'){
-	            		var condition = 'IF' + data.block[key][behavior][0]['range'][0] + " < " +data.block[key][behavior][0]['name'] + " < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
+	            		var condition = 'IF ' + data.block[key][behavior][0]['range'][0] + " < " +data.block[key][behavior][0]['name'] + " < " + data.block[key][behavior][0]['range'][1] +' THEN ' + behavior + ' (' + data.block[key][behavior][0]['appetite'] + ')'
 	            		var find_block_id = '#Ratio'
 	            	} else if(key === 'thresholds') {
-	            		var condition = 'Price must be between ' + data.block[key][behavior][0]['price_range'][0] + " and " + data.block[key][behavior][0]['price_range'][1]
+	            		var condition = 'Price must be between $' + data.block[key][behavior][0]['price_range'][0] + " and $" + data.block[key][behavior][0]['price_range'][1]
+	            		console.log(data.block[key][behavior][0]['sector']['include'])
 	            		if(data.block[key][behavior][0]['sector']['include']){ 
-	            			condition += 'and include '
-	            			for(var i; i < data.block[key][behavior][0]['sector']['include'].length; i++){
+	            			condition += ' and include the '
+	            			for(var i = 0; i < data.block[key][behavior][0]['sector']['include'].length; i++){
 	            				condition += data.block[key][behavior][0]['sector']['include'][i].toString()
 	            				if(i+1 < data.block[key][behavior][0]['sector']['include'].length){
 	            					condition += ","
@@ -157,22 +161,23 @@ $(document).ready(function(){
 	            			}
 	            		}
 	            		if(data.block[key][behavior][0]['sector']['exclude']){ 
-	            			condition += 'and exclude '
-	            			for(var i; i < data.block[key][behavior][0]['sector']['exclude'].length; i++){
+	            			condition += ' and exclude the '
+	            			for(var i = 0; i < data.block[key][behavior][0]['sector']['exclude'].length; i++){
 	            				condition += data.block[key][behavior][0]['sector']['exclude'][i].toString()
 	            				if(i+1 < data.block[key][behavior][0]['sector']['exclude'].length){
 	            					condition += ","
 	            				}
 	            			}
 	            		}
+	            		condition += ' sector'
 	            		console.log(key)
 	            		var find_block_id = '#Thresholds'
 	            	} else if(key === 'diversity') {
-	            		var condition = 'Portfolio cannot contain more than ' + data.block[key][behavior][0]['num_sector'] + " and " +data.block[key][behavior][0]['num_industry']+" of the same sector and industry, respectively"
+	            		var condition = 'Portfolio cannot contain more than ' + data.block[key][behavior][0]['num_sector'] + " and " +data.block[key][behavior][0]['num_industry']+" of the same sector and industry"
 	       				console.log(key)
 	            		var find_block_id = '#Diversity'
 	            	}
-	            	$('#conditions_list').append("<li><h1>"+condition+"</h1></li>")
+	            	$('#conditions_list').append("<h1>"+condition+"</h1>")
 
             		$(find_block_id).show()
 						.css({
@@ -203,7 +208,7 @@ $(document).ready(function(){
 			height: '0px',
 			opacity: 0,
 			borderWidth: '0px'
-		}, 400);
+		}, 300);
 
 		var splits = post_data.split('&')
 		var block_id_pair = splits[splits.length-1]
@@ -215,17 +220,18 @@ $(document).ready(function(){
 			}) // ('display','block');
     });
 
+
 	$('.droppable').droppable({	
  		drop: function(event, ui) {
  			var match_to_block = $(ui.draggable).attr('id')
 			var match_to_form = "#" + $(ui.draggable).attr('id') + "_conditions";
  			$(match_to_form).show()
  				.animate({
-				    width: "30%",
-				    height: "150px",
+				    width: "100%",
+				    height: "100%",
 				    opacity: 1,
 				    borderWidth: "1px"
-				  }, 400 );
+				  }, 300 );
  			$(ui.draggable).hide()
 		}
 	});
@@ -237,8 +243,7 @@ $(document).ready(function(){
         		.text(id)
         	$('.description_text')
         		.text(description_text[id])
-    		$('.droppable').css('border','1px solid black')
-    			.css('box-shadow', '7px 7px 5px #888888')
+    		$('.droppable').css('box-shadow', '7px 7px 5px #888888')
     			.css('padding-top','0px')
     			.css('background-color', 'rgba(0, 0, 0, 0.1)')
     			.css('border-radius','10px')
@@ -248,11 +253,29 @@ $(document).ready(function(){
     		var id = 'Build your own Algorithm'
     		$('.droppable').css('border','none')
     			.css('box-shadow', 'none')
-    			.css('padding-top','1px')
+    			.css('padding-top','0px')
     			.css('background-color', 'rgba(255, 255, 255, 0)')
     		$('.description_header')
         		.text(id)
         	$('.description_text')
         		.text(description_text[id])
-  });
+  	});
+
+  	$('#test_button').on('click', function(){
+  		json_to_send = $.cookie('final_json_object')
+  		json = JSON.stringify(json_to_send)
+  		console.log(json)
+  		$.ajax({
+	            url: "/builder/test_json/",
+	            type: "POST",
+	            data: {
+	                csrfmiddlewaretoken: token,
+	                data: json
+	            },
+	            success: function (data) {
+	            	console.log('awesome!')
+	            }
+        });
+  	});
+
 });

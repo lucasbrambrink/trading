@@ -132,18 +132,30 @@ class Event_Block:
     def __init__(self,**kwargs):
         for key in kwargs:
             setattr(self,key,kwargs[key])
+        for attr in self.__dict__:
+            print(attr)
         self.stock_object = Stocks.objects.get(symbol=self.stock)
 
     def test_event(self,date):
         price = DB_Helper.prices_in_range(1,0,self.stock_object,date)
-        if len(price) > 0 and self.range[0] <= getattr(price[-1],self.attribute) <= self.range[1]:
-            return {
-                'object': self.stock_object,
-                'event_score' : self.appetite,
-                'symbol': stock_object.symbol,
-                'todays_price' : price[-1].close,
-                'todays_volume': price[-1].volume
-            }
+        if self.inout == 'below':
+            if len(price) > 0 and self.price < getattr(price[-1],self.attribute):
+                return {
+                    'object': self.stock_object,
+                    'event_score' : self.appetite,
+                    'symbol': stock_object.symbol,
+                    'todays_price' : price[-1].close,
+                    'todays_volume': price[-1].volume
+                }
+        if self.inout == 'above':
+            if len(price) > 0 and self.price > getattr(price[-1],self.attribute):
+                return {
+                    'object': self.stock_object,
+                    'event_score' : self.appetite,
+                    'symbol': stock_object.symbol,
+                    'todays_price' : price[-1].close,
+                    'todays_volume': price[-1].volume
+                }
         return {}
 
     def aggregate_stocks(self,stocks,date):
