@@ -1,6 +1,20 @@
 {% extends 'nav_bar.html' %}
 
 {% block content %}
-    <h1>Home</h1>
-    <h1>Hello Word</h1>
+<div class='container'>
+	<h1>Trading Made Easy</h1>
+	<div class='text_container col-md-6'>
+		<h4>Title is a playground for studying algorithmic trading strategies. Designed for people without a financial background or programming expertise, Title allows the user to easily implement different conditional statements to dictate algorithmic trading behavior.</h4>
+
+		<p>By encapsulating different trading paradigms in the form of draggable blocks, the user can easily set up conditional statements for the algorithm to follow.</p>
+
+		<p>During each trading session, the algorithm scours our database of historical stock data and aggregates all stocks that fits the conditional statements. It then scores each stock according to set 'appetites' defined by the user and selects the best scoring stocks to hold in the portfolio. The number of stocks held in the portfolio between sessions is defined by the user.</p>
+
+		<p>The backtest generates a graph and risk metrics table showing the behavior of each session. The user may customize the time frame for testing, as well as specify the frequency of trade sessions. Trials have shown best results to lie around trading once a month.</p>
+
+		</p>
+		First and foremost, it is designed to be fun and remove some opacity surrounding the stock market!</p>
+	</div>
+</div>
+
 {% endblock %}

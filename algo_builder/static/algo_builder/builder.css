@@ -1,3 +1,52 @@
+.double_line.form-control {
+	width: 25%;
+}
+.single_line.form-control {
+	width: 50.5%;
+}
+
+.cancel_button {
+	float: right;
+}
+
+.conditional_submit {
+	float: right;
+	margin-right: 3%;
+}
+
+.label_title {
+	text-align: center;
+	width: 25%;
+}
+.diversity_line.form-control {
+	width: 35%;
+}
+.diversity_label.control-label {
+	text-align: center;
+	width: 40%;
+}
+
+#diversity_row {
+	margin-top: 4%;
+}
+
+#diversity_button {
+	margin-top: 4%;
+}
+
+#behavior_row {
+	margin-top: 12%;
+}
+
+#behavior_submit {
+	float: right;
+	margin-top: 2.5%;
+	margin-right: 4.5%;
+}
+.behavior_title {
+	width: 20%;
+}
+
 .if_statement {
 	/*padding-top: 4px;*/
 }
@@ -13,21 +62,40 @@
 }
 
 .fixed_logic {
-	/*padding-top: 4px;*/
+	margin-top: 1%;
+	padding-top: 4px;
 	float: center;
 	text-align: center;
 	font-size: 650%;
 	display: inline-block;
-	/*height: 150px;*/
 }
 
 
 .condition_container {
 	display: inline-block;
 }
+.form_title {
+	position: absolute;
+	top: -25%;
+	margin-bottom: 1em;
+}
+.top_level {
+	margin-top: 1.2%;
+}
 
 .behavior_container {
 	display: inline-block;
+}
+
+fieldset {
+	padding: 1em;
+}
+
+legend {
+  padding: 0.2em 0.5em;
+  margin-bottom: 1em;
+  font-size:100%;
+  text-align:left;
 }
 
 .droppable {
@@ -36,51 +104,79 @@
 }
 
 .draggable {
+	margin: 2%;
+	width: 15%;
+	height: 50%;
+	padding-top: 1.8%;
 	text-align: center;
 	float: center;
 	display: inline-block;
 	border: 2px solid black;
 	border-radius: 10px;
-	background-color: rgba(13, 182, 94, 0.8);
+	background-color: rgba(13, 94, 182, 0.8);
 	box-shadow: 7px 7px 5px #888888;
 }
 .lower_portion {
+	margin-top: 5em;
+	height: 30em;
+}
+
+.blocks {
+	height: 15em;
 }
 
 .block_container {
-	/*margin-top: 0;*/
+	/*width: 70%;*/
 	display: inline-block;
 }
 
 .description_container {
+	/*width: 30%;*/
+	height: 60%;
 	display: inline-block;
 }
 
-.description {
-	border: 2px solid black;
-	/*margin: 2em;
-	padding: 2em;*/
+.accepted_conditions {
+	margin-top: 6em;
+}
 
+.description {
+	text-align: center;
+	height: 150%;
+	border: 2px solid black;
+	margin: 2%;
+	margin-right: 4%;
+	padding: 2%;
+
+}
+.description_text {
+	font-size: 120%;
 }
 
 .button_container {
-	/*margin-top: 2em;*/
 	float: center;
-	/*padding-left: 40%;*/
 }
 
 
 .field_labels {
 }
+.group {
+	margin-left: 1%;
+	margin-bottom: 2%;
+}
+.run_algorithm.btn {
+	width: 51%;
+}
 
 .popup_conditions {
+	padding-top: 2%;
 	font-size: 10%;
 	text-align: left;
 	float: left;
-	/*padding: 1%;*/
 	position: absolute;
 	background: rgba(255, 255, 255, 1);
 	border: 0px solid black;
+	border-radius: 5px;
 	width: 0px;
 	height: 0px;
 }
@@ -95,3 +191,6 @@
 	height: 0px;
 }
 
+.button_holder {
+	height: 10em;
+}
