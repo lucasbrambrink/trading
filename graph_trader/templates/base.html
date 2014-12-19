@@ -1,0 +1,52 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block head-title %}graph-trader{% endblock %}</title>
+
+    <link href="{% static 'bower_components/jquery-ui/themes/ui-darkness/jquery-ui.min.css' %}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap-theme.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/site.css' %}" rel="stylesheet">
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="{% static 'bower_components/jquery/dist/jquery.js' %}"></script>
+    {% block stylesheets %}
+
+    {% endblock %}
+</head>
+<body>
+    <!--[if lt IE 7]>
+     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+     <![endif]-->
+
+    {% block header %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+    {% endblock %}
+
+    <!-- Load scripts here -->
+    <script src="{% static 'bower_components/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+
+    {% block scripts %}
+    {% endblock %}
+    <!-- End loading scripts -->
+</body>
+</html>
