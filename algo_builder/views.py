@@ -50,24 +50,24 @@ class JsonBuilder(TemplateView):
     def parse_block(self,block):
         if block['id'].lower() == 'sma':
             formatted_block = {
-                    'period1' : block['period1'],
-                    'period2' : block['period2'],
-                    'range': (block['range0'],block['range1']),
-                    'appetite': block['appetite']
+                    'period1' : int(block['period1']),
+                    'period2' : int(block['period2']),
+                    'range': (float(block['range0']),float(block['range1'])),
+                    'appetite': int(block['appetite'])
                     }
         if block['id'].lower() == 'volatility' or block['id'].lower() == 'covariance':
             formatted_block = {
-                    'period' : block['period'],
-                    'range': (block['range0'],block['range1']),
-                    'appetite': block['appetite']
+                    'period' : int(block['period']),
+                    'range': (float(block['range0']),float(block['range1'])),
+                    'appetite': int(block['appetite'])
                     }
         if block['id'].lower() == 'event':
             formatted_block = {
                     'stock' : block['stock'],
                     'attribute': 'close',
                     'inout' : block['inout'],
-                    'price': block['price'],
-                    'appetite': block['appetite']
+                    'price': float(block['price']),
+                    'appetite': int(block['appetite'])
                     }
         if block['id'].lower() == 'ratio':
             print(block['name'])
@@ -83,18 +83,18 @@ class JsonBuilder(TemplateView):
                 name = 'ROE'
             formatted_block = {
                     'name' : name,
-                    'range': (block['range0'],block['range1']),
-                    'appetite': block['appetite']
+                    'range': (float(block['range0']),float(block['range1'])),
+                    'appetite': int(block['appetite'])
                     }
         if block['id'].lower() == 'thresholds':
             formatted_block = {
-                    'price_range' : (block['price_range0'],block['price_range1']),
+                    'price_range' : (float(block['price_range0']),float(block['price_range1'])),
                     'sector': {block['inout']: (block['sector'],)}
                     }
         if block['id'].lower() == 'diversity':
             formatted_block = {
-                    'num_sector' : block['num_sector'],
-                    'num_industry': block['num_industry']
+                    'num_sector' : int(block['num_sector']),
+                    'num_industry': int(block['num_industry'])
                     }
         return formatted_block
 

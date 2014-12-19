@@ -359,12 +359,19 @@
 
         $("#save-btn").on('click', function(e) {
             alert('save');
+            algorithm = {
+                'algorithm' : {
+                    'name': 'Test',
+                    'uuid': algo_id,
+                    'block': $.cookie('final_json_object')
+                    }
+                }
             $.ajax({
                 url: "{% url 'builder:save' %}",
                 type: "POST",
                 data: {
                     csrfmiddlewaretoken:"{{ csrf_token }}",
-                    data: JSON.stringify(testResponse)
+                    data: JSON.stringify(algorithm)
                 },
                 success: function (data) {
                     console.log(data);
