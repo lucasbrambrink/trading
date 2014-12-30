@@ -1,3 +1,6 @@
+body {
+  overflow: hidden; }
+
 .bg {
   position: absolute;
   width: 100%;
@@ -42,9 +45,6 @@
     -moz-border-radius: 0;
     border-radius: 0;
     background-image: None; }
-
-body {
-  overflow: hidden; }
 
 .auth-box .social-login:after {
   content: '';

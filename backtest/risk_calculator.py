@@ -130,7 +130,7 @@ class RiskMetricsCalculator:
         """
         portfolio_stdev = Calculator.stdev(self.c_portfolio_returns,'returns')
         if portfolio_stdev == 0:
-            return 'N/A'
+            return 0
         sharpe = round(float((self.total_returns() - list(self.risk_free)[len(self.risk_free)-1].one_year) / portfolio_stdev),5)
         return sharpe
 

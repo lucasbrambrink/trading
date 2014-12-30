@@ -1,5 +1,5 @@
-Algorithmic Trading Strategies
-==============================
+Playground Wallstreet
+=====================
 
 A virtual playground to study different trading conditions using historical data.
 
