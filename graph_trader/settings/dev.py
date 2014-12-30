@@ -39,14 +39,6 @@ AUTHENTICATION_BACKENDS = (
 
 #### Site Settings
 SITE_ID = 1
-# Setup Email server
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'investnotice@gmail.com'
-EMAIL_HOST_PASSWORD = 'investnotice123'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'admin@djangular-2048.com'
 
 
 #### Rabbitmq Settings
@@ -54,7 +46,6 @@ RABBITMQ_HOST = 'localhost'
 
 
 #### Celery Settings
-BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -75,7 +66,8 @@ ACCOUNT_USE_AUTH_AUTHENTICATE = True
 try:
     from .local_settings import *
 except ImportError:
-    import sys, traceback
+    import sys
+    import traceback
     sys.stderr.write("Warning: Can't find the file 'local_settings.py' in the directory containing {}. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n(If the file settings.py does indeed exist, it's causing an ImportError somehow.)\n".format(__file__))
     sys.stderr.write("\nFor debugging purposes, the exception was:\n\n")
     traceback.print_exc()
